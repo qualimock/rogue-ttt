@@ -1,8 +1,8 @@
 # Rogue TTT
 ## Build and run
 ```bash
-meson setup build
-cd build
-meson compile
+mkdir build && cd build
+cmake ..
+cmake --build .
 ```
-then run `rogue-ttt`
+then run `build/bin/rogue-ttt`
