@@ -1,7 +1,7 @@
 #include "game.hpp"
 
-#include "../../include/imgui/imgui.h"
-#include "../../include/imgui-sfml/imgui-SFML.h"
+#include <imgui-SFML.h>
+#include <imgui.h>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 
