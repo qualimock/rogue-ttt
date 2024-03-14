@@ -7,8 +7,8 @@ namespace Grid {
 	typedef std::vector<sf::VertexArray> Lines;
 
 	class Grid {
-		unsigned m_horizontalAmount = 0;
-		unsigned m_verticalAmount = 0;
+		sf::Vector2u m_linesAmount;
+		sf::Vector2u m_cellsAmount;
 
 		Lines m_horizontalLines;
 		Lines m_verticalLines;
