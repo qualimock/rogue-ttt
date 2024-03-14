@@ -43,19 +43,21 @@ void Game::update() {
 		if (event.type == sf::Event::Closed) {
 			m_window.close();
 		}
+
+		if(event.type == sf::Event::Resized)
+		{
+			sf::FloatRect view(0, 0, event.size.width, event.size.height);
+			m_window.setView(sf::View(view));
+		}
 	}
 
 	ImGui::SFML::Update(m_window, m_deltaClock.restart());
 }
 
 void Game::render() {
-	ImGui::Begin("Window");
-	ImGui::Button("Butt OMG", ImVec2(0, 0));
-	ImGui::Text("HELLO!!!");
-	ImGui::End();
-
 	m_window.clear();
-	for (auto line : Grid::Grid(m_window).grid()) {
+	auto grid = Grid::Grid(m_window);
+	for (auto line : grid.grid()) {
 		m_window.draw(line);
 	}
 	ImGui::SFML::Render(m_window);

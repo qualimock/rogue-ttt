@@ -1,11 +1,18 @@
 #include "grid.hpp"
 
+#include <imgui-SFML.h>
+#include <imgui.h>
+
 namespace Grid {
 
 	Grid::Grid(const sf::RenderWindow& window, unsigned offset) {
 
-		m_horizontalAmount = window.getSize().y / offset;
-		m_verticalAmount = window.getSize().x / offset;
+		// +1 to add lacking line due to division
+		m_horizontalAmount = window.getSize().y / offset + 1;
+		m_verticalAmount = window.getSize().x / offset + 1;
+
+		ImGui::LabelText(std::to_string(m_horizontalAmount).c_str(), "Horizontal");
+		ImGui::LabelText(std::to_string(m_verticalAmount).c_str(), "Vertical");
 
 		for (unsigned i = 0; i < m_horizontalAmount; ++i) {
 			m_horizontalLines.push_back(sf::VertexArray(sf::LinesStrip, 2));
