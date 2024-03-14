@@ -14,6 +14,7 @@ namespace Grid {
 		Lines m_verticalLines;
 		std::pair<Lines, Lines> m_grid;
 
+
 	public:
 		Grid(const sf::RenderWindow&, unsigned = 40);
 		~Grid() = default;
