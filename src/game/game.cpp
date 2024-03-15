@@ -10,7 +10,7 @@
 #include "../grid/grid.hpp"
 
 Game::Game(const sf::VideoMode& videoMode)
-	: m_window(sf::RenderWindow(sf::VideoMode(640, 480), "Rogue Tic-Tac-Toe"))
+	: m_window(videoMode, "Rogue Tic-Tac-Toe")
 {
 	
 }
