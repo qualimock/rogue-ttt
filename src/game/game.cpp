@@ -61,6 +61,7 @@ void Game::update() {
 
 void Game::render() {
 	m_window.clear();
+
 	for (auto &cell : m_grid.cells()) {
 		m_window.draw(cell);
 	}
@@ -70,9 +71,11 @@ void Game::render() {
 	for (auto &line : m_grid.grid().second) {
 		m_window.draw(line);
 	}
+
 	ImGui::LabelText(std::to_string(m_grid.horizontal().size()).c_str(), "Horizontal");
 	ImGui::LabelText(std::to_string(m_grid.vertical().size()).c_str(), "Vertical");
 	ImGui::LabelText(std::to_string(m_grid.cells().size()).c_str(), "Cells");
+
 	ImGui::SFML::Render(m_window);
 	m_window.display();
 }
