@@ -5,22 +5,30 @@
 
 namespace Grid {
 	typedef std::vector<sf::VertexArray> Lines;
+	typedef std::vector<sf::RectangleShape> Cells;
 
 	class Grid {
-		sf::Vector2u m_linesAmount;
-		sf::Vector2u m_cellsAmount;
+		const sf::RenderWindow &m_window;
 
-		Lines m_horizontalLines;
-		Lines m_verticalLines;
+		unsigned m_offset;
+
+		sf::Vector2u m_linesAmount;
+
 		std::pair<Lines, Lines> m_grid;
 
+		Cells m_cells;
 
 	public:
 		Grid(const sf::RenderWindow&, unsigned = 40);
 		~Grid() = default;
 
-		Lines grid();
-		Lines horizontal() { return m_horizontalLines; }
-		Lines vertical() { return  m_verticalLines; }
+		void update();
+
+		void processEvents(const sf::Event &event);
+
+		Cells cells() { return m_cells; }
+		std::pair<Lines, Lines> grid() { return m_grid; }
+		Lines horizontal() { return m_grid.first; }
+		Lines vertical() { return  m_grid.second; }
 	};
 }

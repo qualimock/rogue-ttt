@@ -11,8 +11,9 @@
 
 Game::Game(const sf::VideoMode& videoMode)
 	: m_window(videoMode, "Rogue Tic-Tac-Toe")
+	, m_grid(m_window)
 {
-	
+
 }
 
 Game::~Game() {
@@ -34,6 +35,8 @@ void Game::update() {
 	while (m_window.pollEvent(event)) {
 		ImGui::SFML::ProcessEvent(m_window, event);
 
+		m_grid.processEvents(event);
+
 		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Escape) {
 				event.type = sf::Event::Closed;
@@ -44,22 +47,32 @@ void Game::update() {
 			m_window.close();
 		}
 
-		if(event.type == sf::Event::Resized)
+		if (event.type == sf::Event::Resized)
 		{
 			sf::FloatRect view(0, 0, event.size.width, event.size.height);
 			m_window.setView(sf::View(view));
 		}
 	}
 
+	m_grid.update();
+
 	ImGui::SFML::Update(m_window, m_deltaClock.restart());
 }
 
 void Game::render() {
 	m_window.clear();
-	auto grid = Grid::Grid(m_window);
-	for (auto line : grid.grid()) {
+	for (auto &cell : m_grid.cells()) {
+		m_window.draw(cell);
+	}
+	for (auto &line : m_grid.grid().first) {
 		m_window.draw(line);
 	}
+	for (auto &line : m_grid.grid().second) {
+		m_window.draw(line);
+	}
+	ImGui::LabelText(std::to_string(m_grid.horizontal().size()).c_str(), "Horizontal");
+	ImGui::LabelText(std::to_string(m_grid.vertical().size()).c_str(), "Vertical");
+	ImGui::LabelText(std::to_string(m_grid.cells().size()).c_str(), "Cells");
 	ImGui::SFML::Render(m_window);
 	m_window.display();
 }
