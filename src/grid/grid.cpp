@@ -3,8 +3,6 @@
 #include <imgui-SFML.h>
 #include <imgui.h>
 
-#include <iostream>
-
 namespace Grid {
 
 	Grid::Grid(const sf::RenderWindow& window, unsigned offset)
