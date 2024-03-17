@@ -37,7 +37,6 @@ namespace Grid {
 		sf::Vector2u m_linesAmount;
 
 		std::pair<Lines, Lines> m_grid;
-
 		Cells m_cells;
 
 		struct SideOffset {
@@ -66,6 +65,8 @@ namespace Grid {
 	public:
 		Grid(const sf::RenderWindow&, unsigned = 40);
 		~Grid() = default;
+
+		bool finished;
 
 		void update();
 
