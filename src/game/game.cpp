@@ -35,7 +35,9 @@ void Game::update() {
 	while (m_window.pollEvent(event)) {
 		ImGui::SFML::ProcessEvent(m_window, event);
 
-		m_grid.processEvents(event);
+		if (!ImGuiFlags.mouseHover) {
+			m_grid.processEvents(event);
+		}
 
 		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Escape) {
@@ -59,6 +61,23 @@ void Game::update() {
 	ImGui::SFML::Update(m_window, m_deltaClock.restart());
 }
 
+void Game::processImgui() {
+	ImGuiFlags.mouseHover = false;
+
+	if(ImGui::Begin("Debug")) {
+		ImGui::LabelText(std::to_string(m_grid.horizontal().size()).c_str(), "Horizontal");
+		ImGui::LabelText(std::to_string(m_grid.vertical().size()).c_str(), "Vertical");
+		ImGui::LabelText(std::to_string(m_grid.cells().size()).c_str(), "Cells");
+
+		if (ImGui::IsWindowHovered())
+			ImGuiFlags.mouseHover = true;
+	}
+
+	ImGui::End();
+
+	ImGui::SFML::Render(m_window);
+}
+
 void Game::render() {
 	m_window.clear();
 
@@ -72,10 +91,7 @@ void Game::render() {
 		m_window.draw(line);
 	}
 
-	ImGui::LabelText(std::to_string(m_grid.horizontal().size()).c_str(), "Horizontal");
-	ImGui::LabelText(std::to_string(m_grid.vertical().size()).c_str(), "Vertical");
-	ImGui::LabelText(std::to_string(m_grid.cells().size()).c_str(), "Cells");
+	processImgui();
 
-	ImGui::SFML::Render(m_window);
 	m_window.display();
 }
