@@ -56,9 +56,8 @@ void Game::update() {
 		}
 	}
 
-	m_grid.update();
-
 	ImGui::SFML::Update(m_window, m_deltaClock.restart());
+	m_grid.update();
 }
 
 void Game::processImgui() {
@@ -82,7 +81,7 @@ void Game::render() {
 	m_window.clear();
 
 	for (auto &cell : m_grid.cells()) {
-		m_window.draw(cell);
+		m_window.draw(cell.second);
 	}
 	for (auto &line : m_grid.grid().first) {
 		m_window.draw(line);
