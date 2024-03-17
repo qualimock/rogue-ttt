@@ -11,9 +11,15 @@ class Game {
 
 	Grid::Grid m_grid;
 
+	struct {
+		bool mouseHover = false;
+	} ImGuiFlags;
+
 public:
 	Game(const sf::VideoMode& videoMode);
 	~Game();
+
+	void processImgui();
 
 	void render();
 	void update();
