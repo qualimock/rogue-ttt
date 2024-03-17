@@ -8,6 +8,7 @@ namespace Grid {
 	Grid::Grid(const sf::RenderWindow& window, unsigned offset)
 		: m_window(window)
 		, m_offset(offset)
+		, finished(false)
 		, m_sideOffset(m_offset)
 	{}
 
@@ -53,6 +54,8 @@ namespace Grid {
 				centre->second.setFillColor(sf::Color::Green);
 				top->second.setFillColor(sf::Color::Green);
 				bottom->second.setFillColor(sf::Color::Green);
+
+				finished = true;
 				break;
 			}
 
@@ -60,6 +63,8 @@ namespace Grid {
 				centre->second.setFillColor(sf::Color::Green);
 				left->second.setFillColor(sf::Color::Green);
 				right->second.setFillColor(sf::Color::Green);
+
+				finished = true;
 				break;
 			}
 
@@ -67,6 +72,8 @@ namespace Grid {
 				centre->second.setFillColor(sf::Color::Green);
 				topLeft->second.setFillColor(sf::Color::Green);
 				bottomRight->second.setFillColor(sf::Color::Green);
+
+				finished = true;
 				break;
 			}
 
@@ -74,8 +81,13 @@ namespace Grid {
 				centre->second.setFillColor(sf::Color::Green);
 				topRight->second.setFillColor(sf::Color::Green);
 				bottomLeft->second.setFillColor(sf::Color::Green);
+
+				finished = true;
 				break;
 			}
+
+			centre->second.setFillColor(sf::Color::Red);
+			finished = false;
 		}
 	}
 
@@ -92,7 +104,6 @@ namespace Grid {
 			}
 
 			sf::RectangleShape shape(sf::Vector2f(m_offset, m_offset));
-			shape.setFillColor(sf::Color::Red);
 			shape.move(mousePosition);
 			m_cells.emplace(std::make_pair(shape.getPosition(), shape));
 		}

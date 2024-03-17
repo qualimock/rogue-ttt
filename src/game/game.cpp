@@ -9,6 +9,8 @@
 
 #include "../grid/grid.hpp"
 
+// #define DEBUG
+
 Game::Game(const sf::VideoMode& videoMode)
 	: m_window(videoMode, "Rogue Tic-Tac-Toe")
 	, m_grid(m_window)
@@ -57,13 +59,25 @@ void Game::update() {
 	}
 
 	ImGui::SFML::Update(m_window, m_deltaClock.restart());
+
 	m_grid.update();
 }
 
 void Game::processImgui() {
 	ImGuiFlags.mouseHover = false;
 
-	if(ImGui::Begin("Debug")) {
+	if (m_grid.finished) {
+		if (ImGui::Begin("VICTORY")) {
+			ImGui::LabelText("WON", "YOU");
+
+			if (ImGui::IsWindowHovered())
+				ImGuiFlags.mouseHover = true;
+		}
+		ImGui::End();
+	}
+
+#ifdef DEBUG
+	if (ImGui::Begin("Debug")) {
 		ImGui::LabelText(std::to_string(m_grid.horizontal().size()).c_str(), "Horizontal");
 		ImGui::LabelText(std::to_string(m_grid.vertical().size()).c_str(), "Vertical");
 		ImGui::LabelText(std::to_string(m_grid.cells().size()).c_str(), "Cells");
@@ -71,8 +85,8 @@ void Game::processImgui() {
 		if (ImGui::IsWindowHovered())
 			ImGuiFlags.mouseHover = true;
 	}
-
 	ImGui::End();
+#endif
 
 	ImGui::SFML::Render(m_window);
 }
