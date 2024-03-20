@@ -66,14 +66,50 @@ void Game::update() {
 void Game::processImgui() {
 	ImGuiFlags.mouseHover = false;
 
-	if (m_grid.finished) {
+	if (ImGui::BeginMainMenuBar()) {
+		if (ImGui::BeginMenu("Game")) {
+			if (ImGui::MenuItem("New")) {
+				m_grid.clear();
+			}
+
+			if (ImGui::MenuItem("Exit", "Esc")) {
+				m_window.close();
+			}
+
+			if(ImGui::IsWindowHovered())
+				ImGuiFlags.mouseHover = true;
+
+			ImGui::EndMenu();
+		}
+
+		if(ImGui::IsWindowHovered())
+				ImGuiFlags.mouseHover = true;
+
+		ImGui::EndMainMenuBar();
+	}
+
+	if (m_grid.victory.first) {
+		std::string winner;
+		switch (m_grid.victory.second) {
+		case Grid::Cell::Cross:
+			winner = "Cross";
+			break;
+		case Grid::Cell::Nought:
+			winner = "Nought";
+			break;
+		default:
+			winner = "";
+			break;
+		}
+
 		if (ImGui::Begin("VICTORY")) {
-			ImGui::LabelText("WON", "YOU");
+			ImGui::LabelText("WON", winner.c_str());
 
 			if (ImGui::IsWindowHovered())
 				ImGuiFlags.mouseHover = true;
+
+			ImGui::End();
 		}
-		ImGui::End();
 	}
 
 #ifdef DEBUG
@@ -84,8 +120,9 @@ void Game::processImgui() {
 
 		if (ImGui::IsWindowHovered())
 			ImGuiFlags.mouseHover = true;
+
+		ImGui::End();
 	}
-	ImGui::End();
 #endif
 
 	ImGui::SFML::Render(m_window);

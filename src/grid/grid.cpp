@@ -3,12 +3,14 @@
 #include <imgui-SFML.h>
 #include <imgui.h>
 
+#include <iostream>
+
 namespace Grid {
 
 	Grid::Grid(const sf::RenderWindow& window, unsigned offset)
 		: m_window(window)
 		, m_offset(offset)
-		, finished(false)
+		, victory(false, Cell::Faction::None)
 		, m_sideOffset(m_offset)
 	{}
 
@@ -41,6 +43,17 @@ namespace Grid {
 		}
 
 		for (Cells::iterator centre = m_cells.begin(); centre != m_cells.end(); ++centre) {
+			if (!victory.first) {
+				switch (centre->second.faction()) {
+				case Cell::Faction::Cross:
+					centre->second.setFillColor(sf::Color::Red);
+					break;
+				case Cell::Faction::Nought:
+					centre->second.setFillColor(sf::Color::Blue);
+					break;
+				}
+			}
+
 			auto topLeft = m_cells.find(centre->first + m_sideOffset.topLeft);
 			auto top = m_cells.find(centre->first + m_sideOffset.top);
 			auto topRight = m_cells.find(centre->first + m_sideOffset.topRight);
@@ -50,45 +63,31 @@ namespace Grid {
 			auto bottomLeft = m_cells.find(centre->first + m_sideOffset.bottomLeft);
 			auto left = m_cells.find(centre->first + m_sideOffset.left);
 
-			if (top != m_cells.end() && bottom != m_cells.end()){
-				centre->second.setFillColor(sf::Color::Green);
-				top->second.setFillColor(sf::Color::Green);
-				bottom->second.setFillColor(sf::Color::Green);
-
-				finished = true;
-				break;
+			if (checkCellNeighbours(centre, top, bottom) ||
+				checkCellNeighbours(centre, left, right) ||
+				checkCellNeighbours(centre, topRight, bottomLeft) ||
+				checkCellNeighbours(centre, topLeft, bottomRight))
+			{
+				victory = std::pair(true, centre->second.faction());
 			}
 
-			if (left != m_cells.end() && right != m_cells.end()) {
-				centre->second.setFillColor(sf::Color::Green);
-				left->second.setFillColor(sf::Color::Green);
-				right->second.setFillColor(sf::Color::Green);
-
-				finished = true;
+			if (victory.first) {
+				for (auto& cell : m_cells) {
+					if (cell.second.faction() == victory.second)
+						cell.second.setFillColor(sf::Color::Green);
+				}
 				break;
 			}
-
-			if (topLeft != m_cells.end() && bottomRight != m_cells.end()) {
-				centre->second.setFillColor(sf::Color::Green);
-				topLeft->second.setFillColor(sf::Color::Green);
-				bottomRight->second.setFillColor(sf::Color::Green);
-
-				finished = true;
-				break;
-			}
-
-			if (topRight != m_cells.end() && bottomLeft != m_cells.end()) {
-				centre->second.setFillColor(sf::Color::Green);
-				topRight->second.setFillColor(sf::Color::Green);
-				bottomLeft->second.setFillColor(sf::Color::Green);
-
-				finished = true;
-				break;
-			}
-
-			centre->second.setFillColor(sf::Color::Red);
-			finished = false;
 		}
+	}
+
+	bool Grid::checkCellNeighbours(const Cells::iterator& cell,
+								   const Cells::iterator& first,
+								   const Cells::iterator& second)
+	{
+		return (first != m_cells.end() && second != m_cells.end() &&
+				(cell->second.isAlly(first->second) &&
+				 cell->second.isAlly(second->second)));
 	}
 
 	void Grid::processEvents(const sf::Event &event) {
@@ -103,8 +102,20 @@ namespace Grid {
 				}
 			}
 
-			sf::RectangleShape shape(sf::Vector2f(m_offset, m_offset));
-			shape.move(mousePosition);
+			Cell::Faction faction;
+
+			switch (event.mouseButton.button) {
+			case sf::Mouse::Left:
+				faction = Cell::Faction::Cross;
+				break;
+			case sf::Mouse::Right:
+				faction = Cell::Faction::Nought;
+				break;
+			default:
+				break;
+			}
+
+			Cell shape(mousePosition, sf::Vector2f(m_offset, m_offset), faction);
 			m_cells.emplace(std::make_pair(shape.getPosition(), shape));
 		}
 	}
