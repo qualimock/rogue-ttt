@@ -1,8 +1,9 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include <vector>
 #include <unordered_map>
+
+#include "cell.hpp"
 
 namespace std
 {
@@ -27,7 +28,8 @@ namespace std
 
 namespace Grid {
 	typedef std::vector<sf::VertexArray> Lines;
-	typedef std::unordered_map<sf::Vector2f, sf::RectangleShape> Cells;
+	typedef std::unordered_map<sf::Vector2f, Cell> Cells;
+	typedef std::pair<bool, Cell::Faction> Victory;
 
 	class Grid {
 		const sf::RenderWindow &m_window;
@@ -62,13 +64,18 @@ namespace Grid {
 
 		SideOffset m_sideOffset;
 
+		bool checkCellNeighbours(const Cells::iterator& cell,
+								 const Cells::iterator& first,
+								 const Cells::iterator& second);
+
 	public:
 		Grid(const sf::RenderWindow&, unsigned = 40);
 		~Grid() = default;
 
-		bool finished;
+		Victory victory;
 
 		void update();
+		void clear() { m_cells.clear(); } ;
 
 		void processEvents(const sf::Event &event);
 
