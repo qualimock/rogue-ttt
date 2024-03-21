@@ -3,7 +3,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
-#include "../grid/grid.hpp"
+#include "../Grid/Grid.hpp"
 
 class Game {
 	sf::RenderWindow m_window;

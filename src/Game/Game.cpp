@@ -1,4 +1,4 @@
-#include "game.hpp"
+#include "Game.hpp"
 
 #include <imgui-SFML.h>
 #include <imgui.h>
@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-#include "../grid/grid.hpp"
+#include "../Grid/Grid.hpp"
 
 // #define DEBUG
 

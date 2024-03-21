@@ -3,7 +3,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include "cell.hpp"
+#include "Cell.hpp"
 
 namespace std
 {

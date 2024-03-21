@@ -1,4 +1,4 @@
-#include "grid.hpp"
+#include "Grid.hpp"
 
 #include <imgui-SFML.h>
 #include <imgui.h>

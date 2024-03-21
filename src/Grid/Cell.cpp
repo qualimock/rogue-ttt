@@ -1,4 +1,4 @@
-#include "cell.hpp"
+#include "Cell.hpp"
 
 namespace Grid {
 	Cell::Cell(const sf::Vector2f& position,
