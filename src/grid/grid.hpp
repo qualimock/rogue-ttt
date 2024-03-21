@@ -68,6 +68,8 @@ namespace Grid {
 								 const Cells::iterator& first,
 								 const Cells::iterator& second);
 
+		void colorFactions();
+
 	public:
 		Grid(const sf::RenderWindow&, unsigned = 40);
 		~Grid() = default;

@@ -42,41 +42,24 @@ namespace Grid {
 			m_grid.second[i][1].position = sf::Vector2f((i+1)*m_offset, m_window.getSize().y);
 		}
 
-		for (Cells::iterator centre = m_cells.begin(); centre != m_cells.end(); ++centre) {
-			if (!victory.first) {
-				switch (centre->second.faction()) {
-				case Cell::Faction::Cross:
-					centre->second.setFillColor(sf::Color::Red);
-					break;
-				case Cell::Faction::Nought:
-					centre->second.setFillColor(sf::Color::Blue);
-					break;
-				}
-			}
+		colorFactions();
+	}
 
-			auto topLeft = m_cells.find(centre->first + m_sideOffset.topLeft);
-			auto top = m_cells.find(centre->first + m_sideOffset.top);
-			auto topRight = m_cells.find(centre->first + m_sideOffset.topRight);
-			auto right = m_cells.find(centre->first + m_sideOffset.right);
-			auto bottomRight = m_cells.find(centre->first + m_sideOffset.bottomRight);
-			auto bottom = m_cells.find(centre->first + m_sideOffset.bottom);
-			auto bottomLeft = m_cells.find(centre->first + m_sideOffset.bottomLeft);
-			auto left = m_cells.find(centre->first + m_sideOffset.left);
-
-			if (checkCellNeighbours(centre, top, bottom) ||
-				checkCellNeighbours(centre, left, right) ||
-				checkCellNeighbours(centre, topRight, bottomLeft) ||
-				checkCellNeighbours(centre, topLeft, bottomRight))
-			{
-				victory = std::pair(true, centre->second.faction());
-			}
-
-			if (victory.first) {
-				for (auto& cell : m_cells) {
-					if (cell.second.faction() == victory.second)
-						cell.second.setFillColor(sf::Color::Green);
-				}
+	void Grid::colorFactions() {
+		for (auto& cell : m_cells) {
+			switch (cell.second.faction()) {
+			case Cell::Faction::Cross:
+				cell.second.setFillColor(sf::Color::Red);
 				break;
+			case Cell::Faction::Nought:
+				cell.second.setFillColor(sf::Color::Blue);
+				break;
+			case Cell::Faction::None:
+				break;
+			}
+
+			if (cell.second.faction() == victory.second) {
+				cell.second.setFillColor(sf::Color::Green);
 			}
 		}
 	}
@@ -94,6 +77,8 @@ namespace Grid {
 		if (event.type == sf::Event::MouseButtonPressed) {
 			sf::Vector2f mousePosition((event.mouseButton.x/m_offset)*m_offset,
 									   (event.mouseButton.y/m_offset)*m_offset);
+			victory.first = false;
+			victory.second = Cell::Faction::None;
 
 			for (Cells::iterator it = m_cells.begin(); it != m_cells.end(); ++it) {
 				if (it->second.getPosition() == mousePosition) {
@@ -102,21 +87,50 @@ namespace Grid {
 				}
 			}
 
-			Cell::Faction faction;
+			if (!victory.first){
+				Cell::Faction faction;
 
-			switch (event.mouseButton.button) {
-			case sf::Mouse::Left:
-				faction = Cell::Faction::Cross;
-				break;
-			case sf::Mouse::Right:
-				faction = Cell::Faction::Nought;
-				break;
-			default:
-				break;
+				switch (event.mouseButton.button) {
+				case sf::Mouse::Left:
+					faction = Cell::Faction::Cross;
+					break;
+				case sf::Mouse::Right:
+					faction = Cell::Faction::Nought;
+					break;
+				default:
+					break;
+				}
+
+				Cell cell(mousePosition, sf::Vector2f(m_offset, m_offset), faction);
+				m_cells.emplace(std::make_pair(cell.getPosition(), cell));
 			}
 
-			Cell shape(mousePosition, sf::Vector2f(m_offset, m_offset), faction);
-			m_cells.emplace(std::make_pair(shape.getPosition(), shape));
+			for (Cells::iterator centre = m_cells.begin(); centre != m_cells.end(); ++centre) {
+				if (checkCellNeighbours(centre,
+										m_cells.find(centre->first + m_sideOffset.top),
+										m_cells.find(centre->first + m_sideOffset.bottom)) ||
+					checkCellNeighbours(centre,
+										m_cells.find(centre->first + m_sideOffset.left),
+										m_cells.find(centre->first + m_sideOffset.right)) ||
+					checkCellNeighbours(centre,
+										m_cells.find(centre->first + m_sideOffset.topRight),
+										m_cells.find(centre->first + m_sideOffset.bottomLeft)) ||
+					checkCellNeighbours(centre,
+										m_cells.find(centre->first + m_sideOffset.topLeft),
+										m_cells.find(centre->first + m_sideOffset.bottomRight)))
+				{
+					victory.first = true;
+					victory.second = centre->second.faction();
+				}
+
+				if (victory.first) {
+					for (auto& cell : m_cells) {
+						if (cell.second.faction() == victory.second)
+							cell.second.setFillColor(sf::Color::Green);
+					}
+					break;
+				}
+			}
 		}
 	}
 }
