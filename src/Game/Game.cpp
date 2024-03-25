@@ -7,16 +7,14 @@
 
 #include <iostream>
 
-#include "../Grid/Grid.hpp"
+#include "../Grid/Map.hpp"
 
-// #define DEBUG
+#define DEBUG
 
 Game::Game(const sf::VideoMode& videoMode)
 	: m_window(videoMode, "Rogue Tic-Tac-Toe")
-	, m_grid(m_window)
-{
-
-}
+	, m_map(m_window)
+{}
 
 Game::~Game()
 {
@@ -44,7 +42,7 @@ void Game::update()
 
 		if (!ImGuiFlags.mouseHover)
 		{
-			m_grid.processEvents(event);
+			m_map.processEvents(event);
 		}
 
 		if (event.type == sf::Event::KeyPressed)
@@ -69,7 +67,7 @@ void Game::update()
 
 	ImGui::SFML::Update(m_window, m_deltaClock.restart());
 
-	m_grid.update();
+	m_map.update();
 }
 
 void Game::processImgui()
@@ -82,7 +80,7 @@ void Game::processImgui()
 		{
 			if (ImGui::MenuItem("New"))
 			{
-				m_grid.clear();
+				// placeholder
 			}
 
 			if (ImGui::MenuItem("Exit", "Esc"))
@@ -102,39 +100,12 @@ void Game::processImgui()
 		ImGui::EndMainMenuBar();
 	}
 
-	if (m_grid.victory.first)
-	{
-		std::string winner;
-		switch (m_grid.victory.second)
-		{
-		case Grid::Cell::Cross:
-			winner = "Cross";
-			break;
-		case Grid::Cell::Nought:
-			winner = "Nought";
-			break;
-		default:
-			winner = "";
-			break;
-		}
-
-		if (ImGui::Begin("VICTORY"))
-		{
-			ImGui::LabelText("WON", winner.c_str());
-
-			if (ImGui::IsWindowHovered())
-				ImGuiFlags.mouseHover = true;
-
-			ImGui::End();
-		}
-	}
-
 #ifdef DEBUG
 	if (ImGui::Begin("Debug"))
 	{
-		ImGui::LabelText(std::to_string(m_grid.horizontal().size()).c_str(), "Horizontal");
-		ImGui::LabelText(std::to_string(m_grid.vertical().size()).c_str(), "Vertical");
-		ImGui::LabelText(std::to_string(m_grid.cells().size()).c_str(), "Cells");
+		ImGui::LabelText(m_map.name().c_str(), "Name");
+		ImGui::LabelText((std::to_string(m_map.position().x) + ":" + std::to_string(m_map.position().y)).c_str(), "Position");
+		ImGui::LabelText((std::to_string(m_map.size().x) + ":" + std::to_string(m_map.size().y)).c_str(), "Size");
 
 		if (ImGui::IsWindowHovered())
 			ImGuiFlags.mouseHover = true;
@@ -149,21 +120,7 @@ void Game::processImgui()
 void Game::render()
 {
 	m_window.clear();
-
-	for (auto &cell : m_grid.cells())
-	{
-		m_window.draw(cell.second);
-	}
-	for (auto &line : m_grid.grid().first)
-	{
-		m_window.draw(line);
-	}
-	for (auto &line : m_grid.grid().second)
-	{
-		m_window.draw(line);
-	}
-
+	m_map.draw();
 	processImgui();
-
 	m_window.display();
 }

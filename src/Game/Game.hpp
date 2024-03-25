@@ -3,14 +3,16 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
-#include "../Grid/Grid.hpp"
+#include <vector>
+
+#include "../Grid/Map.hpp"
 
 class Game
 {
 	sf::RenderWindow m_window;
 	sf::Clock m_deltaClock;
 
-	Grid::Grid m_grid;
+	Grid::Map m_map;
 
 	struct
 	{
