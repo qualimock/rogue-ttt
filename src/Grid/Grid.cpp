@@ -5,8 +5,8 @@
 
 #include <iostream>
 
-namespace Grid {
-
+namespace Grid
+{
 	Grid::Grid(const sf::RenderWindow& window, unsigned offset)
 		: m_window(window)
 		, m_offset(offset)
@@ -14,30 +14,37 @@ namespace Grid {
 		, m_sideOffset(m_offset)
 	{}
 
-	void Grid::update() {
+	void Grid::update()
+	{
 		m_linesAmount = sf::Vector2u(m_window.getSize().x/m_offset,
 									 m_window.getSize().y/m_offset);
 
-		while (m_linesAmount.y > m_grid.first.size()) {
+		while (m_linesAmount.y > m_grid.first.size())
+		{
 			m_grid.first.emplace_back(sf::VertexArray(sf::LinesStrip, 2));
 		}
-		while (m_linesAmount.y < m_grid.first.size()) {
+		while (m_linesAmount.y < m_grid.first.size())
+		{
 			m_grid.first.erase(m_grid.first.end());
 		}
-		while (m_linesAmount.x > m_grid.second.size()) {
+		while (m_linesAmount.x > m_grid.second.size())
+		{
 			m_grid.second.emplace_back(sf::VertexArray(sf::LinesStrip, 2));
 		}
-		while (m_linesAmount.x < m_grid.second.size()) {
+		while (m_linesAmount.x < m_grid.second.size())
+		{
 			m_grid.second.erase(m_grid.second.end());
 		}
 
 		// +1 to start from offset instead of 0
-		for (unsigned i = 0; i < m_linesAmount.y; ++i) {
+		for (unsigned i = 0; i < m_linesAmount.y; ++i)
+		{
 			m_grid.first[i][0].position = sf::Vector2f(0, (i+1)*m_offset);
 			m_grid.first[i][1].position = sf::Vector2f(m_window.getSize().x, (i+1)*m_offset);
 		}
 
-		for (unsigned i = 0; i < m_linesAmount.x; ++i) {
+		for (unsigned i = 0; i < m_linesAmount.x; ++i)
+		{
 			m_grid.second[i][0].position = sf::Vector2f((i+1)*m_offset, 0);
 			m_grid.second[i][1].position = sf::Vector2f((i+1)*m_offset, m_window.getSize().y);
 		}
@@ -45,9 +52,12 @@ namespace Grid {
 		colorFactions();
 	}
 
-	void Grid::colorFactions() {
-		for (auto& cell : m_cells) {
-			switch (cell.second.faction()) {
+	void Grid::colorFactions()
+	{
+		for (auto& cell : m_cells)
+		{
+			switch (cell.second.faction())
+			{
 			case Cell::Faction::Cross:
 				cell.second.setFillColor(sf::Color::Red);
 				break;
@@ -58,7 +68,8 @@ namespace Grid {
 				break;
 			}
 
-			if (cell.second.faction() == victory.second) {
+			if (cell.second.faction() == victory.second)
+			{
 				cell.second.setFillColor(sf::Color::Green);
 			}
 		}
@@ -73,24 +84,30 @@ namespace Grid {
 				 cell->second.isAlly(second->second)));
 	}
 
-	void Grid::processEvents(const sf::Event &event) {
-		if (event.type == sf::Event::MouseButtonPressed) {
+	void Grid::processEvents(const sf::Event &event)
+	{
+		if (event.type == sf::Event::MouseButtonPressed)
+		{
 			sf::Vector2f mousePosition((event.mouseButton.x/m_offset)*m_offset,
 									   (event.mouseButton.y/m_offset)*m_offset);
 			victory.first = false;
 			victory.second = Cell::Faction::None;
 
-			for (Cells::iterator it = m_cells.begin(); it != m_cells.end(); ++it) {
-				if (it->second.getPosition() == mousePosition) {
+			for (Cells::iterator it = m_cells.begin(); it != m_cells.end(); ++it)
+			{
+				if (it->second.getPosition() == mousePosition)
+				{
 					m_cells.erase(it);
 					return;
 				}
 			}
 
-			if (!victory.first){
+			if (!victory.first)
+			{
 				Cell::Faction faction;
 
-				switch (event.mouseButton.button) {
+				switch (event.mouseButton.button)
+				{
 				case sf::Mouse::Left:
 					faction = Cell::Faction::Cross;
 					break;
@@ -105,7 +122,8 @@ namespace Grid {
 				m_cells.emplace(std::make_pair(cell.getPosition(), cell));
 			}
 
-			for (Cells::iterator centre = m_cells.begin(); centre != m_cells.end(); ++centre) {
+			for (Cells::iterator centre = m_cells.begin(); centre != m_cells.end(); ++centre)
+			{
 				if (checkCellNeighbours(centre,
 										m_cells.find(centre->first + m_sideOffset.top),
 										m_cells.find(centre->first + m_sideOffset.bottom)) ||
@@ -123,8 +141,10 @@ namespace Grid {
 					victory.second = centre->second.faction();
 				}
 
-				if (victory.first) {
-					for (auto& cell : m_cells) {
+				if (victory.first)
+				{
+					for (auto& cell : m_cells)
+					{
 						if (cell.second.faction() == victory.second)
 							cell.second.setFillColor(sf::Color::Green);
 					}

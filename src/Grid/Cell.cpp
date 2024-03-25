@@ -1,6 +1,7 @@
 #include "Cell.hpp"
 
-namespace Grid {
+namespace Grid
+{
 	Cell::Cell(const sf::Vector2f& position,
 			   const sf::Vector2f& size,
 			   Faction faction)
@@ -10,7 +11,8 @@ namespace Grid {
 		this->move(position);
 	}
 
-	bool Cell::isAlly(const Cell& cell) {
+	bool Cell::isAlly(const Cell& cell)
+	{
 		return (m_faction == cell.faction());
 	}
 }

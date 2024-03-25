@@ -18,13 +18,16 @@ Game::Game(const sf::VideoMode& videoMode)
 
 }
 
-Game::~Game() {
+Game::~Game()
+{
 	ImGui::SFML::Shutdown();
 }
 
-bool Game::init() {
+bool Game::init()
+{
     m_window.setFramerateLimit(60);
-	if (!ImGui::SFML::Init(m_window)) {
+	if (!ImGui::SFML::Init(m_window))
+	{
 		std::cerr << "ERR:\n\tFailed to initialize the window!" << std::endl;
 		return false;
 	}
@@ -32,22 +35,28 @@ bool Game::init() {
 	return true;
 }
 
-void Game::update() {
+void Game::update()
+{
 	sf::Event event;
-	while (m_window.pollEvent(event)) {
+	while (m_window.pollEvent(event))
+	{
 		ImGui::SFML::ProcessEvent(m_window, event);
 
-		if (!ImGuiFlags.mouseHover) {
+		if (!ImGuiFlags.mouseHover)
+		{
 			m_grid.processEvents(event);
 		}
 
-		if (event.type == sf::Event::KeyPressed) {
-			if (event.key.code == sf::Keyboard::Escape) {
+		if (event.type == sf::Event::KeyPressed)
+		{
+			if (event.key.code == sf::Keyboard::Escape)
+			{
 				event.type = sf::Event::Closed;
 			}
 		}
 
-		if (event.type == sf::Event::Closed) {
+		if (event.type == sf::Event::Closed)
+		{
 			m_window.close();
 		}
 
@@ -63,16 +72,21 @@ void Game::update() {
 	m_grid.update();
 }
 
-void Game::processImgui() {
+void Game::processImgui()
+{
 	ImGuiFlags.mouseHover = false;
 
-	if (ImGui::BeginMainMenuBar()) {
-		if (ImGui::BeginMenu("Game")) {
-			if (ImGui::MenuItem("New")) {
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("Game"))
+		{
+			if (ImGui::MenuItem("New"))
+			{
 				m_grid.clear();
 			}
 
-			if (ImGui::MenuItem("Exit", "Esc")) {
+			if (ImGui::MenuItem("Exit", "Esc"))
+			{
 				m_window.close();
 			}
 
@@ -88,9 +102,11 @@ void Game::processImgui() {
 		ImGui::EndMainMenuBar();
 	}
 
-	if (m_grid.victory.first) {
+	if (m_grid.victory.first)
+	{
 		std::string winner;
-		switch (m_grid.victory.second) {
+		switch (m_grid.victory.second)
+		{
 		case Grid::Cell::Cross:
 			winner = "Cross";
 			break;
@@ -102,7 +118,8 @@ void Game::processImgui() {
 			break;
 		}
 
-		if (ImGui::Begin("VICTORY")) {
+		if (ImGui::Begin("VICTORY"))
+		{
 			ImGui::LabelText("WON", winner.c_str());
 
 			if (ImGui::IsWindowHovered())
@@ -113,7 +130,8 @@ void Game::processImgui() {
 	}
 
 #ifdef DEBUG
-	if (ImGui::Begin("Debug")) {
+	if (ImGui::Begin("Debug"))
+	{
 		ImGui::LabelText(std::to_string(m_grid.horizontal().size()).c_str(), "Horizontal");
 		ImGui::LabelText(std::to_string(m_grid.vertical().size()).c_str(), "Vertical");
 		ImGui::LabelText(std::to_string(m_grid.cells().size()).c_str(), "Cells");
@@ -128,16 +146,20 @@ void Game::processImgui() {
 	ImGui::SFML::Render(m_window);
 }
 
-void Game::render() {
+void Game::render()
+{
 	m_window.clear();
 
-	for (auto &cell : m_grid.cells()) {
+	for (auto &cell : m_grid.cells())
+	{
 		m_window.draw(cell.second);
 	}
-	for (auto &line : m_grid.grid().first) {
+	for (auto &line : m_grid.grid().first)
+	{
 		m_window.draw(line);
 	}
-	for (auto &line : m_grid.grid().second) {
+	for (auto &line : m_grid.grid().second)
+	{
 		m_window.draw(line);
 	}
 

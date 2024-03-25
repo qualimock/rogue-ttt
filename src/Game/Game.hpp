@@ -5,13 +5,15 @@
 
 #include "../Grid/Grid.hpp"
 
-class Game {
+class Game
+{
 	sf::RenderWindow m_window;
 	sf::Clock m_deltaClock;
 
 	Grid::Grid m_grid;
 
-	struct {
+	struct
+	{
 		bool mouseHover = false;
 	} ImGuiFlags;
 

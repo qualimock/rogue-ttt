@@ -2,10 +2,13 @@
 
 #include <SFML/Graphics.hpp>
 
-namespace Grid {
-	class Cell : public sf::RectangleShape {
+namespace Grid
+{
+	class Cell : public sf::RectangleShape
+	{
 	public:
-		enum Faction {
+		enum Faction
+		{
 			Cross,
 			Nought,
 			None
