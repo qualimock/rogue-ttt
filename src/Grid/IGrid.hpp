@@ -30,6 +30,7 @@ namespace Grid
 		virtual void processEvents(sf::Event event) = 0;
 		virtual void update() = 0;
 		virtual void draw();
+		virtual void move(const sf::Vector2u &position);
 
 		const sf::Vector2u position() const { return m_topLeft; }
 		const sf::Vector2u size() const { return m_size; }

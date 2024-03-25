@@ -16,8 +16,7 @@ namespace Grid
 		, m_name(name)
 		, m_offset(linesOffset)
 		, m_size(bottomRight - topLeft)
-	{
-	}
+	{}
 
 	IGrid::~IGrid() {}
 
@@ -31,5 +30,11 @@ namespace Grid
 		{
 			m_window.draw(line);
 		}
+	}
+
+	void IGrid::move(const sf::Vector2u &position)
+	{
+		m_topLeft = position;
+		m_bottomRight = position + m_size;
 	}
 }

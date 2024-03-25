@@ -14,7 +14,9 @@
 Game::Game(const sf::VideoMode& videoMode)
 	: m_window(videoMode, "Rogue Tic-Tac-Toe")
 	, m_map(m_window)
-{}
+{
+	m_map.move(sf::Vector2u(300, 300));
+}
 
 Game::~Game()
 {
