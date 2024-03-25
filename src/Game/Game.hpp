@@ -12,7 +12,7 @@ class Game
 	sf::RenderWindow m_window;
 	sf::Clock m_deltaClock;
 
-	Grid::Map m_map;
+	std::unique_ptr<Grid::Map> m_map;
 
 	struct
 	{

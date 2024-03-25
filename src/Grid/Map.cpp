@@ -2,9 +2,20 @@
 
 namespace Grid
 {
+	std::unique_ptr<Map> Map::map = nullptr;
+
 	Map::Map(sf::RenderWindow &window)
 		: IGrid(window, EGridType::Map, sf::Vector2u(0, 0), window.getSize(), "map", 40)
 	{}
+
+	std::unique_ptr<Map>& Map::getMap(sf::RenderWindow &window)
+	{
+		if (map == nullptr)
+		{
+			map.reset(new Map(window));
+		}
+		return map;
+	}
 
 	Map::~Map() {}
 

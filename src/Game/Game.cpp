@@ -13,9 +13,9 @@
 
 Game::Game(const sf::VideoMode& videoMode)
 	: m_window(videoMode, "Rogue Tic-Tac-Toe")
-	, m_map(m_window)
+	, m_map(std::move(Grid::Map::getMap(m_window)))
 {
-	m_map.move(sf::Vector2u(300, 300));
+	m_map->move(sf::Vector2u(300, 300));
 }
 
 Game::~Game()
@@ -44,7 +44,7 @@ void Game::update()
 
 		if (!ImGuiFlags.mouseHover)
 		{
-			m_map.processEvents(event);
+			m_map->processEvents(event);
 		}
 
 		if (event.type == sf::Event::KeyPressed)
@@ -69,7 +69,7 @@ void Game::update()
 
 	ImGui::SFML::Update(m_window, m_deltaClock.restart());
 
-	m_map.update();
+	m_map->update();
 }
 
 void Game::processImgui()
@@ -105,9 +105,9 @@ void Game::processImgui()
 #ifdef DEBUG
 	if (ImGui::Begin("Debug"))
 	{
-		ImGui::LabelText(m_map.name().c_str(), "Name");
-		ImGui::LabelText((std::to_string(m_map.position().x) + ":" + std::to_string(m_map.position().y)).c_str(), "Position");
-		ImGui::LabelText((std::to_string(m_map.size().x) + ":" + std::to_string(m_map.size().y)).c_str(), "Size");
+		ImGui::LabelText(m_map->name().c_str(), "Name");
+		ImGui::LabelText((std::to_string(m_map->position().x) + ":" + std::to_string(m_map->position().y)).c_str(), "Position");
+		ImGui::LabelText((std::to_string(m_map->size().x) + ":" + std::to_string(m_map->size().y)).c_str(), "Size");
 
 		if (ImGui::IsWindowHovered())
 			ImGuiFlags.mouseHover = true;
@@ -122,7 +122,7 @@ void Game::processImgui()
 void Game::render()
 {
 	m_window.clear();
-	m_map.draw();
+	m_map->draw();
 	processImgui();
 	m_window.display();
 }
