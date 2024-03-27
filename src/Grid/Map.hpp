@@ -1,12 +1,12 @@
 #pragma once
 
-#include "IGrid.hpp"
+#include "BaseGrid.hpp"
 
 #include <memory>
 
 namespace Grid
 {
-	class Map : public IGrid
+	class Map : public BaseGrid
 	{
 		Map(sf::RenderWindow &window);
 
@@ -22,7 +22,7 @@ namespace Grid
 		Map(Map&&) = delete;
 		Map& operator=(Map&&) = delete;
 
-		void processEvents(sf::Event event) override;
-		void update() override;
+		void processEvent(sf::Event &event) override;
+		void move() = delete;
 	};
 }

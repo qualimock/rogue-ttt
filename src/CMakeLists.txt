@@ -4,6 +4,8 @@ add_executable(${PROJECT_NAME}
   Game/Game.hpp
   Grid/IGrid.cpp
   Grid/IGrid.hpp
+  Grid/BaseGrid.cpp
+  Grid/BaseGrid.hpp
   Grid/Map.cpp
   Grid/Map.hpp)
 

@@ -23,18 +23,25 @@ namespace Grid
 			  EGridType gridType,
 			  const sf::Vector2u &topLeft,
 			  const sf::Vector2u &bottomRight,
-			  const std::string &name,
 			  unsigned linesOffset);
 		~IGrid();
 
-		virtual void processEvents(sf::Event event) = 0;
-		virtual void update() = 0;
+		virtual void processEvent(sf::Event &event) = 0;
+		virtual void update();
 		virtual void draw();
-		virtual void move(const sf::Vector2u &position);
 
+		virtual void move(const sf::Vector2u &position) = 0;
+		virtual void resize(const sf::Vector2u &point) = 0;
+
+		const EGridType type() const { return m_type; }
 		const sf::Vector2u position() const { return m_topLeft; }
 		const sf::Vector2u size() const { return m_size; }
-		const std::string name() const { return m_name; }
+
+	private:
+		Lines m_verticalLines;
+		Lines m_horizontalLines;
+
+		EGridType m_type;
 
 	protected:
 		sf::RenderWindow &m_window;
@@ -42,15 +49,10 @@ namespace Grid
 		sf::Vector2u m_topLeft;
 		sf::Vector2u m_bottomRight;
 
-		unsigned m_offset;
-
-		std::string m_name;
-
-		sf::Vector2u m_size;
-
 		sf::Vector2u m_linesAmount;
 
-		Lines m_verticalLines;
-		Lines m_horizontalLines;
+		unsigned m_offset;
+
+		sf::Vector2u m_size;
 	};
 }
