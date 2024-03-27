@@ -8,15 +8,14 @@
 #include <iostream>
 
 #include "../Grid/Map.hpp"
+#include "../GridManager/GridManager.hpp"
 
 #define DEBUG
 
 Game::Game(const sf::VideoMode& videoMode)
 	: m_window(videoMode, "Rogue Tic-Tac-Toe")
 	, m_map(std::move(Grid::Map::getMap(m_window)))
-{
-	m_map->move(sf::Vector2u(300, 300));
-}
+{}
 
 Game::~Game()
 {
@@ -44,7 +43,7 @@ void Game::update()
 
 		if (!ImGuiFlags.mouseHover)
 		{
-			m_map->processEvents(event);
+			Grid::GridManager::processEvent(event, m_map.get());
 		}
 
 		if (event.type == sf::Event::KeyPressed)
@@ -64,6 +63,7 @@ void Game::update()
 		{
 			sf::FloatRect view(0, 0, event.size.width, event.size.height);
 			m_window.setView(sf::View(view));
+			m_map->resize(sf::Vector2u(event.size.width, event.size.height));
 		}
 	}
 

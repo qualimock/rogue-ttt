@@ -7,7 +7,9 @@ add_executable(${PROJECT_NAME}
   Grid/BaseGrid.cpp
   Grid/BaseGrid.hpp
   Grid/Map.cpp
-  Grid/Map.hpp)
+  Grid/Map.hpp
+  GridManager/GridManager.cpp
+  GridManager/GridManager.hpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics)
 target_link_libraries(${PROJECT_NAME} PRIVATE ImGui-SFML::ImGui-SFML)
