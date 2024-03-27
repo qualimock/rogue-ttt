@@ -3,7 +3,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include "cell.hpp"
+#include "Cell.hpp"
 
 namespace std
 {
@@ -26,12 +26,14 @@ namespace std
     };
 }
 
-namespace Grid {
+namespace Grid
+{
 	typedef std::vector<sf::VertexArray> Lines;
 	typedef std::unordered_map<sf::Vector2f, Cell> Cells;
 	typedef std::pair<bool, Cell::Faction> Victory;
 
-	class Grid {
+	class Grid
+	{
 		const sf::RenderWindow &m_window;
 
 		unsigned m_offset;
@@ -41,7 +43,8 @@ namespace Grid {
 		std::pair<Lines, Lines> m_grid;
 		Cells m_cells;
 
-		struct SideOffset {
+		struct SideOffset
+		{
 			SideOffset(int offset)
 				: topLeft(-offset, -offset)
 				, top(0, -offset)
@@ -67,6 +70,8 @@ namespace Grid {
 		bool checkCellNeighbours(const Cells::iterator& cell,
 								 const Cells::iterator& first,
 								 const Cells::iterator& second);
+
+		void colorFactions();
 
 	public:
 		Grid(const sf::RenderWindow&, unsigned = 40);
