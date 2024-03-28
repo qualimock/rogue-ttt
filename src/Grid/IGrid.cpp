@@ -27,7 +27,7 @@ namespace Grid
 		// create lines
 		while (m_linesAmount.x > m_horizontalLines.size())
 		{
-			m_horizontalLines.emplace_back(sf::VertexArray(sf::LinesStrip, 2));
+			m_horizontalLines.emplace_back(sf::VertexArray(sf::Lines, 2));
 		}
 		while (m_linesAmount.x < m_horizontalLines.size())
 		{
@@ -35,7 +35,7 @@ namespace Grid
 		}
 		while (m_linesAmount.y > m_verticalLines.size())
 		{
-			m_verticalLines.emplace_back(sf::VertexArray(sf::LinesStrip, 2));
+			m_verticalLines.emplace_back(sf::VertexArray(sf::Lines, 2));
 		}
 		while (m_linesAmount.y < m_verticalLines.size())
 		{
@@ -44,13 +44,13 @@ namespace Grid
 
 		for (unsigned i = 0; i < m_linesAmount.x; ++i)
 		{
-			m_horizontalLines[i][0].position = sf::Vector2f(m_topLeft.x, m_topLeft.x+(i+1)*m_offset);
-			m_horizontalLines[i][1].position = sf::Vector2f(m_bottomRight.x, m_topLeft.x+(i+1)*m_offset);
+			m_horizontalLines[i][0].position = sf::Vector2f(m_topLeft.x, m_topLeft.y+(i+1)*m_offset);
+			m_horizontalLines[i][1].position = sf::Vector2f(m_bottomRight.x, m_topLeft.y+(i+1)*m_offset);
 		}
 		for (unsigned i = 0; i < m_linesAmount.y; ++i)
 		{
-			m_verticalLines[i][0].position = sf::Vector2f(m_topLeft.y+(i+1)*m_offset, m_topLeft.y);
-			m_verticalLines[i][1].position = sf::Vector2f(m_topLeft.y+(i+1)*m_offset, m_bottomRight.y);
+			m_verticalLines[i][0].position = sf::Vector2f(m_topLeft.x+(i+1)*m_offset, m_topLeft.y);
+			m_verticalLines[i][1].position = sf::Vector2f(m_topLeft.x+(i+1)*m_offset, m_bottomRight.y);
 		}
 	}
 
