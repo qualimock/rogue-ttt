@@ -23,5 +23,6 @@ namespace Grid
 		~GridManager() = default;
 
 		static void processEvent(sf::Event &event, std::unique_ptr<IGrid>::pointer grid);
+		static void processEvent(sf::Event &event, IGrid &grid);
 	};
 }

@@ -11,4 +11,9 @@ namespace Grid
 	{
 		grid->processEvent(event);
 	}
+
+	void GridManager::processEvent(sf::Event &event, IGrid &grid)
+	{
+		grid.processEvent(event);
+	}
 }
