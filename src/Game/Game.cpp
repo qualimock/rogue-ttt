@@ -7,7 +7,6 @@
 
 #include <iostream>
 
-#include "../Grid/Map.hpp"
 #include "../GridManager/GridManager.hpp"
 
 #define DEBUG
@@ -36,14 +35,23 @@ bool Game::init()
 
 void Game::update()
 {
+	ImGui::SFML::Update(m_window, m_deltaClock.restart());
+
 	sf::Event event;
 	while (m_window.pollEvent(event))
 	{
 		ImGui::SFML::ProcessEvent(m_window, event);
 
-		if (!ImGuiFlags.mouseHover)
+		if (event.type != sf::Event::MouseButtonPressed)
 		{
 			Grid::GridManager::processEvent(event, m_map.get());
+		}
+		else
+		{
+			if (!ImGuiFlags.mouseHover)
+			{
+				Grid::GridManager::processEvent(event, m_map.get());
+			}
 		}
 
 		if (event.type == sf::Event::KeyPressed)
@@ -63,11 +71,9 @@ void Game::update()
 		{
 			sf::FloatRect view(0, 0, event.size.width, event.size.height);
 			m_window.setView(sf::View(view));
-			m_map->resize(sf::Vector2u(event.size.width, event.size.height));
+			m_map->resize(sf::Vector2i(event.size.width, event.size.height));
 		}
 	}
-
-	ImGui::SFML::Update(m_window, m_deltaClock.restart());
 
 	m_map->update();
 }

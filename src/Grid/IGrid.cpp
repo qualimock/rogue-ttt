@@ -6,8 +6,8 @@ namespace Grid
 {
 	IGrid::IGrid(sf::RenderWindow &window,
 				 EGridType gridType,
-				 const sf::Vector2u &topLeft,
-				 const sf::Vector2u &bottomRight,
+				 const sf::Vector2i &topLeft,
+				 const sf::Vector2i &bottomRight,
 				 unsigned linesOffset)
 		: m_window(window)
 		, m_topLeft(topLeft)

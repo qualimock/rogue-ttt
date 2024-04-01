@@ -10,12 +10,14 @@ namespace Grid
 		BaseGrid(sf::RenderWindow &window,
 				 EGridType eGridType,
 				 const std::string &name,
-				 const sf::Vector2u &topLeft,
-				 const sf::Vector2u &bottomRight,
+				 const sf::Vector2i &topLeft,
+				 const sf::Vector2i &bottomRight,
 				 unsigned linesOffset = 40);
 
-		void move(const sf::Vector2u &position) override;
-		void resize(const sf::Vector2u &point) override;
+		void processEvent(sf::Event &event) override;
+
+		void move(const sf::Vector2i &position) override;
+		void resize(const sf::Vector2i &point) override;
 
 		void setBorder(const IGrid &grid);
 		void setBorder(sf::RenderWindow &window);

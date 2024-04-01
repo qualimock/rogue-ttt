@@ -21,8 +21,8 @@ namespace Grid
 
 		IGrid(sf::RenderWindow &window,
 			  EGridType gridType,
-			  const sf::Vector2u &topLeft,
-			  const sf::Vector2u &bottomRight,
+			  const sf::Vector2i &topLeft,
+			  const sf::Vector2i &bottomRight,
 			  unsigned linesOffset);
 		~IGrid();
 
@@ -30,11 +30,11 @@ namespace Grid
 		virtual void update();
 		virtual void draw();
 
-		virtual void move(const sf::Vector2u &position) = 0;
-		virtual void resize(const sf::Vector2u &point) = 0;
+		virtual void move(const sf::Vector2i &position) = 0;
+		virtual void resize(const sf::Vector2i &point) = 0;
 
 		const EGridType type() const { return m_type; }
-		const sf::Vector2u position() const { return m_topLeft; }
+		const sf::Vector2i position() const { return m_topLeft; }
 		const sf::Vector2u size() const { return m_size; }
 
 	private:
@@ -46,8 +46,8 @@ namespace Grid
 	protected:
 		sf::RenderWindow &m_window;
 
-		sf::Vector2u m_topLeft;
-		sf::Vector2u m_bottomRight;
+		sf::Vector2i m_topLeft;
+		sf::Vector2i m_bottomRight;
 
 		sf::Vector2u m_linesAmount;
 
