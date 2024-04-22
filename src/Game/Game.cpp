@@ -124,6 +124,23 @@ void Game::processImgui()
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Grids"))
+		{
+			int i = 0;
+			for (auto grid = m_grids.begin(); grid < m_grids.end(); ++i, ++grid)
+			{
+				if (m_grids.at(i)->name() == "map")
+					continue;
+				
+				if (ImGui::MenuItem(m_grids.at(i)->name().c_str()))
+				{
+					m_grids.erase(grid);
+				}
+			}
+
+			ImGui::EndMenu();
+		}
+
 		if(ImGui::IsWindowHovered())
 				ImGuiFlags.mouseHover = true;
 
