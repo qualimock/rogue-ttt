@@ -2,6 +2,10 @@
 
 #include "IGrid.hpp"
 
+#include <set>
+
+#include "Cell/Cell.hpp"
+
 namespace Grid
 {
 	class BaseGrid : public IGrid

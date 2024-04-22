@@ -5,14 +5,14 @@
 
 #include <vector>
 
-#include "../Grid/Map.hpp"
+#include "../Grid/BaseGrid.hpp"
 
 class Game
 {
 	sf::RenderWindow m_window;
 	sf::Clock m_deltaClock;
 
-	std::unique_ptr<Grid::Map> m_map;
+	std::vector<Grid::BaseGrid *> m_grids;
 
 	struct
 	{
