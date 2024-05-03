@@ -14,14 +14,19 @@
 
 #define DEBUG
 
+#include <iostream>
+
 Game::Game(const sf::VideoMode& videoMode)
 	: m_window(videoMode, "Rogue Tic-Tac-Toe")
 {
 	m_grids.emplace_back(std::move(Grid::Map::getMap(m_window)).get());
-	m_grids.emplace_back(new Grid::DraggableGrid(m_window, Grid::IGrid::EGridType::Interaction, "grid",
-												 sf::Vector2i(100, 100), sf::Vector2i(200, 200), 7, true));
-	m_grids.emplace_back(new Grid::DraggableGrid(m_window, Grid::IGrid::EGridType::Interaction, "grid1",
-												 sf::Vector2i(200, 100), sf::Vector2i(400, 400), 7, true));
+
+	// combat grid
+	{
+		sf::Vector2i combatP1(m_window.getSize().x, m_window.getSize().y/2 + 60);
+		sf::Vector2i combatP2(combatP1 + sf::Vector2i(120, 120));
+		m_grids.emplace_back(new Grid::BaseGrid(m_window, Grid::BaseGrid::EGridType::Combat, "combat", combatP1, combatP2));
+	}
 }
 
 Game::~Game()
@@ -90,7 +95,12 @@ void Game::update()
 		{
 			sf::FloatRect view(0, 0, event.size.width, event.size.height);
 			m_window.setView(sf::View(view));
-			m_grids[0]->resize(sf::Vector2i(event.size.width, event.size.height));
+			m_grids[0]->resize(sf::Vector2i(event.size.width-200, event.size.height));
+			// combat grid
+			{
+				sf::Vector2i combatPosition(m_window.getSize().x-160, m_window.getSize().y/2 - 60);
+				m_grids[1]->move(combatPosition);
+			}
 		}
 	}
 
