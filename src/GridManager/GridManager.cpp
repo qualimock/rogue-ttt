@@ -3,6 +3,7 @@
 #include <SFML/Window/Event.hpp>
 
 #include "../Grid/IGrid.hpp"
+#include "../Grid/Cell/Cell.hpp"
 
 namespace Grid
 {
@@ -16,4 +17,5 @@ namespace Grid
 	{
 		grid.processEvent(event);
 	}
+	
 }

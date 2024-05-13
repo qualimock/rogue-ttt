@@ -3,6 +3,7 @@
 #include "IGrid.hpp"
 
 #include <set>
+#include <map>
 
 #include "Cell/Cell.hpp"
 
@@ -30,5 +31,7 @@ namespace Grid
 
 	protected:
 		std::string m_name;
+	private:
+		std::map<sf::Vector2u, Cell> m_cells;
 	};
 }
