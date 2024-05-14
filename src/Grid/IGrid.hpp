@@ -19,15 +19,13 @@ namespace Grid
 			Storage
 		};
 
-		IGrid(sf::RenderWindow &window,
-			  EGridType gridType,
+		IGrid(EGridType gridType,
 			  const sf::Vector2i &topLeft,
 			  const sf::Vector2i &bottomRight,
 			  unsigned linesOffset);
-		~IGrid();
 
 		virtual void update();
-		virtual void draw();
+		virtual void render(sf::RenderTarget &target);
 
 		virtual void move(const sf::Vector2i &position) = 0;
 		virtual void resize(const sf::Vector2i &point) = 0;
@@ -43,8 +41,6 @@ namespace Grid
 		EGridType m_type;
 
 	protected:
-		sf::RenderWindow &m_window;
-
 		sf::Vector2i m_topLeft;
 		sf::Vector2i m_bottomRight;
 

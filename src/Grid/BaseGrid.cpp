@@ -2,14 +2,13 @@
 
 namespace Grid
 {
-	BaseGrid::BaseGrid(sf::RenderWindow &window,
+	BaseGrid::BaseGrid(const std::string &name,
 					   EGridType eGridType,
-					   const std::string &name,
 					   const sf::Vector2i &topLeft,
 					   const sf::Vector2i &bottomRight,
 					   unsigned layer,
 					   unsigned linesOffset)
-		: IGrid(window, eGridType, topLeft, bottomRight, linesOffset)
+		: IGrid(eGridType, topLeft, bottomRight, linesOffset)
 		, m_name(name)
 		, m_layer(layer)
 	{}

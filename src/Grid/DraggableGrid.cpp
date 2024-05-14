@@ -4,14 +4,13 @@
 
 namespace Grid
 {
-	DraggableGrid::DraggableGrid(sf::RenderWindow &window,
+	DraggableGrid::DraggableGrid(const std::string &name,
 								 EGridType eGridType,
-								 const std::string &name,
 								 const sf::Vector2i &topLeft,
 								 const sf::Vector2i &bottomRight,
 								 unsigned linesOffset,
 								 bool draggable)
-		: BaseGrid(window, eGridType, name, topLeft, bottomRight, linesOffset)
+		: BaseGrid(name, eGridType, topLeft, bottomRight, linesOffset)
 		, m_draggable(draggable)
 		, m_isDragged(false)
 	{}

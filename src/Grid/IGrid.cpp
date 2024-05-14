@@ -4,23 +4,19 @@
 
 namespace Grid
 {
-	IGrid::IGrid(sf::RenderWindow &window,
-				 EGridType gridType,
+	IGrid::IGrid(EGridType gridType,
 				 const sf::Vector2i &topLeft,
 				 const sf::Vector2i &bottomRight,
 				 unsigned linesOffset)
-		: m_window(window)
-		, m_topLeft(topLeft)
+		: m_topLeft(topLeft)
 		, m_bottomRight(bottomRight)
 		, m_offset(linesOffset)
 		, m_size(bottomRight - topLeft)
 		, m_type(gridType)
 	{
 		m_linesAmount = sf::Vector2u(m_size.y/m_offset,  // horizontal lines
-									 m_size.x/m_offset); // vertical lines 
+									 m_size.x/m_offset); // vertical lines
 	}
-
-	IGrid::~IGrid() {}
 
 	void IGrid::update()
 	{
@@ -54,15 +50,15 @@ namespace Grid
 		}
 	}
 
-	void IGrid::draw()
+	void IGrid::render(sf::RenderTarget &target)
 	{
 		for (auto &line : m_horizontalLines)
 		{
-			m_window.draw(line);
+			target.draw(line);
 		}
 		for (auto &line : m_verticalLines)
 		{
-			m_window.draw(line);
+			target.draw(line);
 		}
 	}
 }

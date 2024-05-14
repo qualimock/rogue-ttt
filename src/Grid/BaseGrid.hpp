@@ -2,8 +2,6 @@
 
 #include "IGrid.hpp"
 
-#include <set>
-
 #include "Cell/Cell.hpp"
 
 namespace Grid
@@ -15,9 +13,8 @@ namespace Grid
 		std::string m_name;
 
 	public:
-		BaseGrid(sf::RenderWindow &window,
+		BaseGrid(const std::string &name,
 				 EGridType eGridType,
-				 const std::string &name,
 				 const sf::Vector2i &topLeft,
 				 const sf::Vector2i &bottomRight,
 				 unsigned layer = 0,
