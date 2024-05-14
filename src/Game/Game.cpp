@@ -22,7 +22,7 @@ Game::Game(const sf::VideoMode& videoMode)
 	m_grids.emplace_back(std::move(Grid::Map::getMap()));
 
 	m_grids.emplace_back(Grid::BaseGrid("sample", Grid::BaseGrid::EGridType::Interaction,
-										sf::Vector2i(100, 100), sf::Vector2(300, 300)));
+										sf::Vector2i(100, 100), sf::Vector2(300, 300), 1));
 	
 	// combat grid
 	{
@@ -56,10 +56,12 @@ void Game::onMouseClick(sf::Event event)
     // search grid on mouse position
 	{
 		std::vector<Grid::BaseGrid *> mouseGrids;
+
 		for (auto &grid : m_grids)
 		{
 			sf::Vector2i gridLU = grid.position();
 			sf::Vector2i gridRB = grid.position() + sf::Vector2i(grid.size());
+
 			if (mousePos.x >= gridLU.x && mousePos.x <= gridRB.x &&
 				mousePos.y >= gridLU.y && mousePos.y <= gridRB.y)
 			{
@@ -67,24 +69,27 @@ void Game::onMouseClick(sf::Event event)
 			}
 		}
 
-		std::cout << mouseGrids.size() << std::endl;
-
 		if (mouseGrids.size() == 1)
 		{
 			Grid::GridManager::processEvent(event, *mouseGrids[0]);
 			return;
 		}
 
-		Grid::BaseGrid& currentGrid = *mouseGrids.at(0);
+		if (mouseGrids.empty())
+		{
+			return;
+		}
+
+		Grid::BaseGrid *currentGrid = mouseGrids.at(0);
 		for (auto &grid : mouseGrids)
 		{
-			if (grid->layer() > currentGrid.layer())
+			if (grid->layer() > currentGrid->layer())
 			{
-				// currentGrid =  grid;
+				currentGrid = grid;
 			}
 		}
 
-		Grid::GridManager::processEvent(event, currentGrid);
+		Grid::GridManager::processEvent(event, *currentGrid);
 	}
 }
 
@@ -218,6 +223,7 @@ void Game::processImgui()
 			ImGui::LabelText(grid.name().c_str(), "Name");
 			ImGui::LabelText((std::to_string(grid.position().x) + ":" + std::to_string(grid.position().y)).c_str(), "Position");
 			ImGui::LabelText((std::to_string(grid.size().x) + ":" + std::to_string(grid.size().y)).c_str(), "Size");
+			ImGui::LabelText((std::to_string(grid.layer()).c_str()), "Layer");
 		}
 
 		if (ImGui::IsWindowHovered())
