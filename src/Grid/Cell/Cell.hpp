@@ -16,10 +16,9 @@ namespace Grid
 			None
 		};
 
-		Cell(const sf::Vector2f& position,
-			 const sf::Vector2f& size,
+		Cell(const sf::Vector2i& position,
+			 const sf::Vector2u& size,
 			 Faction faction = None);
-		~Cell() = default;
 
 		bool isAlly(const Cell& cell);
 
@@ -27,6 +26,8 @@ namespace Grid
 
 		void addTag(const std::string &tag) { m_tags.emplace(tag); }
 		bool hasTag(const std::string &tag) { return m_tags.contains(tag); }
+
+		void render(sf::RenderTarget &target);
 
 	private:
 		std::set<std::string> m_tags;

@@ -4,6 +4,7 @@
 
 namespace sf {
 	class Event;
+	class RenderWindow;
 }
 
 namespace Grid
@@ -23,7 +24,7 @@ namespace Grid
 
 		~GridManager() = default;
 
-		static void processEvent(sf::Event &event, std::unique_ptr<IGrid>::pointer grid);
 		static void processEvent(sf::Event &event, BaseGrid &grid);
+		static void mouseClicked(sf::RenderWindow &window, sf::Event &event, BaseGrid &grid);
 	};
 }

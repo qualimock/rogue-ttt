@@ -6,8 +6,6 @@
 
 namespace Grid
 {
-	typedef std::vector<sf::VertexArray> Lines;
-
 	class IGrid
 	{
 	public:
@@ -35,8 +33,8 @@ namespace Grid
 		const sf::Vector2u size() const { return m_size; }
 
 	private:
-		Lines m_verticalLines;
-		Lines m_horizontalLines;
+		std::vector<sf::VertexArray> m_verticalLines;
+		std::vector<sf::VertexArray> m_horizontalLines;
 
 		EGridType m_type;
 

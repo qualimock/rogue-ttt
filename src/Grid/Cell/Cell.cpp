@@ -2,13 +2,13 @@
 
 namespace Grid
 {
-	Cell::Cell(const sf::Vector2f& position,
-			   const sf::Vector2f& size,
+	Cell::Cell(const sf::Vector2i& position,
+			   const sf::Vector2u& size,
 			   Faction faction)
-		: sf::RectangleShape(size)
+		: sf::RectangleShape(sf::Vector2f(size))
 		, m_faction(faction)
 	{
-		this->move(position);
+		this->move(sf::Vector2f(position));
 
 		switch(m_faction)
 		{
@@ -31,5 +31,10 @@ namespace Grid
 	bool Cell::isAlly(const Cell& cell)
 	{
 		return (m_faction == cell.faction());
+	}
+
+	void Cell::render(sf::RenderTarget &target)
+	{
+		target.draw(*this);
 	}
 }

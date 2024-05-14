@@ -69,14 +69,13 @@ void Game::onMouseClick(sf::Event event)
 			}
 		}
 
-		if (mouseGrids.size() == 1)
-		{
-			Grid::GridManager::processEvent(event, *mouseGrids[0]);
-			return;
-		}
 
 		if (mouseGrids.empty())
+			return;
+
+		if (mouseGrids.size() == 1)
 		{
+			Grid::GridManager::mouseClicked(m_window, event, *mouseGrids[0]);
 			return;
 		}
 
@@ -89,12 +88,31 @@ void Game::onMouseClick(sf::Event event)
 			}
 		}
 
-		Grid::GridManager::processEvent(event, *currentGrid);
+		Grid::GridManager::mouseClicked(m_window, event, *currentGrid);
 	}
 }
 
 void Game::onKeyPressed(sf::Event event)
-{}
+{
+	if (event.key.code == sf::Keyboard::Escape)
+	{
+		event.type = sf::Event::Closed;
+	}
+
+	if (event.key.code == sf::Keyboard::S) {
+		auto mousePos = sf::Mouse::getPosition(m_window);
+
+		m_grids.emplace_back
+		(
+				Grid::DraggableGrid
+				(
+					("G(" + std::to_string(mousePos.x) + ":" + std::to_string(mousePos.y) + ")").c_str(),
+					Grid::IGrid::EGridType::Interaction,
+					mousePos, mousePos+sf::Vector2i(10, 100), 7, true
+				)
+		);
+	}
+}
 
 void Game::update()
 {
@@ -119,24 +137,6 @@ void Game::update()
 
 		default:
 			break;
-		}
-
-		if (event.type == sf::Event::KeyPressed)
-		{
-			if (event.key.code == sf::Keyboard::Escape)
-			{
-				event.type = sf::Event::Closed;
-			}
-
-			if (event.key.code == sf::Keyboard::S) {
-				auto mousePos = sf::Mouse::getPosition(m_window);
-				m_grids.emplace_back
-					(
-						Grid::DraggableGrid(("G(" + std::to_string(mousePos.x) + ":" + std::to_string(mousePos.y) + ")").c_str(),
-											Grid::IGrid::EGridType::Interaction,
-											mousePos, mousePos+sf::Vector2i(10, 100), 7, true)
-					);
-			}
 		}
 
 		if (event.type == sf::Event::Closed)
@@ -178,7 +178,14 @@ void Game::processImgui()
 		{
 			if (ImGui::MenuItem("New"))
 			{
-				// placeholder
+				for (auto &grid : m_grids)
+				{
+					if (grid.name() == "combat")
+					{
+						grid.clear();
+						break;
+					}
+				}
 			}
 
 			if (ImGui::MenuItem("Exit", "Esc"))
@@ -224,6 +231,13 @@ void Game::processImgui()
 			ImGui::LabelText((std::to_string(grid.position().x) + ":" + std::to_string(grid.position().y)).c_str(), "Position");
 			ImGui::LabelText((std::to_string(grid.size().x) + ":" + std::to_string(grid.size().y)).c_str(), "Size");
 			ImGui::LabelText((std::to_string(grid.layer()).c_str()), "Layer");
+			ImGui::LabelText("", "Cells");
+			for (auto &cell : grid.m_cells)
+			{
+				ImGui::LabelText(std::to_string(cell.second.getFillColor().toInteger()).c_str(), "Color");
+				ImGui::LabelText((std::to_string(cell.second.getPosition().x) + ":" + std::to_string(cell.second.getPosition().y)).c_str(), "Position");
+				ImGui::LabelText((std::to_string(cell.second.getSize().x) + ":" + std::to_string(cell.second.getSize().y)).c_str(), "Size");
+			}
 		}
 
 		if (ImGui::IsWindowHovered())
@@ -241,6 +255,7 @@ void Game::render()
 	for (auto &grid : m_grids)
 	{
 		grid.render(m_window);
+		grid.renderCells(m_window);
 	}
 	processImgui();
 	m_window.display();

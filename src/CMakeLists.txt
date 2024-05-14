@@ -11,7 +11,9 @@ add_executable(${PROJECT_NAME}
   Grid/Map.cpp
   Grid/Map.hpp
   GridManager/GridManager.cpp
-  GridManager/GridManager.hpp)
+  GridManager/GridManager.hpp
+  Grid/Cell/Cell.cpp
+  Grid/Cell/Cell.hpp)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
