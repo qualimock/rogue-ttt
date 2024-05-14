@@ -19,16 +19,16 @@
 Game::Game(const sf::VideoMode& videoMode)
 	: m_window(videoMode, "Rogue Tic-Tac-Toe")
 {
-	m_grids.emplace_back(std::move(Grid::Map::getMap(m_window)).get());
+	m_grids.emplace_back(std::move(Grid::Map::getMap()));
 
-	m_grids.emplace_back(new Grid::BaseGrid(m_window, Grid::BaseGrid::EGridType::Interaction,
-											"sample", sf::Vector2i(100, 100), sf::Vector2i(300, 300), 1));
-
+	m_grids.emplace_back(Grid::BaseGrid("sample", Grid::BaseGrid::EGridType::Interaction,
+										sf::Vector2i(100, 100), sf::Vector2(300, 300)));
+	
 	// combat grid
 	{
 		sf::Vector2i combatP1(m_window.getSize().x, m_window.getSize().y/2 + 60);
 		sf::Vector2i combatP2(combatP1 + sf::Vector2i(120, 120));
-		m_grids.emplace_back(new Grid::BaseGrid(m_window, Grid::BaseGrid::EGridType::Combat, "combat", combatP1, combatP2));
+		m_grids.emplace_back(Grid::BaseGrid("combat", Grid::BaseGrid::EGridType::Combat, combatP1, combatP2));
 	}
 }
 
@@ -58,12 +58,12 @@ void Game::onMouseClick(sf::Event event)
 		std::vector<Grid::BaseGrid *> mouseGrids;
 		for (auto &grid : m_grids)
 		{
-			sf::Vector2i gridLU = grid->position();
-			sf::Vector2i gridRB = grid->position() + sf::Vector2i(grid->size());
+			sf::Vector2i gridLU = grid.position();
+			sf::Vector2i gridRB = grid.position() + sf::Vector2i(grid.size());
 			if (mousePos.x >= gridLU.x && mousePos.x <= gridRB.x &&
 				mousePos.y >= gridLU.y && mousePos.y <= gridRB.y)
 			{
-			    mouseGrids.emplace_back(grid);
+			    mouseGrids.emplace_back(&grid);
 			}
 		}
 
@@ -71,20 +71,20 @@ void Game::onMouseClick(sf::Event event)
 
 		if (mouseGrids.size() == 1)
 		{
-			Grid::GridManager::processEvent(event, mouseGrids[0]);
+			Grid::GridManager::processEvent(event, *mouseGrids[0]);
 			return;
 		}
 
-		Grid::BaseGrid *currentGrid = mouseGrids.at(0);
+		Grid::BaseGrid& currentGrid = *mouseGrids.at(0);
 		for (auto &grid : mouseGrids)
 		{
-			if (grid->layer() > currentGrid->layer())
+			if (grid->layer() > currentGrid.layer())
 			{
-				currentGrid = grid;
+				// currentGrid =  grid;
 			}
 		}
 
-		Grid::GridManager::processEvent(event, *currentGrid);
+		Grid::GridManager::processEvent(event, currentGrid);
 	}
 }
 
@@ -103,7 +103,10 @@ void Game::update()
 		switch(event.type)
 		{
 		case sf::Event::MouseButtonPressed:
-			onMouseClick(event);
+			if (!ImGuiFlags.mouseHover)
+			{
+				onMouseClick(event);
+			}
 			break;
 
 		case sf::Event::KeyPressed:
@@ -111,22 +114,6 @@ void Game::update()
 
 		default:
 			break;
-		}
-
-		for (auto &grid : m_grids)
-		{
-			if (event.type != sf::Event::MouseButtonPressed)
-			{
-				if (!ImGuiFlags.mouseHover)
-					Grid::GridManager::processEvent(event, grid);				
-			}
-			else
-			{
-				if (!ImGuiFlags.mouseHover)
-				{
-					Grid::GridManager::processEvent(event, grid);
-				}
-			}
 		}
 
 		if (event.type == sf::Event::KeyPressed)
@@ -138,9 +125,12 @@ void Game::update()
 
 			if (event.key.code == sf::Keyboard::S) {
 				auto mousePos = sf::Mouse::getPosition(m_window);
-				m_grids.emplace_back(new Grid::DraggableGrid(m_window, Grid::IGrid::EGridType::Interaction,
-															 ("G(" + std::to_string(mousePos.x) + ":" + std::to_string(mousePos.y) + ")").c_str(),
-															 mousePos, mousePos+sf::Vector2i(100, 100), 7, true));
+				m_grids.emplace_back
+					(
+						Grid::DraggableGrid(("G(" + std::to_string(mousePos.x) + ":" + std::to_string(mousePos.y) + ")").c_str(),
+											Grid::IGrid::EGridType::Interaction,
+											mousePos, mousePos+sf::Vector2i(10, 100), 7, true)
+					);
 			}
 		}
 
@@ -153,14 +143,15 @@ void Game::update()
 		{
 			sf::FloatRect view(0, 0, event.size.width, event.size.height);
 			m_window.setView(sf::View(view));
-			m_grids[0]->resize(sf::Vector2i(event.size.width-200, event.size.height));
-			// combat grid
+			m_grids[0].resize(sf::Vector2i(event.size.width-200, event.size.height));
+
+// combat grid
 			for (auto &grid : m_grids)
 			{
-				if (grid->type() == Grid::IGrid::EGridType::Combat)
+				if (grid.type() == Grid::IGrid::EGridType::Combat)
 				{
 					sf::Vector2i combatPosition(m_window.getSize().x-160, m_window.getSize().y/2 - 60);
-					grid->move(combatPosition);
+					grid.move(combatPosition);
 				}
 			}
 		}
@@ -168,7 +159,7 @@ void Game::update()
 
 	for (auto &grid : m_grids)
 	{
-		grid->update();
+		grid.update();
 	}
 }
 
@@ -199,12 +190,13 @@ void Game::processImgui()
 		if (ImGui::BeginMenu("Grids"))
 		{
 			int i = 0;
+
 			for (auto grid = m_grids.begin(); grid < m_grids.end(); ++i, ++grid)
 			{
-				if (m_grids.at(i)->name() == "map")
+				if (grid.base()->name() == "map")
 					continue;
 				
-				if (ImGui::MenuItem(m_grids.at(i)->name().c_str()))
+				if (ImGui::MenuItem(grid.base()->name().c_str()))
 				{
 					m_grids.erase(grid);
 				}
@@ -223,9 +215,9 @@ void Game::processImgui()
 	ImGui::Begin("Debug");
 		for (auto &grid : m_grids)
 		{
-			ImGui::LabelText(grid->name().c_str(), "Name");
-			ImGui::LabelText((std::to_string(grid->position().x) + ":" + std::to_string(grid->position().y)).c_str(), "Position");
-			ImGui::LabelText((std::to_string(grid->size().x) + ":" + std::to_string(grid->size().y)).c_str(), "Size");
+			ImGui::LabelText(grid.name().c_str(), "Name");
+			ImGui::LabelText((std::to_string(grid.position().x) + ":" + std::to_string(grid.position().y)).c_str(), "Position");
+			ImGui::LabelText((std::to_string(grid.size().x) + ":" + std::to_string(grid.size().y)).c_str(), "Size");
 		}
 
 		if (ImGui::IsWindowHovered())
@@ -242,7 +234,7 @@ void Game::render()
 	m_window.clear();
 	for (auto &grid : m_grids)
 	{
-		grid->draw();
+		grid.render(m_window);
 	}
 	processImgui();
 	m_window.display();

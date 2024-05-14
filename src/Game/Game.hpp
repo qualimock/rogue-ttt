@@ -12,7 +12,7 @@ class Game
 	sf::RenderWindow m_window;
 	sf::Clock m_deltaClock;
 
-	std::vector<Grid::BaseGrid *> m_grids;
+	std::vector<Grid::BaseGrid> m_grids;
 
 	struct
 	{
