@@ -19,6 +19,6 @@ namespace Grid
 		sf::Vector2i m_dragPoint;
 		bool m_isDragged;
 
-		void processEvent(sf::Event &event) override;
+		void drag(const sf::Vector2i &position);
 	};
 }

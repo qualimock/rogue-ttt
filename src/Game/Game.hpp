@@ -19,6 +19,9 @@ class Game
 		bool mouseHover = false;
 	} ImGuiFlags;
 
+	void onMouseClick(sf::Event event);
+	void onKeyPressed(sf::Event event);
+
 public:
 	Game(const sf::VideoMode& videoMode);
 	~Game();

@@ -2,18 +2,20 @@
 
 #include <SFML/Window/Event.hpp>
 
-#include "../Grid/IGrid.hpp"
+#include "../Grid/BaseGrid.hpp"
+
+#include <iostream>
 
 namespace Grid
 {
 	void GridManager::processEvent(sf::Event &event,
 								   std::unique_ptr<IGrid>::pointer grid)
 	{
-		grid->processEvent(event);
+		processEvent(event, &grid);
 	}
 
-	void GridManager::processEvent(sf::Event &event, IGrid &grid)
+	void GridManager::processEvent(sf::Event &event, Grid::BaseGrid &grid)
 	{
-		grid.processEvent(event);
+		std::cout << grid.name() << std::endl;
 	}
 }

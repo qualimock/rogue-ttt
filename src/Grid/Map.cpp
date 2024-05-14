@@ -7,7 +7,7 @@ namespace Grid
 	std::unique_ptr<Map> Map::map = nullptr;
 
 	Map::Map(sf::RenderWindow &window)
-		: BaseGrid(window, EGridType::Map, "map", sf::Vector2i(0, 0), sf::Vector2i(window.getSize()), 40)
+		: BaseGrid(window, EGridType::Map, "map", sf::Vector2i(0, 0), sf::Vector2i(window.getSize()), 0, 40)
 	{}
 
 	std::unique_ptr<Map>& Map::getMap(sf::RenderWindow &window)
@@ -20,9 +20,4 @@ namespace Grid
 	}
 
 	Map::~Map() {}
-
-	void Map::processEvent(sf::Event &event)
-	{
-		
-	}
 }

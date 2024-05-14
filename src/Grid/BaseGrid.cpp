@@ -7,12 +7,11 @@ namespace Grid
 					   const std::string &name,
 					   const sf::Vector2i &topLeft,
 					   const sf::Vector2i &bottomRight,
+					   unsigned layer,
 					   unsigned linesOffset)
 		: IGrid(window, eGridType, topLeft, bottomRight, linesOffset)
 		, m_name(name)
-	{}
-
-	void BaseGrid::processEvent(sf::Event &event)
+		, m_layer(layer)
 	{}
 
 	void BaseGrid::move(const sf::Vector2i &position)

@@ -16,26 +16,22 @@ namespace Grid
 		, m_isDragged(false)
 	{}
 
-	void DraggableGrid::processEvent(sf::Event &event)
+	void DraggableGrid::drag(const sf::Vector2i &position)
 	{
-		if (event.type == sf::Event::MouseMoved)
+		m_isDragged = (sf::Mouse::isButtonPressed(sf::Mouse::Left) && 
+					   position.x > m_topLeft.x &&
+					   position.x < m_bottomRight.x &&
+					   position.y > m_topLeft.y &&
+					   position.y < m_bottomRight.y);
+
+		if (!m_isDragged)
 		{
-			sf::Vector2i mousePosition(event.mouseMove.x, event.mouseMove.y);
-			m_isDragged = (sf::Mouse::isButtonPressed(sf::Mouse::Left) && 
-						   mousePosition.x > m_topLeft.x &&
-						   mousePosition.x < m_bottomRight.x &&
-						   mousePosition.y > m_topLeft.y &&
-						   mousePosition.y < m_bottomRight.y);
+			m_dragPoint = position - sf::Vector2i(m_topLeft);
+		}
 
-			if (!m_isDragged)
-			{
-				m_dragPoint = mousePosition - sf::Vector2i(m_topLeft);
-			}
-
-			if (m_draggable && m_isDragged)
-			{
-				move(mousePosition - m_dragPoint);
-			}
+		if (m_draggable && m_isDragged)
+		{
+			move(position - m_dragPoint);
 		}
 	}
 }

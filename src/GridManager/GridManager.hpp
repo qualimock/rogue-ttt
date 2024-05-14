@@ -9,6 +9,7 @@ namespace sf {
 namespace Grid
 {
 	class IGrid;
+	class BaseGrid;
 
 	class GridManager
 	{
@@ -23,6 +24,6 @@ namespace Grid
 		~GridManager() = default;
 
 		static void processEvent(sf::Event &event, std::unique_ptr<IGrid>::pointer grid);
-		static void processEvent(sf::Event &event, IGrid &grid);
+		static void processEvent(sf::Event &event, BaseGrid &grid);
 	};
 }

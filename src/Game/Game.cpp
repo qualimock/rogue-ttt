@@ -21,6 +21,9 @@ Game::Game(const sf::VideoMode& videoMode)
 {
 	m_grids.emplace_back(std::move(Grid::Map::getMap(m_window)).get());
 
+	m_grids.emplace_back(new Grid::BaseGrid(m_window, Grid::BaseGrid::EGridType::Interaction,
+											"sample", sf::Vector2i(100, 100), sf::Vector2i(300, 300), 1));
+
 	// combat grid
 	{
 		sf::Vector2i combatP1(m_window.getSize().x, m_window.getSize().y/2 + 60);
@@ -46,6 +49,48 @@ bool Game::init()
 	return true;
 }
 
+void Game::onMouseClick(sf::Event event)
+{
+	sf::Vector2i mousePos = sf::Mouse::getPosition(m_window);
+	
+    // search grid on mouse position
+	{
+		std::vector<Grid::BaseGrid *> mouseGrids;
+		for (auto &grid : m_grids)
+		{
+			sf::Vector2i gridLU = grid->position();
+			sf::Vector2i gridRB = grid->position() + sf::Vector2i(grid->size());
+			if (mousePos.x >= gridLU.x && mousePos.x <= gridRB.x &&
+				mousePos.y >= gridLU.y && mousePos.y <= gridRB.y)
+			{
+			    mouseGrids.emplace_back(grid);
+			}
+		}
+
+		std::cout << mouseGrids.size() << std::endl;
+
+		if (mouseGrids.size() == 1)
+		{
+			Grid::GridManager::processEvent(event, mouseGrids[0]);
+			return;
+		}
+
+		Grid::BaseGrid *currentGrid = mouseGrids.at(0);
+		for (auto &grid : mouseGrids)
+		{
+			if (grid->layer() > currentGrid->layer())
+			{
+				currentGrid = grid;
+			}
+		}
+
+		Grid::GridManager::processEvent(event, *currentGrid);
+	}
+}
+
+void Game::onKeyPressed(sf::Event event)
+{}
+
 void Game::update()
 {
 	ImGui::SFML::Update(m_window, m_deltaClock.restart());
@@ -54,6 +99,19 @@ void Game::update()
 	while (m_window.pollEvent(event))
 	{
 		ImGui::SFML::ProcessEvent(m_window, event);
+
+		switch(event.type)
+		{
+		case sf::Event::MouseButtonPressed:
+			onMouseClick(event);
+			break;
+
+		case sf::Event::KeyPressed:
+			onKeyPressed(event);
+
+		default:
+			break;
+		}
 
 		for (auto &grid : m_grids)
 		{
@@ -97,9 +155,13 @@ void Game::update()
 			m_window.setView(sf::View(view));
 			m_grids[0]->resize(sf::Vector2i(event.size.width-200, event.size.height));
 			// combat grid
+			for (auto &grid : m_grids)
 			{
-				sf::Vector2i combatPosition(m_window.getSize().x-160, m_window.getSize().y/2 - 60);
-				m_grids[1]->move(combatPosition);
+				if (grid->type() == Grid::IGrid::EGridType::Combat)
+				{
+					sf::Vector2i combatPosition(m_window.getSize().x-160, m_window.getSize().y/2 - 60);
+					grid->move(combatPosition);
+				}
 			}
 		}
 	}

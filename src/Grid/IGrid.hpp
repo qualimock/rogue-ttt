@@ -26,7 +26,6 @@ namespace Grid
 			  unsigned linesOffset);
 		~IGrid();
 
-		virtual void processEvent(sf::Event &event) = 0;
 		virtual void update();
 		virtual void draw();
 

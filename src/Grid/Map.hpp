@@ -22,7 +22,6 @@ namespace Grid
 		Map(Map&&) = delete;
 		Map& operator=(Map&&) = delete;
 
-		void processEvent(sf::Event &event) override;
 		void move() = delete;
 	};
 }
