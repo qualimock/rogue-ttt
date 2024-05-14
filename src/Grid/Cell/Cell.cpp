@@ -21,7 +21,7 @@ namespace Grid
 			break;
 
 		case None:
-			m_color = sf::Color::Transparent;
+			m_color = sf::Color::Green;
 			break;
 		}
 
@@ -31,5 +31,9 @@ namespace Grid
 	bool Cell::isAlly(const Cell& cell)
 	{
 		return (m_faction == cell.faction());
+	}
+
+	void Cell::draw(sf::RenderWindow &window){
+		window.draw(*this);
 	}
 }

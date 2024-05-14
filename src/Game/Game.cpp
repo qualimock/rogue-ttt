@@ -181,6 +181,7 @@ void Game::render()
 	for (auto &grid : m_grids)
 	{
 		grid->draw();
+		grid->drawCells(m_window);
 	}
 	processImgui();
 	m_window.display();

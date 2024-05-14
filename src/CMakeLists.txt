@@ -10,6 +10,8 @@ add_executable(${PROJECT_NAME}
   Grid/DraggableGrid.hpp
   Grid/Map.cpp
   Grid/Map.hpp
+  Grid/Cell/Cell.cpp
+  Grid/Cell/Cell.hpp
   GridManager/GridManager.cpp
   GridManager/GridManager.hpp)
 

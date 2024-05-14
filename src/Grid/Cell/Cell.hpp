@@ -28,6 +28,8 @@ namespace Grid
 		void addTag(const std::string &tag) { m_tags.emplace(tag); }
 		bool hasTag(const std::string &tag) { return m_tags.contains(tag); }
 
+		void draw(sf::RenderWindow &window);
+
 	private:
 		std::set<std::string> m_tags;
 
