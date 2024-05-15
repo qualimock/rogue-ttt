@@ -18,11 +18,17 @@ namespace Grid
 	{
 		auto n1 = m_entities.find(origin.first + n1Offset);
 		auto n2 = m_entities.find(origin.first + n2Offset);
+		Entity::TTTCell::Faction neighboursFaction = Entity::TTTCell::Faction::None;
 
 		if (n1 != m_entities.end() && n2 != m_entities.end())
 		{
 			if (dynamic_cast<Entity::TTTCell *>(n1->second)->faction() ==
 				dynamic_cast<Entity::TTTCell *>(n2->second)->faction())
+			{
+				neighboursFaction = dynamic_cast<Entity::TTTCell *>(n1->second)->faction();
+			}
+
+			if (neighboursFaction == dynamic_cast<Entity::TTTCell *>(origin.second)->faction())
 			{
 				return dynamic_cast<Entity::TTTCell *>(origin.second)->faction();
 			}
@@ -35,14 +41,35 @@ namespace Grid
 	{
 		for (auto &entity : m_entities)
 		{
-			if ((checkNeighbors(entity, sf::Vector2i(1, 1), sf::Vector2i(-1, -1)) != Entity::TTTCell::Faction::None)
-				||
-				(checkNeighbors(entity, sf::Vector2i(-1, 1), sf::Vector2i(1, -1)) != Entity::TTTCell::Faction::None)
-				||
-				(checkNeighbors(entity, sf::Vector2i(0, 1), sf::Vector2i(0, -1)) != Entity::TTTCell::Faction::None)
-				||
-				(checkNeighbors(entity, sf::Vector2i(1, 0), sf::Vector2i(-1, 0)) != Entity::TTTCell::Faction::None))
+			if (checkNeighbors(entity, sf::Vector2i(1, 1), sf::Vector2i(-1, -1)) != Entity::TTTCell::Faction::None)
 			{
+				std::cout << "ORIGIN" << std::endl;
+				std::cout << entity.first.x << ":" << entity.first.y << std::endl;
+				std::cout << "URDL" << std::endl;
+				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
+			}
+
+			if	(checkNeighbors(entity, sf::Vector2i(-1, 1), sf::Vector2i(1, -1)) != Entity::TTTCell::Faction::None)
+			{
+				std::cout << "ORIGIN" << std::endl;
+				std::cout << entity.first.x << ":" << entity.first.y << std::endl;
+				std::cout << "ULDR" << std::endl;
+				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
+			}
+
+			if (checkNeighbors(entity, sf::Vector2i(0, 1), sf::Vector2i(0, -1)) != Entity::TTTCell::Faction::None)
+			{
+				std::cout << "ORIGIN" << std::endl;
+				std::cout << entity.first.x << ":" << entity.first.y << std::endl;
+				std::cout << "UCDC" << std::endl;
+				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
+			}
+
+			if(checkNeighbors(entity, sf::Vector2i(1, 0), sf::Vector2i(-1, 0)) != Entity::TTTCell::Faction::None)
+			{
+				std::cout << "ORIGIN" << std::endl;
+				std::cout << entity.first.x << ":" << entity.first.y << std::endl;
+				std::cout << "CRCL" << std::endl;
 				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
 			}
 		}
