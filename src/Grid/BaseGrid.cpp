@@ -20,6 +20,11 @@ namespace Grid
 	{
 		m_topLeft = position;
 		m_bottomRight = position + sf::Vector2i(m_size);
+
+		for (auto &entity : m_entities)
+		{
+			entity.second->setPosition(m_topLeft + sf::Vector2i(m_offset * entity.first.x, m_offset * entity.first.y));
+		}
 	}
 
 	void BaseGrid::resize(const sf::Vector2i &point)
@@ -28,6 +33,7 @@ namespace Grid
 		m_size = sf::Vector2u(m_bottomRight - m_topLeft);
 		m_linesAmount = sf::Vector2u(m_size.y/m_offset,  // horizontal lines
 									 m_size.x/m_offset); // vertical lines
+
 	}
 
 	std::pair<sf::Vector2i, sf::Vector2i> BaseGrid::adjustEntityPosition(const sf::Vector2i &position) const

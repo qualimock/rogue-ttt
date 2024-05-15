@@ -124,7 +124,7 @@ namespace Grid
 			{
 				if (dynamic_cast<Entity::TTTCell *>(cell.second)->faction() == winnerFaction)
 				{
-					cell.second->setFillColor(sf::Color::White);
+					cell.second->setColor(sf::Color::White);
 				}
 			}
 		}
