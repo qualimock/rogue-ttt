@@ -24,7 +24,7 @@ namespace Grid
 
 		~GridManager() = default;
 
-		static void processEvent(sf::Event &event, BaseGrid &grid);
-		static void mouseClicked(sf::RenderWindow &window, sf::Event &event, BaseGrid &grid);
+		static void processEvent(sf::Event &event, BaseGrid *grid);
+		static void mouseClicked(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid);
 	};
 }

@@ -13,4 +13,10 @@ namespace Grid
 		static Map instance;
 		return instance;
 	}
+
+	Map* Map::getMapPointer()
+	{
+		static Map instance;
+		return &instance;
+	}
 }

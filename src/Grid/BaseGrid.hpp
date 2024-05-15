@@ -32,15 +32,6 @@ namespace Grid
 	{
 		unsigned m_layer;
 		std::string m_name;
-		bool m_complete;
-
-		std::pair<sf::Vector2i, sf::Vector2i> adjustClickPosition(const sf::Vector2i &position) const;
-
-		void spawnCell(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
-					   Cell::Faction faction);
-		void destroyCell(const sf::Vector2i &index);
-
-		void checkIfComplete();
 
 	public:
 		BaseGrid(const std::string &name,
@@ -54,7 +45,8 @@ namespace Grid
 		void move(const sf::Vector2i &position) override;
 		void resize(const sf::Vector2i &point) override;
 
-		void clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition);
+		virtual void clicked(sf::Mouse::Button button,
+							 const sf::Vector2i &mousePosition);
 
 		void renderCells(sf::RenderTarget &target);
 
@@ -62,6 +54,14 @@ namespace Grid
 
 		const std::string name() const { return m_name; }
 		const unsigned layer() const { return m_layer; }
-		const bool complete() const { return m_complete; }
+
+	protected:
+		std::pair<sf::Vector2i, sf::Vector2i>
+		adjustClickPosition(const sf::Vector2i &position) const;
+
+		void spawnCell(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
+					   Cell::Faction faction);
+		void destroyCell(const sf::Vector2i &index);
+		
 	};
 }

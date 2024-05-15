@@ -29,6 +29,8 @@ namespace Grid
 
 		void render(sf::RenderTarget &target);
 
+		void resetColor();
+
 	private:
 		std::set<std::string> m_tags;
 

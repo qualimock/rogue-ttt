@@ -15,6 +15,7 @@ namespace Grid
 
 	public:
 		static Map& getMap();
+		static Map* getMapPointer();
 
 		void move() = delete;
 	};

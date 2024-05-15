@@ -10,6 +10,21 @@ namespace Grid
 	{
 		this->move(sf::Vector2f(position));
 
+		resetColor();
+	}
+
+	bool Cell::isAlly(const Cell& cell)
+	{
+		return (m_faction == cell.faction());
+	}
+
+	void Cell::render(sf::RenderTarget &target)
+	{
+		target.draw(*this);
+	}
+
+	void Cell::resetColor()
+	{
 		switch(m_faction)
 		{
 		case Cross:
@@ -26,15 +41,5 @@ namespace Grid
 		}
 
 		this->setFillColor(m_color);
-	}
-
-	bool Cell::isAlly(const Cell& cell)
-	{
-		return (m_faction == cell.faction());
-	}
-
-	void Cell::render(sf::RenderTarget &target)
-	{
-		target.draw(*this);
 	}
 }

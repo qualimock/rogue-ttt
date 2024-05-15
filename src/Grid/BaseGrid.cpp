@@ -1,5 +1,6 @@
 #include "BaseGrid.hpp"
 
+#include <iostream>
 #include <cmath>
 
 namespace Grid
@@ -92,33 +93,9 @@ namespace Grid
 
 	void BaseGrid::clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition)
 	{
-		auto cellIndexPosition = adjustClickPosition(mousePosition);
-
-		switch (type())
-		{
-		case IGrid::EGridType::Map:
-			break;
-
-		case IGrid::EGridType::Combat:
-			switch (button)
-			{
-			case sf::Mouse::Left:
-				if (!m_complete)
-					spawnCell(cellIndexPosition, Cell::Faction::Nought);
-				break;
-
-			case sf::Mouse::Right:
-				destroyCell(cellIndexPosition.first);
-				break;
-			}
-			break;
-
-		case IGrid::EGridType::Interaction:
-			break;
-
-		case IGrid::EGridType::Storage:
-			break;
-		}
+		std::cout << "BASE GRID" << std::endl;
+		if (type() == EGridType::Combat)
+			std::cout << "COMBAT" << std::endl;
 	}
 
 	void BaseGrid::spawnCell(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
@@ -131,6 +108,8 @@ namespace Grid
 				IndexPosition.first,
 				Cell(IndexPosition.second, sf::Vector2u(m_offset, m_offset), faction)
 			);
+			std::cout << "SPAWNED" << std::endl;
+			std::cout << IndexPosition.first.x << ":" << IndexPosition.first.y << std::endl;
 		}
 	}
 
@@ -152,33 +131,5 @@ namespace Grid
 	void BaseGrid::clear()
 	{
 		m_cells.clear();
-	}
-
-	void BaseGrid::checkIfComplete()
-	{
-		unsigned neighbourCounter;
-		for (auto &cell : m_cells)
-		{
-			if (m_cells.find(cell.first + sf::Vector2i(1, 1)) != m_cells.end() ^
-				m_cells.find(cell.first + sf::Vector2i(-1, -1)) != m_cells.end())
-			{
-				neighbourCounter++;
-
-				if (m_cells.find(cell.first + sf::Vector2i(-1, -1)) != m_cells.end() ^
-					m_cells.find(cell.first + sf::Vector2i(1, 1)) != m_cells.end())
-					neighbourCounter++;
-			}
-			
-			
-
-			if (neighbourCounter == 2)
-			{
-				m_complete = true;
-			}
-			else
-			{
-				m_complete = false;
-			}
-		}
 	}
 }
