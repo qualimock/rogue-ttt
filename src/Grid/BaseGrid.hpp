@@ -32,13 +32,15 @@ namespace Grid
 	{
 		unsigned m_layer;
 		std::string m_name;
+		bool m_complete;
 
 		std::pair<sf::Vector2i, sf::Vector2i> adjustClickPosition(const sf::Vector2i &position) const;
 
 		void spawnCell(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
 					   Cell::Faction faction);
-
 		void destroyCell(const sf::Vector2i &index);
+
+		void checkIfComplete();
 
 	public:
 		BaseGrid(const std::string &name,
@@ -60,5 +62,6 @@ namespace Grid
 
 		const std::string name() const { return m_name; }
 		const unsigned layer() const { return m_layer; }
+		const bool complete() const { return m_complete; }
 	};
 }

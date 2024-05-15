@@ -1,5 +1,7 @@
 #include "BaseGrid.hpp"
 
+#include <cmath>
+
 namespace Grid
 {
 	BaseGrid::BaseGrid(const std::string &name,
@@ -101,7 +103,8 @@ namespace Grid
 			switch (button)
 			{
 			case sf::Mouse::Left:
-				spawnCell(cellIndexPosition, Cell::Faction::Nought);
+				if (!m_complete)
+					spawnCell(cellIndexPosition, Cell::Faction::Nought);
 				break;
 
 			case sf::Mouse::Right:
@@ -149,5 +152,33 @@ namespace Grid
 	void BaseGrid::clear()
 	{
 		m_cells.clear();
+	}
+
+	void BaseGrid::checkIfComplete()
+	{
+		unsigned neighbourCounter;
+		for (auto &cell : m_cells)
+		{
+			if (m_cells.find(cell.first + sf::Vector2i(1, 1)) != m_cells.end() ^
+				m_cells.find(cell.first + sf::Vector2i(-1, -1)) != m_cells.end())
+			{
+				neighbourCounter++;
+
+				if (m_cells.find(cell.first + sf::Vector2i(-1, -1)) != m_cells.end() ^
+					m_cells.find(cell.first + sf::Vector2i(1, 1)) != m_cells.end())
+					neighbourCounter++;
+			}
+			
+			
+
+			if (neighbourCounter == 2)
+			{
+				m_complete = true;
+			}
+			else
+			{
+				m_complete = false;
+			}
+		}
 	}
 }
