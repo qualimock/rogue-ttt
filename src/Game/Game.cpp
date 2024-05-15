@@ -102,20 +102,6 @@ void Game::onKeyPressed(sf::Event &event)
 	{
 		event.type = sf::Event::Closed;
 	}
-
-	if (event.key.code == sf::Keyboard::S) {
-		auto mousePos = sf::Mouse::getPosition(m_window);
-
-		// m_grids.emplace_back
-		// (
-				// Grid::DraggableGrid
-				// (
-					// ("G(" + std::to_string(mousePos.x) + ":" + std::to_string(mousePos.y) + ")").c_str(),
-					// Grid::IGrid::EGridType::Interaction,
-					// mousePos, mousePos+sf::Vector2i(10, 100), 7, true
-				// )
-		// );
-	}
 }
 
 void Game::update()
