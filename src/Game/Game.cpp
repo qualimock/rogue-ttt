@@ -29,6 +29,11 @@ Game::Game(const sf::VideoMode& videoMode)
 	}
 
 	m_gameState = EGameState::Exploring;
+
+	for (auto &grid : m_grids)
+	{
+		m_visibleImGuiWindows.push_back(false);
+	}
 }
 
 Game::~Game()
@@ -200,18 +205,13 @@ void Game::processImgui()
 
 		if (ImGui::BeginMenu("Grids"))
 		{
-			int i = 0;
-
-			// for (auto grid = m_grids.begin(); grid < m_grids.end(); ++i, ++grid)
-			// {
-				// if (grid.base() == "map")
-					// continue;
-				
-				// if (ImGui::MenuItem(grid.base()->name().c_str()))
-				// {
-					// m_grids.erase(grid);
-				// }
-			// }
+			for (int i = 0; i < m_grids.size(); i++)
+			{
+				if (ImGui::MenuItem(m_grids[i]->name().c_str()))
+				{
+					m_visibleImGuiWindows[i] = !m_visibleImGuiWindows[i];
+				}
+			}
 
 			ImGui::EndMenu();
 		}
@@ -222,27 +222,27 @@ void Game::processImgui()
 		ImGui::EndMainMenuBar();
 	}
 
-#ifdef DEBUG
-	ImGui::Begin("Debug");
-		for (auto &grid : m_grids)
+	for (int i = 0; i < m_grids.size(); i++)
+	{
+		if (m_visibleImGuiWindows[i])
+		if (ImGui::Begin(m_grids[i]->name().c_str()))
 		{
-			ImGui::LabelText(grid->name().c_str(), "Name");
-			ImGui::LabelText((std::to_string(grid->position().x) + ":" + std::to_string(grid->position().y)).c_str(), "Position");
-			ImGui::LabelText((std::to_string(grid->size().x) + ":" + std::to_string(grid->size().y)).c_str(), "Size");
-			ImGui::LabelText((std::to_string(grid->layer()).c_str()), "Layer");
+			ImGui::LabelText((std::to_string(m_grids[i]->position().x) + ":" + std::to_string(m_grids[i]->position().y)).c_str(), "Position");
+			ImGui::LabelText((std::to_string(m_grids[i]->size().x) + ":" + std::to_string(m_grids[i]->size().y)).c_str(), "Size");
+			ImGui::LabelText((std::to_string(m_grids[i]->layer()).c_str()), "Layer");
 			ImGui::LabelText("", "Cells");
-			for (auto &cell : grid->m_entities)
+			for (auto &cell : m_grids[i]->m_entities)
 			{
 				ImGui::LabelText((std::to_string(cell.second->position().x) + ":" + std::to_string(cell.second->position().y)).c_str(), "Position");
 				ImGui::LabelText((std::to_string(cell.second->size().x) + ":" + std::to_string(cell.second->size().y)).c_str(), "Size");
 			}
+
+			if (ImGui::IsWindowHovered())
+				ImGuiFlags.mouseHover = true;
+
+			ImGui::End();
 		}
-
-		if (ImGui::IsWindowHovered())
-			ImGuiFlags.mouseHover = true;
-
-		ImGui::End();
-#endif
+	}
 
 	ImGui::SFML::Render(m_window);
 }

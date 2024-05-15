@@ -35,6 +35,8 @@ private:
 
 	std::vector<Grid::BaseGrid *> m_grids;
 
+	std::vector<bool> m_visibleImGuiWindows;
+
 	EGameState m_gameState;
 
 	struct
