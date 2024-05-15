@@ -53,7 +53,7 @@ bool Game::init()
 	return true;
 }
 
-void Game::onMouseClick(sf::Event event)
+void Game::onMouseClick(sf::Event &event)
 {
 	sf::Vector2i mousePos = sf::Mouse::getPosition(m_window);
 	
@@ -96,7 +96,7 @@ void Game::onMouseClick(sf::Event event)
 	}
 }
 
-void Game::onKeyPressed(sf::Event event)
+void Game::onKeyPressed(sf::Event &event)
 {
 	if (event.key.code == sf::Keyboard::Escape)
 	{
@@ -138,6 +138,7 @@ void Game::update()
 
 		case sf::Event::KeyPressed:
 			onKeyPressed(event);
+			break;
 
 		default:
 			break;

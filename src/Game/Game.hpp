@@ -44,6 +44,6 @@ private:
 		bool mouseHover = false;
 	} ImGuiFlags;
 
-	void onMouseClick(sf::Event event);
-	void onKeyPressed(sf::Event event);
+	void onMouseClick(sf::Event &event);
+	void onKeyPressed(sf::Event &event);
 };
