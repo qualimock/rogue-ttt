@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseGrid.hpp"
+#include "Entity/Entity.hpp"
 
 #include <memory>
 
