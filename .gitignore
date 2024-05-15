@@ -4,3 +4,4 @@ compile_commands.json
 imgui.ini
 .vs
 src/.vs
+.cache
