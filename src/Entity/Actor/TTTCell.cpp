@@ -33,6 +33,6 @@ namespace Entity
 			break;
 		}
 
-		this->setFillColor(m_color);
+		this->setColor(m_color);
 	}
 }

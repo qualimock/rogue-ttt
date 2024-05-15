@@ -23,7 +23,7 @@ namespace Entity
 
 	void Character::move(const sf::Vector2i &position)
 	{
-		setPosition(sf::Vector2f(position));
+		setPosition(position);
 	}
 
 	void Character::interact(const Entity &target)
