@@ -14,8 +14,6 @@ add_executable(${PROJECT_NAME}
   Grid/CombatGrid.hpp
   GridManager/GridManager.cpp
   GridManager/GridManager.hpp
-  Grid/Cell/Cell.cpp
-  Grid/Cell/Cell.hpp
   Entity/Entity.cpp
   Entity/Entity.hpp
   Entity/Actor/Actor.cpp
