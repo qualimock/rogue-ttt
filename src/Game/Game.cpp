@@ -22,15 +22,13 @@ Game::Game(const sf::VideoMode& videoMode)
 {
 	m_grids.emplace_back(Grid::Map::getMapPointer());
 
-	// m_grids.emplace_back(Grid::BaseGrid("sample", Grid::BaseGrid::EGridType::Interaction,
-										// sf::Vector2i(100, 100), sf::Vector2(300, 300), 1));
-	
-	// combat grid
 	{
-		sf::Vector2i combatP1(m_window.getSize().x, m_window.getSize().y/2 + 60);
-		sf::Vector2i combatP2(combatP1 + sf::Vector2i(120, 120));
-		m_grids.emplace_back(new Grid::CombatGrid("combat", combatP1, combatP2, 0, 40));
+		sf::Vector2i combatLeftTop(m_window.getSize().x, m_window.getSize().y/2 + 60);
+		sf::Vector2i combatRightBottom(combatLeftTop + sf::Vector2i(120, 120));
+		m_grids.emplace_back(new Grid::CombatGrid("combat", combatLeftTop, combatRightBottom, 0, 40));
 	}
+
+	m_gameState = EGameState::Exploring;
 }
 
 Game::~Game()
