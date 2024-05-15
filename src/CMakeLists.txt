@@ -19,7 +19,9 @@ add_executable(${PROJECT_NAME}
   Entity/Actor/Actor.cpp
   Entity/Actor/Actor.hpp
   Entity/Actor/TTTCell.cpp
-  Entity/Actor/TTTCell.hpp)
+  Entity/Actor/TTTCell.hpp
+  Entity/Character/Character.cpp
+  Entity/Character/Character.hpp)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
