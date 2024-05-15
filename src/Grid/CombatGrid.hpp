@@ -6,6 +6,10 @@ namespace Grid
 {
 	class CombatGrid : public BaseGrid
 	{
+		Cell::Faction checkNeighbors(const std::pair<sf::Vector2i, Cell> &origin,
+									 const sf::Vector2i &n1Offset,
+									 const sf::Vector2i &n2Offset);
+
 	public:
 		CombatGrid(const std::string &name,
 				   const sf::Vector2i &topLeft,

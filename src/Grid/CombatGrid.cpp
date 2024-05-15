@@ -12,22 +12,35 @@ namespace Grid
 		: BaseGrid(name, EGridType::Combat, topLeft, bottomRight, layer, linesOffset)
 	{}
 
+	Cell::Faction CombatGrid::checkNeighbors(const std::pair<sf::Vector2i, Cell> &origin,
+											 const sf::Vector2i &n1Offset,
+											 const sf::Vector2i &n2Offset)
+	{
+		auto n1 = m_cells.find(origin.first + n1Offset);
+		auto n2 = m_cells.find(origin.first + n2Offset);
+
+		if (n1 != m_cells.end() && n2 != m_cells.end())
+		{
+			if (n1->second.faction() == n2->second.faction())
+			{
+				return origin.second.faction();
+			}
+		}
+
+		return Cell::None;
+	}
+
 	Cell::Faction CombatGrid::getWinner()
 	{
 		for (auto &cell : m_cells)
 		{
-			if ((m_cells.find(cell.first + sf::Vector2i(1, 1)) != m_cells.end() &&
-				 m_cells.find(cell.first + sf::Vector2i(-1, -1)) != m_cells.end())
+			if ((checkNeighbors(cell, sf::Vector2i(1, 1), sf::Vector2i(-1, -1)) != Cell::None)
 				||
-				(m_cells.find(cell.first + sf::Vector2i(1, -1)) != m_cells.end() &&
-				 m_cells.find(cell.first + sf::Vector2i(-1, 1)) != m_cells.end())
+				(checkNeighbors(cell, sf::Vector2i(-1, 1), sf::Vector2i(1, -1)) != Cell::None)
 				||
-				(m_cells.find(cell.first + sf::Vector2i(0, 1)) != m_cells.end() &&
-				 m_cells.find(cell.first + sf::Vector2i(0, -1)) != m_cells.end())
+				(checkNeighbors(cell, sf::Vector2i(0, 1), sf::Vector2i(0, -1)) != Cell::None)
 				||
-				(m_cells.find(cell.first + sf::Vector2i(1, 0)) != m_cells.end() &&
-				 m_cells.find(cell.first + sf::Vector2i(-1, 0)) != m_cells.end())
-				)
+				(checkNeighbors(cell, sf::Vector2i(1, 0), sf::Vector2i(-1, 0)) != Cell::None))
 			{
 				return cell.second.faction();
 			}
