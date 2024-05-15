@@ -2,13 +2,16 @@
 
 #include "BaseGrid.hpp"
 
+#include "../Entity/Actor/TTTCell.hpp"
+
 namespace Grid
 {
 	class CombatGrid : public BaseGrid
 	{
-		Cell::Faction checkNeighbors(const std::pair<sf::Vector2i, Cell> &origin,
-									 const sf::Vector2i &n1Offset,
-									 const sf::Vector2i &n2Offset);
+		Entity::TTTCell::Faction checkNeighbors(
+			const std::pair<sf::Vector2i, Entity::Entity *> &origin,
+			const sf::Vector2i &n1Offset,
+			const sf::Vector2i &n2Offset);
 
 	public:
 		CombatGrid(const std::string &name,
@@ -19,6 +22,6 @@ namespace Grid
 
 		void clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition) override;
 
-		Cell::Faction getWinner();
+		Entity::TTTCell::Faction getWinner();
 	};
 }

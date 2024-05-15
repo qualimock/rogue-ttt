@@ -4,7 +4,7 @@
 
 #include <unordered_map>
 
-#include "Cell/Cell.hpp"
+#include "../Entity/Actor/Actor.hpp"
 
 
 namespace std
@@ -41,7 +41,7 @@ namespace Grid
 				 unsigned layer = 0,
 				 unsigned linesOffset = 40);
 
-		std::unordered_map<sf::Vector2i, Cell> m_cells;
+		std::unordered_map<sf::Vector2i, Entity::Entity *> m_entities;
 		void move(const sf::Vector2i &position) override;
 		void resize(const sf::Vector2i &point) override;
 
@@ -59,9 +59,11 @@ namespace Grid
 		std::pair<sf::Vector2i, sf::Vector2i>
 		adjustClickPosition(const sf::Vector2i &position) const;
 
-		void spawnCell(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
-					   Cell::Faction faction);
-		void destroyCell(const sf::Vector2i &index);
+		void spawnActor(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
+						Entity::Actor::EType type = Entity::Actor::EType::None);
+		void spawnActor(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
+						Entity::Actor *actor);
+		void destroyEntity(const sf::Vector2i &index);
 		
 	};
 }

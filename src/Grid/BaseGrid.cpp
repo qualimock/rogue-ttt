@@ -32,15 +32,15 @@ namespace Grid
 
 	std::pair<sf::Vector2i, sf::Vector2i> BaseGrid::adjustClickPosition(const sf::Vector2i &position) const
 	{
-		sf::Vector2i cellIndex; // cell index in grid
-		sf::Vector2i cellPosition; // cell position in window
+		sf::Vector2i entityIndex; // entity index in grid
+		sf::Vector2i entityPosition; // entity position in window
 		sf::Vector2i relativePosition; // position relative to the grid
 					
 		relativePosition.x = position.x - m_topLeft.x;
 		relativePosition.y = position.y - m_topLeft.y;
 
-		cellIndex.x = relativePosition.x / ( m_offset + 1 ) - 1;
-		cellIndex.y = relativePosition.y / ( m_offset + 1 ) - 1;
+		entityIndex.x = relativePosition.x / ( m_offset + 1 ) - 1;
+		entityIndex.y = relativePosition.y / ( m_offset + 1 ) - 1;
 
 		// vertical line click
 		if ( (m_size.x - 1) % position.x == 0 )
@@ -48,88 +48,99 @@ namespace Grid
 			// crossing lines click
 			if ( (m_size.y - 1) % position.y == 0 )
 			{
-				if ( m_cells.contains(cellIndex) || cellIndex.x < 0 || cellIndex.x > (m_size.x - 1) % m_offset )
+				if ( m_entities.contains(entityIndex) || entityIndex.x < 0 || entityIndex.x > (m_size.x - 1) % m_offset )
 				{
-					cellIndex.x++;
+					entityIndex.x++;
 				}
 					
-				if ( m_cells.contains(cellIndex) || cellIndex.y < 0 || cellIndex.y > (m_size.y - 1) % m_offset )
+				if ( m_entities.contains(entityIndex) || entityIndex.y < 0 || entityIndex.y > (m_size.y - 1) % m_offset )
 				{
-					cellIndex.y++;
+					entityIndex.y++;
 				}
 			}
 
-			cellIndex.y++;
+			entityIndex.y++;
 
-			if ( m_cells.contains(cellIndex) || cellIndex.x < 0 || cellIndex.x > (m_size.x - 1) % m_offset )
+			if ( m_entities.contains(entityIndex) || entityIndex.x < 0 || entityIndex.x > (m_size.x - 1) % m_offset )
 			{
-				cellIndex.x++;
+				entityIndex.x++;
 			}
 
 		}
 		// horizontal line click
 		else if ( (m_size.y - 1) % position.y == 0 )
 		{
-			cellIndex.x++;
+			entityIndex.x++;
 
-			if ( m_cells.contains(cellIndex) || cellIndex.y < 0 || cellIndex.y > (m_size.y - 1) % m_offset )
+			if ( m_entities.contains(entityIndex) || entityIndex.y < 0 || entityIndex.y > (m_size.y - 1) % m_offset )
 			{
-				cellIndex.y++;
+				entityIndex.y++;
 			}
 
 		}
-		// cell click
+		// entity click
 		else
 		{
-			cellIndex.x++;
-			cellIndex.y++;
+			entityIndex.x++;
+			entityIndex.y++;
 		}
 
-		cellPosition.x = cellIndex.x * ( m_offset ) - relativePosition.x + position.x;
-		cellPosition.y = cellIndex.y * ( m_offset ) - relativePosition.y + position.y;
+		entityPosition.x = entityIndex.x * ( m_offset ) - relativePosition.x + position.x;
+		entityPosition.y = entityIndex.y * ( m_offset ) - relativePosition.y + position.y;
 
-		return std::make_pair(cellIndex, cellPosition);
+		return std::make_pair(entityIndex, entityPosition);
 	}
 
 	void BaseGrid::clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition)
-	{
-		std::cout << "BASE GRID" << std::endl;
-		if (type() == EGridType::Combat)
-			std::cout << "COMBAT" << std::endl;
-	}
+	{}
 
-	void BaseGrid::spawnCell(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
-							 Cell::Faction faction)
+	void BaseGrid::spawnActor(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
+							  Entity::Actor::EType type)
 	{
-		if (m_cells.find(IndexPosition.first) == m_cells.end())
+		if (m_entities.find(IndexPosition.first) == m_entities.end())
 		{
-			m_cells.emplace
+			m_entities.emplace
 			(
 				IndexPosition.first,
-				Cell(IndexPosition.second, sf::Vector2u(m_offset, m_offset), faction)
+				new Entity::Actor(IndexPosition.second, sf::Vector2u(m_offset, m_offset), type)
 			);
 			std::cout << "SPAWNED" << std::endl;
 			std::cout << IndexPosition.first.x << ":" << IndexPosition.first.y << std::endl;
 		}
 	}
 
-	void BaseGrid::destroyCell(const sf::Vector2i &index)
+	void BaseGrid::spawnActor(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
+							  Entity::Actor *actor)
 	{
-		if (m_cells.find(index) != m_cells.end())
+		if (m_entities.find(IndexPosition.first) == m_entities.end())
 		{
-			m_cells.erase(index);
+			m_entities.emplace
+			(
+				IndexPosition.first,
+				actor
+			);
+			std::cout << "SPAWNED" << std::endl;
+			std::cout << IndexPosition.first.x << ":" << IndexPosition.first.y << std::endl;
+		}
+	}
+
+	void BaseGrid::destroyEntity(const sf::Vector2i &index)
+	{
+		if (m_entities.find(index) != m_entities.end())
+		{
+			m_entities.erase(index);
 		}
 	}
 
 	void BaseGrid::renderCells(sf::RenderTarget &target)
 	{
-		for(auto &cell : m_cells){
-			cell.second.render(target);
+		for(auto &cell : m_entities){
+			cell.second->render(target);
 		}
 	}
 
 	void BaseGrid::clear()
 	{
-		m_cells.clear();
+		m_entities.clear();
 	}
 }

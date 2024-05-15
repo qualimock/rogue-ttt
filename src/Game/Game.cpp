@@ -233,11 +233,11 @@ void Game::processImgui()
 			ImGui::LabelText((std::to_string(grid->size().x) + ":" + std::to_string(grid->size().y)).c_str(), "Size");
 			ImGui::LabelText((std::to_string(grid->layer()).c_str()), "Layer");
 			ImGui::LabelText("", "Cells");
-			for (auto &cell : grid->m_cells)
+			for (auto &cell : grid->m_entities)
 			{
-				ImGui::LabelText(std::to_string(cell.second.getFillColor().toInteger()).c_str(), "Color");
-				ImGui::LabelText((std::to_string(cell.second.getPosition().x) + ":" + std::to_string(cell.second.getPosition().y)).c_str(), "Position");
-				ImGui::LabelText((std::to_string(cell.second.getSize().x) + ":" + std::to_string(cell.second.getSize().y)).c_str(), "Size");
+				ImGui::LabelText(std::to_string(cell.second->getFillColor().toInteger()).c_str(), "Color");
+				ImGui::LabelText((std::to_string(cell.second->getPosition().x) + ":" + std::to_string(cell.second->getPosition().y)).c_str(), "Position");
+				ImGui::LabelText((std::to_string(cell.second->getSize().x) + ":" + std::to_string(cell.second->getSize().y)).c_str(), "Size");
 			}
 		}
 

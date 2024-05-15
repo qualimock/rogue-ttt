@@ -12,48 +12,49 @@ namespace Grid
 		: BaseGrid(name, EGridType::Combat, topLeft, bottomRight, layer, linesOffset)
 	{}
 
-	Cell::Faction CombatGrid::checkNeighbors(const std::pair<sf::Vector2i, Cell> &origin,
-											 const sf::Vector2i &n1Offset,
-											 const sf::Vector2i &n2Offset)
+	Entity::TTTCell::Faction CombatGrid::checkNeighbors(const std::pair<sf::Vector2i, Entity::Entity *> &origin,
+														const sf::Vector2i &n1Offset,
+														const sf::Vector2i &n2Offset)
 	{
-		auto n1 = m_cells.find(origin.first + n1Offset);
-		auto n2 = m_cells.find(origin.first + n2Offset);
+		auto n1 = m_entities.find(origin.first + n1Offset);
+		auto n2 = m_entities.find(origin.first + n2Offset);
 
-		if (n1 != m_cells.end() && n2 != m_cells.end())
+		if (n1 != m_entities.end() && n2 != m_entities.end())
 		{
-			if (n1->second.faction() == n2->second.faction())
+			if (dynamic_cast<Entity::TTTCell *>(n1->second)->faction() ==
+				dynamic_cast<Entity::TTTCell *>(n2->second)->faction())
 			{
-				return origin.second.faction();
+				return dynamic_cast<Entity::TTTCell *>(origin.second)->faction();
 			}
 		}
 
-		return Cell::None;
+		return Entity::TTTCell::Faction::None;
 	}
 
-	Cell::Faction CombatGrid::getWinner()
+	Entity::TTTCell::Faction CombatGrid::getWinner()
 	{
-		for (auto &cell : m_cells)
+		for (auto &entity : m_entities)
 		{
-			if ((checkNeighbors(cell, sf::Vector2i(1, 1), sf::Vector2i(-1, -1)) != Cell::None)
+			if ((checkNeighbors(entity, sf::Vector2i(1, 1), sf::Vector2i(-1, -1)) != Entity::TTTCell::Faction::None)
 				||
-				(checkNeighbors(cell, sf::Vector2i(-1, 1), sf::Vector2i(1, -1)) != Cell::None)
+				(checkNeighbors(entity, sf::Vector2i(-1, 1), sf::Vector2i(1, -1)) != Entity::TTTCell::Faction::None)
 				||
-				(checkNeighbors(cell, sf::Vector2i(0, 1), sf::Vector2i(0, -1)) != Cell::None)
+				(checkNeighbors(entity, sf::Vector2i(0, 1), sf::Vector2i(0, -1)) != Entity::TTTCell::Faction::None)
 				||
-				(checkNeighbors(cell, sf::Vector2i(1, 0), sf::Vector2i(-1, 0)) != Cell::None))
+				(checkNeighbors(entity, sf::Vector2i(1, 0), sf::Vector2i(-1, 0)) != Entity::TTTCell::Faction::None))
 			{
-				return cell.second.faction();
+				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
 			}
 		}
 
-		return Cell::Faction::None;
+		return Entity::TTTCell::Faction::None;
 	}
 
 	void CombatGrid::clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition)
 	{
 		auto cellIndexPosition = adjustClickPosition(mousePosition);
-		Cell::Faction clickFaction;
-		Cell::Faction winnerFaction;
+		Entity::TTTCell::Faction clickFaction;
+		Entity::TTTCell::Faction winnerFaction;
 
 		std::cout << "COMBAT" << std::endl;
 
@@ -62,39 +63,41 @@ namespace Grid
 		switch (button)
 		{
 		case sf::Mouse::Left:
-			clickFaction = Cell::Faction::Cross;
+			clickFaction = Entity::TTTCell::Faction::Cross;
 			break;
 
 		case sf::Mouse::Right:
-			clickFaction = Cell::Faction::Nought;
+			clickFaction = Entity::TTTCell::Faction::Nought;
 			break;
 
 		case sf::Mouse::Middle:
-			destroyCell(cellIndexPosition.first);
-			if (getWinner() == Cell::None)
+			destroyEntity(cellIndexPosition.first);
+			if (getWinner() == Entity::TTTCell::Faction::None)
 			{
-				for (auto &cell : m_cells)
+				for (auto &cell : m_entities)
 				{
-					cell.second.resetColor();
+					dynamic_cast<Entity::TTTCell *>(cell.second)->resetColor();
 				}
 			}
 			return;
 		}
 
 		winnerFaction = getWinner();
-		if (winnerFaction == Cell::None)
+		if (winnerFaction == Entity::TTTCell::Faction::None)
 		{
-			spawnCell(cellIndexPosition, clickFaction);
+			spawnActor(cellIndexPosition, new Entity::TTTCell(cellIndexPosition.second,
+															  sf::Vector2u(m_offset, m_offset),
+															  clickFaction));
 		}
 		winnerFaction = getWinner();
 
-		if (winnerFaction != Cell::None)
+		if (winnerFaction != Entity::TTTCell::Faction::None)
 		{
-			for (auto &cell : m_cells)
+			for (auto &cell : m_entities)
 			{
-				if (cell.second.faction() == winnerFaction)
+				if (dynamic_cast<Entity::TTTCell *>(cell.second)->faction() == winnerFaction)
 				{
-					cell.second.setFillColor(sf::Color::White);
+					cell.second->setFillColor(sf::Color::White);
 				}
 			}
 		}
