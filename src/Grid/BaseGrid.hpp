@@ -57,12 +57,10 @@ namespace Grid
 
 	protected:
 		std::pair<sf::Vector2i, sf::Vector2i>
-		adjustClickPosition(const sf::Vector2i &position) const;
+		adjustEntityPosition(const sf::Vector2i &position) const;
 
-		void spawnActor(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
-						Entity::Actor::EType type = Entity::Actor::EType::None);
-		void spawnActor(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
-						Entity::Actor *actor);
+		void spawnEntity(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
+						 Entity::Entity *entity);
 		void destroyEntity(const sf::Vector2i &index);
 		
 	};

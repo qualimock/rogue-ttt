@@ -79,7 +79,7 @@ namespace Grid
 
 	void CombatGrid::clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition)
 	{
-		auto cellIndexPosition = adjustClickPosition(mousePosition);
+		auto cellIndexPosition = adjustEntityPosition(mousePosition);
 		Entity::TTTCell::Faction clickFaction;
 		Entity::TTTCell::Faction winnerFaction;
 
@@ -112,9 +112,9 @@ namespace Grid
 		winnerFaction = getWinner();
 		if (winnerFaction == Entity::TTTCell::Faction::None)
 		{
-			spawnActor(cellIndexPosition, new Entity::TTTCell(cellIndexPosition.second,
-															  sf::Vector2u(m_offset, m_offset),
-															  clickFaction));
+			spawnEntity(cellIndexPosition, new Entity::TTTCell(cellIndexPosition.second,
+															   sf::Vector2u(m_offset, m_offset),
+															   clickFaction));
 		}
 		winnerFaction = getWinner();
 

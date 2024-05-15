@@ -30,7 +30,7 @@ namespace Grid
 									 m_size.x/m_offset); // vertical lines
 	}
 
-	std::pair<sf::Vector2i, sf::Vector2i> BaseGrid::adjustClickPosition(const sf::Vector2i &position) const
+	std::pair<sf::Vector2i, sf::Vector2i> BaseGrid::adjustEntityPosition(const sf::Vector2i &position) const
 	{
 		sf::Vector2i entityIndex; // entity index in grid
 		sf::Vector2i entityPosition; // entity position in window
@@ -94,30 +94,15 @@ namespace Grid
 	void BaseGrid::clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition)
 	{}
 
-	void BaseGrid::spawnActor(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
-							  Entity::Actor::EType type)
+	void BaseGrid::spawnEntity(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
+							   Entity::Entity *entity)
 	{
 		if (m_entities.find(IndexPosition.first) == m_entities.end())
 		{
 			m_entities.emplace
 			(
 				IndexPosition.first,
-				new Entity::Actor(IndexPosition.second, sf::Vector2u(m_offset, m_offset), type)
-			);
-			std::cout << "SPAWNED" << std::endl;
-			std::cout << IndexPosition.first.x << ":" << IndexPosition.first.y << std::endl;
-		}
-	}
-
-	void BaseGrid::spawnActor(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
-							  Entity::Actor *actor)
-	{
-		if (m_entities.find(IndexPosition.first) == m_entities.end())
-		{
-			m_entities.emplace
-			(
-				IndexPosition.first,
-				actor
+				entity
 			);
 			std::cout << "SPAWNED" << std::endl;
 			std::cout << IndexPosition.first.x << ":" << IndexPosition.first.y << std::endl;
