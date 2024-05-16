@@ -13,6 +13,14 @@ namespace Entity
 		resetColor();
 	}
 
+	bool Entity::operator==(const Entity *entity) const
+	{
+		if (m_tags == entity->tags())
+			return true;
+
+		return false;
+	}
+
 	void Entity::render(sf::RenderTarget &target)
 	{
 		target.draw(m_shape);
