@@ -52,6 +52,8 @@ namespace Grid
 
 		void clear();
 
+		void destroyEntity(Entity::Entity *entity);
+
 		const std::string name() const { return m_name; }
 		const unsigned layer() const { return m_layer; }
 
@@ -62,6 +64,5 @@ namespace Grid
 		void spawnEntity(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
 						 Entity::Entity *entity);
 		void destroyEntity(const sf::Vector2i &index);
-		
 	};
 }
