@@ -45,7 +45,7 @@ namespace Grid
 		void move(const sf::Vector2i &position) override;
 		void resize(const sf::Vector2i &point) override;
 
-		virtual void clicked(sf::Mouse::Button button,
+		virtual bool clicked(sf::Mouse::Button button,
 							 const sf::Vector2i &mousePosition);
 
 		void renderCells(sf::RenderTarget &target);

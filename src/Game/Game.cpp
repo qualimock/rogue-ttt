@@ -73,15 +73,8 @@ void Game::onMouseClick(sf::Event &event)
 			}
 		}
 
-
 		if (mouseGrids.empty())
 			return;
-
-		if (mouseGrids.size() == 1)
-		{
-			Grid::GridManager::mouseClicked(m_window, event, mouseGrids[0]);
-			return;
-		}
 
 		Grid::BaseGrid *currentGrid = mouseGrids.at(0);
 		for (auto &grid : mouseGrids)
@@ -92,17 +85,36 @@ void Game::onMouseClick(sf::Event &event)
 			}
 		}
 
-		Grid::GridManager::mouseClicked(m_window, event, currentGrid);
+		std::cout << "EVENT" << std::endl;
+		switch(event.type)
+		{
+		case sf::Event::MouseButtonPressed:
+			Grid::GridManager::mouseClicked(m_window, event, currentGrid);
+			break;
+		}
 	}
 }
 
 void Game::onKeyPressed(sf::Event &event)
 {
-	// player moving
-	Grid::GridManager::keyPressed(m_window, event, m_grids[0]);
-
+	std::cout << "EVENT" << std::endl;
 	switch (event.key.code)
 	{
+	case sf::Keyboard::W:
+	case sf::Keyboard::A:
+	case sf::Keyboard::S:
+	case sf::Keyboard::D:
+		// player moving
+		if (!Grid::GridManager::moveEvent(m_window, event, m_grids[0]))
+		{
+			m_gameState = EGameState::InCombat;
+		}
+		else
+		{
+			m_gameState = EGameState::Exploring;
+		}
+		break;
+
 	case sf::Keyboard::Escape:
 		event.type = sf::Event::Closed;
 		return;

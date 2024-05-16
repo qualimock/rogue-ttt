@@ -77,7 +77,7 @@ namespace Grid
 		return Entity::TTTCell::Faction::None;
 	}
 
-	void CombatGrid::clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition)
+	bool CombatGrid::clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition)
 	{
 		auto cellIndexPosition = adjustEntityPosition(mousePosition);
 		Entity::TTTCell::Faction clickFaction;
@@ -106,15 +106,16 @@ namespace Grid
 					dynamic_cast<Entity::TTTCell *>(cell.second)->resetColor();
 				}
 			}
-			return;
+			return false;
 		}
 
 		winnerFaction = getWinner();
 		if (winnerFaction == Entity::TTTCell::Faction::None)
 		{
-			spawnEntity(cellIndexPosition, new Entity::TTTCell(cellIndexPosition.second,
-															   sf::Vector2u(m_offset, m_offset),
-															   clickFaction));
+			auto newCell = new Entity::TTTCell(cellIndexPosition.second,
+											   sf::Vector2u(m_offset, m_offset),
+											   clickFaction);
+			spawnEntity(cellIndexPosition, newCell);
 		}
 		winnerFaction = getWinner();
 
@@ -125,8 +126,11 @@ namespace Grid
 				if (dynamic_cast<Entity::TTTCell *>(cell.second)->faction() == winnerFaction)
 				{
 					cell.second->setColor(sf::Color::White);
+					return true;
 				}
 			}
 		}
+
+		return false;
 	}
 }

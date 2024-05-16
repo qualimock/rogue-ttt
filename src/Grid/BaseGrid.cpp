@@ -97,8 +97,10 @@ namespace Grid
 		return std::make_pair(entityIndex, entityPosition);
 	}
 
-	void BaseGrid::clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition)
-	{}
+	bool BaseGrid::clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition)
+	{
+		return false;
+	}
 
 	void BaseGrid::spawnEntity(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
 							   Entity::Entity *entity)

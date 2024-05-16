@@ -10,34 +10,27 @@
 
 namespace Grid
 {
-	void GridManager::mouseClicked(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid)
+	bool GridManager::mouseClicked(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid)
 	{
-		std::cout << "EVENT" << std::endl;
+		std::cout << "MOUSE" << std::endl << std::endl;
 
-		switch (event.type)
+		switch (grid->type())
 		{
-		case sf::Event::MouseButtonPressed:
-			std::cout << "MOUSE" << std::endl;
-
-			switch (grid->type())
+		case BaseGrid::EGridType::Combat:
+			CombatGrid *p_grid = dynamic_cast<CombatGrid *>(grid);
+			if (p_grid)
 			{
-			case BaseGrid::EGridType::Combat:
-				CombatGrid *p_grid = dynamic_cast<CombatGrid *>(grid);
-				if (p_grid)
-				{
-					p_grid->clicked(event.mouseButton.button, sf::Mouse::getPosition(window));
-				}
-				break;
+				return p_grid->clicked(event.mouseButton.button, sf::Mouse::getPosition(window));
 			}
-
 			break;
 		}
-
-		std::cout << std::endl;
+		return false;
 	}
 
-	void GridManager::keyPressed(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid)
+	bool GridManager::moveEvent(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid)
 	{
+		std::cout << "KEYBOARD" << std::endl << std::endl;
+
 		sf::Vector2i movement;
 
 		switch(event.key.code)
@@ -59,6 +52,6 @@ namespace Grid
 			break;
 		}
 
-		dynamic_cast<Grid::Map *>(grid)->movePlayer(movement);
+		return dynamic_cast<Grid::Map *>(grid)->movePlayer(movement);
 	}
 }
