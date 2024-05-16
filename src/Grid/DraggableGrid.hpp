@@ -8,8 +8,7 @@ namespace Grid
 	{
 		bool m_draggable;
 	public:
-		DraggableGrid(const std::string &name,
-					  EGridType eGridType,
+		DraggableGrid(EGridType eGridType,
 					  const sf::Vector2i &topLeft,
 					  const sf::Vector2i &bottomRight,
 					  unsigned linesOffset,

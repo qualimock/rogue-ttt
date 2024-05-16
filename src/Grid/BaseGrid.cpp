@@ -5,14 +5,29 @@
 
 namespace Grid
 {
-	BaseGrid::BaseGrid(const std::string &name,
-					   EGridType eGridType,
+	BaseGrid::BaseGrid(EGridType eGridType,
 					   const sf::Vector2i &topLeft,
 					   const sf::Vector2i &bottomRight,
 					   unsigned layer,
 					   unsigned linesOffset)
 		: IGrid(eGridType, topLeft, bottomRight, linesOffset)
-		, m_name(name)
+		, m_layer(layer)
+	{}
+
+	BaseGrid::BaseGrid(EGridType eGridType,
+					   const sf::Vector2u &size,
+					   unsigned layer,
+					   unsigned linesOffset)
+		: IGrid(eGridType, sf::Vector2i(0, 0), sf::Vector2i(size), linesOffset)
+		, m_layer(layer)
+	{}
+
+	BaseGrid::BaseGrid(EGridType eGridType,
+					   const sf::Vector2i &position,
+					   const sf::Vector2u &size,
+					   unsigned layer,
+					   unsigned linesOffset)
+		: IGrid(eGridType, position, position+sf::Vector2i(size), linesOffset)
 		, m_layer(layer)
 	{}
 

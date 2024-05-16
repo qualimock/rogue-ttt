@@ -31,13 +31,22 @@ namespace Grid
 	class BaseGrid : public IGrid
 	{
 		unsigned m_layer;
-		std::string m_name;
 
 	public:
-		BaseGrid(const std::string &name,
-				 EGridType eGridType,
+		BaseGrid(EGridType eGridType,
 				 const sf::Vector2i &topLeft,
 				 const sf::Vector2i &bottomRight,
+				 unsigned layer = 0,
+				 unsigned linesOffset = 40);
+
+		BaseGrid(EGridType eGridType,
+				 const sf::Vector2u &size,
+				 unsigned layer = 0,
+				 unsigned linesOffset = 40);
+
+		BaseGrid(EGridType eGridType,
+				 const sf::Vector2i &position,
+				 const sf::Vector2u &size,
 				 unsigned layer = 0,
 				 unsigned linesOffset = 40);
 
@@ -54,7 +63,6 @@ namespace Grid
 
 		void destroyEntity(Entity::Entity *entity);
 
-		const std::string name() const { return m_name; }
 		const unsigned layer() const { return m_layer; }
 
 	protected:

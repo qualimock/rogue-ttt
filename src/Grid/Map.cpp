@@ -4,25 +4,26 @@
 
 namespace Grid
 {
+	Map * Map::map = nullptr;
+
 	Map::Map()
-		: BaseGrid("map", EGridType::Map, sf::Vector2i(0, 0), sf::Vector2i(640, 480), 0, 40)
+		: BaseGrid(EGridType::Map, sf::Vector2u(640, 480))
 	{
 		placeCharacter(sf::Vector2i(m_size.x / 2, m_size.y / 2), Entity::Character::EType::Player);
 		placeCharacter(sf::Vector2i(100, 100), Entity::Character::EType::Enemy);
 	}
 
-	Map& Map::getMap()
+	Map * Map::getMap()
 	{
-		static Map instance;
-		return instance;
+		if (map == nullptr)
+		{
+			return new Map();
+		}
+		else
+		{
+			return std::move(map);
+		}
 	}
-
-	Map* Map::getMapPointer()
-	{
-		static Map instance;
-		return &instance;
-	}
-
 
 	void Map::placeCharacter(const sf::Vector2i &position, Entity::Character::EType type)
 	{
