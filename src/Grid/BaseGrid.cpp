@@ -33,6 +33,7 @@ namespace Grid
 		m_size = sf::Vector2u(m_bottomRight - m_topLeft);
 		m_linesAmount = sf::Vector2u(m_size.y/m_offset,  // horizontal lines
 									 m_size.x/m_offset); // vertical lines
+		m_cellsAmount = sf::Vector2u(m_linesAmount.y-1, m_linesAmount.x-1);
 
 	}
 
@@ -41,7 +42,7 @@ namespace Grid
 		sf::Vector2i entityIndex; // entity index in grid
 		sf::Vector2i entityPosition; // entity position in window
 		sf::Vector2i relativePosition; // position relative to the grid
-					
+
 		relativePosition.x = position.x - m_topLeft.x;
 		relativePosition.y = position.y - m_topLeft.y;
 
@@ -58,7 +59,7 @@ namespace Grid
 				{
 					entityIndex.x++;
 				}
-					
+
 				if ( m_entities.contains(entityIndex) || entityIndex.y < 0 || entityIndex.y > (m_size.y - 1) % m_offset )
 				{
 					entityIndex.y++;
@@ -97,8 +98,10 @@ namespace Grid
 		return std::make_pair(entityIndex, entityPosition);
 	}
 
-	void BaseGrid::clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition)
-	{}
+	bool BaseGrid::clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition)
+	{
+		return false;
+	}
 
 	void BaseGrid::spawnEntity(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
 							   Entity::Entity *entity)
@@ -106,6 +109,7 @@ namespace Grid
 		if (m_entities.find(IndexPosition.first) == m_entities.end())
 		{
 			entity->setPosition(IndexPosition.second);
+			entity->addTag(std::to_string(m_entities.size()));
 			m_entities.emplace
 			(
 				IndexPosition.first,
@@ -122,6 +126,18 @@ namespace Grid
 		if (m_entities.find(index) != m_entities.end())
 		{
 			m_entities.erase(index);
+		}
+	}
+
+	void BaseGrid::destroyEntity(Entity::Entity *entity)
+	{
+		for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
+		{
+			if (it->second == entity)
+			{
+				m_entities.erase(it);
+				return;
+			}
 		}
 	}
 

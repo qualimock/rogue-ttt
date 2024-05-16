@@ -20,7 +20,7 @@ namespace Grid
 				   unsigned layer,
 				   unsigned linesOffset);
 
-		void clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition) override;
+		bool clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition) override;
 
 		Entity::TTTCell::Faction getWinner();
 	};

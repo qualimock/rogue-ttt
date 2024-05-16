@@ -43,33 +43,21 @@ namespace Grid
 		{
 			if (checkNeighbors(entity, sf::Vector2i(1, 1), sf::Vector2i(-1, -1)) != Entity::TTTCell::Faction::None)
 			{
-				std::cout << "ORIGIN" << std::endl;
-				std::cout << entity.first.x << ":" << entity.first.y << std::endl;
-				std::cout << "URDL" << std::endl;
 				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
 			}
 
 			if	(checkNeighbors(entity, sf::Vector2i(-1, 1), sf::Vector2i(1, -1)) != Entity::TTTCell::Faction::None)
 			{
-				std::cout << "ORIGIN" << std::endl;
-				std::cout << entity.first.x << ":" << entity.first.y << std::endl;
-				std::cout << "ULDR" << std::endl;
 				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
 			}
 
 			if (checkNeighbors(entity, sf::Vector2i(0, 1), sf::Vector2i(0, -1)) != Entity::TTTCell::Faction::None)
 			{
-				std::cout << "ORIGIN" << std::endl;
-				std::cout << entity.first.x << ":" << entity.first.y << std::endl;
-				std::cout << "UCDC" << std::endl;
 				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
 			}
 
 			if(checkNeighbors(entity, sf::Vector2i(1, 0), sf::Vector2i(-1, 0)) != Entity::TTTCell::Faction::None)
 			{
-				std::cout << "ORIGIN" << std::endl;
-				std::cout << entity.first.x << ":" << entity.first.y << std::endl;
-				std::cout << "CRCL" << std::endl;
 				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
 			}
 		}
@@ -77,7 +65,7 @@ namespace Grid
 		return Entity::TTTCell::Faction::None;
 	}
 
-	void CombatGrid::clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition)
+	bool CombatGrid::clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition)
 	{
 		auto cellIndexPosition = adjustEntityPosition(mousePosition);
 		Entity::TTTCell::Faction clickFaction;
@@ -106,15 +94,16 @@ namespace Grid
 					dynamic_cast<Entity::TTTCell *>(cell.second)->resetColor();
 				}
 			}
-			return;
+			return false;
 		}
 
 		winnerFaction = getWinner();
 		if (winnerFaction == Entity::TTTCell::Faction::None)
 		{
-			spawnEntity(cellIndexPosition, new Entity::TTTCell(cellIndexPosition.second,
-															   sf::Vector2u(m_offset, m_offset),
-															   clickFaction));
+			auto newCell = new Entity::TTTCell(cellIndexPosition.second,
+											   sf::Vector2u(m_offset, m_offset),
+											   clickFaction);
+			spawnEntity(cellIndexPosition, newCell);
 		}
 		winnerFaction = getWinner();
 
@@ -127,6 +116,10 @@ namespace Grid
 					cell.second->setColor(sf::Color::White);
 				}
 			}
+			m_entities.clear();
+			return true;
 		}
+
+		return false;
 	}
 }

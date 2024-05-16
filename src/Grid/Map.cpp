@@ -67,25 +67,59 @@ namespace Grid
 	void Map::placeActor(const sf::Vector2i &position, Entity::Actor *actor)
 	{}
 
-	bool Map::movePlayer(const sf::Vector2i &indexOffset)
+	Entity::Entity * Map::movePlayer(const sf::Vector2i &indexOffset)
 	{
+		auto foundEntity = m_entities.end();
+
 		for (auto &entity : m_entities)
 		{
-			if (m_entities.find(entity.first + indexOffset) == m_entities.end() && entity.second->hasTag("player"))
+			foundEntity = m_entities.find(entity.first + indexOffset);
+
+			bool canMove =
+				((entity.first.x + indexOffset.x) >= 0) &&
+				((entity.first.x + indexOffset.x) <= m_cellsAmount.x) &&
+				((entity.first.y + indexOffset.y) >= 0) &&
+				((entity.first.y + indexOffset.y) <= m_cellsAmount.y);
+
+			if (entity.second->hasTag("player") && canMove)
 			{
 				auto player = m_entities.extract(entity.first);
 
-				player.key() = player.key() + indexOffset;
+				if (foundEntity == m_entities.end())
+				{
+					std::cout << "PLAYER" << std::endl;
+					std::cout << "MOVE" << std::endl;
 
-				dynamic_cast<Entity::Character *>(player.mapped())->move(sf::Vector2i(indexOffset.x*m_offset,
-																					  indexOffset.y*m_offset));
+					player.key() = player.key() + indexOffset;
+					dynamic_cast<Entity::Character *>(player.mapped())->move(sf::Vector2i(indexOffset.x*m_offset,
+																						  indexOffset.y*m_offset));
+					m_entities.insert(std::move(player));
+					return nullptr;
+				}
+				else
+				{
+					auto castedPlayer = dynamic_cast<Entity::Character *>(player.mapped());
+					try
+					{
+						castedPlayer->interact(dynamic_cast<Entity::Actor *>(foundEntity->second));
+					}
+					catch(const std::bad_cast &e)
+					{
+						try
+						{
+							castedPlayer->interact(dynamic_cast<Entity::Character *>(foundEntity->second));
+						}
+						catch(const std::bad_cast &e)
+						{
+							std::cout << "FAILED TO INTERACT" << std::endl;
+						}
+					}
 
-				m_entities.insert(std::move(player));
-
-				return true;
+					m_entities.insert(std::move(player));
+					return foundEntity->second;
+				}
 			}
 		}
-
-		return false;
+		return nullptr;
 	}
 }

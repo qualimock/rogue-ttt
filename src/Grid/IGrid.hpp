@@ -43,6 +43,7 @@ namespace Grid
 		sf::Vector2i m_bottomRight;
 
 		sf::Vector2u m_linesAmount;
+		sf::Vector2u m_cellsAmount;
 
 		unsigned m_offset;
 

@@ -30,6 +30,6 @@ namespace Grid
 		void placeCharacter(const sf::Vector2i &position, Entity::Character::EType type);
 		void placeActor(const sf::Vector2i &position, Entity::Actor *actor);
 
-		bool movePlayer(const sf::Vector2i &indexOffset);
+		Entity::Entity * movePlayer(const sf::Vector2i &indexOffset);
 	};
 }

@@ -14,6 +14,7 @@ public:
 	{
 		Exploring,
 		InCombat,
+		Interacting,
 
 		None
 	};
@@ -38,6 +39,8 @@ private:
 	std::vector<bool> m_visibleImGuiWindows;
 
 	EGameState m_gameState;
+
+	Entity::Entity *m_currentlyInteractedEntity = nullptr;
 
 	struct
 	{

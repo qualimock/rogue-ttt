@@ -20,7 +20,9 @@
 Game::Game(const sf::VideoMode& videoMode)
 	: m_window(videoMode, "Rogue Tic-Tac-Toe")
 {
-	m_grids.emplace_back(Grid::Map::getMapPointer());
+	auto map = Grid::Map::getMapPointer();
+	map->resize(sf::Vector2i(m_window.getSize()));
+	m_grids.emplace_back(map);
 
 	{
 		sf::Vector2i combatLeftTop(m_window.getSize().x, m_window.getSize().y/2 + 60);
@@ -56,7 +58,7 @@ bool Game::init()
 void Game::onMouseClick(sf::Event &event)
 {
 	sf::Vector2i mousePos = sf::Mouse::getPosition(m_window);
-	
+
     // search grid on mouse position
 	{
 		std::vector<Grid::BaseGrid *> mouseGrids;
@@ -73,15 +75,8 @@ void Game::onMouseClick(sf::Event &event)
 			}
 		}
 
-
 		if (mouseGrids.empty())
 			return;
-
-		if (mouseGrids.size() == 1)
-		{
-			Grid::GridManager::mouseClicked(m_window, event, mouseGrids[0]);
-			return;
-		}
 
 		Grid::BaseGrid *currentGrid = mouseGrids.at(0);
 		for (auto &grid : mouseGrids)
@@ -92,18 +87,80 @@ void Game::onMouseClick(sf::Event &event)
 			}
 		}
 
-		Grid::GridManager::mouseClicked(m_window, event, currentGrid);
+		switch(event.type)
+		{
+		case sf::Event::MouseButtonPressed:
+			if (currentGrid->name() == "combat" && m_gameState == EGameState::InCombat)
+			{
+				if (Grid::GridManager::mouseClicked(m_window, event, currentGrid))
+				{
+					m_grids[0]->destroyEntity(m_currentlyInteractedEntity);
+					m_currentlyInteractedEntity = nullptr;
+
+					m_gameState = EGameState::Exploring;
+				}
+			}
+			break;
+		}
 	}
 }
 
 void Game::onKeyPressed(sf::Event &event)
 {
 	// player moving
-	Grid::GridManager::keyPressed(m_window, event, m_grids[0]);
-
+	if (m_gameState == EGameState::Exploring)
 	switch (event.key.code)
 	{
-	case sf::Keyboard::Escape:
+	case sf::Keyboard::W:
+	case sf::Keyboard::A:
+	case sf::Keyboard::S:
+	case sf::Keyboard::D:
+	case sf::Keyboard::Up:
+	case sf::Keyboard::Left:
+	case sf::Keyboard::Down:
+	case sf::Keyboard::Right:
+		auto moveResult = Grid::GridManager::moveEvent(m_window, event, m_grids[0]);
+		if (moveResult)
+		{
+			if (moveResult->hasTag("enemy"))
+			{
+				m_currentlyInteractedEntity = dynamic_cast<Entity::Character *>(moveResult);
+				m_gameState = EGameState::InCombat;
+			}
+			else if (moveResult->hasTag("item"))
+			{
+				m_currentlyInteractedEntity = dynamic_cast<Entity::Actor *>(moveResult);
+				m_gameState = EGameState::Interacting;
+			}
+		}
+		else
+		{
+			m_currentlyInteractedEntity = nullptr;
+			m_gameState = EGameState::Exploring;
+		}
+		break;
+	}
+
+	std::cout << "STATE" << std::endl;
+
+	switch (m_gameState)
+	{
+	case EGameState::Exploring:
+		std::cout << "EXPLORING" << std::endl;
+		break;
+
+	case EGameState::InCombat:
+		std::cout << "COMBAT" << std::endl;
+		break;
+
+	case EGameState::Interacting:
+		std::cout << "INTERACTION" << std::endl;
+		break;
+	}
+
+
+	if (event.key.code == sf::Keyboard::Escape)
+	{
 		event.type = sf::Event::Closed;
 		return;
 	}
@@ -121,6 +178,7 @@ void Game::update()
 		switch(event.type)
 		{
 		case sf::Event::MouseButtonPressed:
+			std::cout << std::endl << "EVENT" << std::endl;
 			if (!ImGuiFlags.mouseHover)
 			{
 				onMouseClick(event);
@@ -128,6 +186,7 @@ void Game::update()
 			break;
 
 		case sf::Event::KeyPressed:
+			std::cout << std::endl << "EVENT" << std::endl;
 			onKeyPressed(event);
 			break;
 

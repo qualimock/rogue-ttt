@@ -45,12 +45,14 @@ namespace Grid
 		void move(const sf::Vector2i &position) override;
 		void resize(const sf::Vector2i &point) override;
 
-		virtual void clicked(sf::Mouse::Button button,
+		virtual bool clicked(sf::Mouse::Button button,
 							 const sf::Vector2i &mousePosition);
 
 		void renderCells(sf::RenderTarget &target);
 
 		void clear();
+
+		void destroyEntity(Entity::Entity *entity);
 
 		const std::string name() const { return m_name; }
 		const unsigned layer() const { return m_layer; }
@@ -62,6 +64,5 @@ namespace Grid
 		void spawnEntity(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
 						 Entity::Entity *entity);
 		void destroyEntity(const sf::Vector2i &index);
-		
 	};
 }

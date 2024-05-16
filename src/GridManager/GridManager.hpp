@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include "../Game/Game.hpp"
+
 namespace sf {
 	class Event;
 	class RenderWindow;
@@ -24,7 +26,7 @@ namespace Grid
 
 		~GridManager() = default;
 
-		static void mouseClicked(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid);
-		static void keyPressed(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid);
+		static bool mouseClicked(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid);
+		static Entity::Entity * moveEvent(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid);
 	};
 }
