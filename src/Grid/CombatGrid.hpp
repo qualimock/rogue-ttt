@@ -14,11 +14,7 @@ namespace Grid
 			const sf::Vector2i &n2Offset);
 
 	public:
-		CombatGrid(const std::string &name,
-				   const sf::Vector2i &topLeft,
-				   const sf::Vector2i &bottomRight,
-				   unsigned layer,
-				   unsigned linesOffset);
+		CombatGrid(BaseGrid &&grid);
 
 		bool clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition) override;
 

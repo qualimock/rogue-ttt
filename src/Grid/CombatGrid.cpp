@@ -4,12 +4,8 @@
 
 namespace Grid
 {
-	CombatGrid::CombatGrid(const std::string &name,
-						   const sf::Vector2i &topLeft,
-						   const sf::Vector2i &bottomRight,
-						   unsigned layer,
-						   unsigned linesOffset)
-		: BaseGrid(name, EGridType::Combat, topLeft, bottomRight, layer, linesOffset)
+	CombatGrid::CombatGrid(BaseGrid &&grid)
+		: BaseGrid(grid)
 	{}
 
 	Entity::TTTCell::Faction CombatGrid::checkNeighbors(const std::pair<sf::Vector2i, Entity::Entity *> &origin,

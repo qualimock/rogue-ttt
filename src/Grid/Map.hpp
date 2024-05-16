@@ -5,8 +5,6 @@
 #include "../Entity/Entity.hpp"
 #include "../Entity/Character/Character.hpp"
 
-#include <memory>
-
 namespace Entity
 {
 	class Character;
@@ -16,14 +14,15 @@ namespace Grid
 {
 	class Map : public BaseGrid
 	{
+		static Map * map;
+
 		Map();
 
+	public:
 		Map(const Map&) = delete;
 		Map& operator=(const Map&) = delete;
 
-	public:
-		static Map& getMap();
-		static Map* getMapPointer();
+		static Map * getMap();
 
 		void move() = delete;
 

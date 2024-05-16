@@ -3,12 +3,17 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
+#include <map>
 #include <vector>
+#include <memory>
+#include <string>
 
 #include "../Grid/BaseGrid.hpp"
 
 class Game
 {
+	typedef std::pair<std::string, Grid::BaseGrid *> GridPair;
+
 public:
 	enum class EGameState
 	{
@@ -34,9 +39,9 @@ private:
 	sf::RenderWindow m_window;
 	sf::Clock m_deltaClock;
 
-	std::vector<Grid::BaseGrid *> m_grids;
+	std::map<std::string, Grid::BaseGrid *> m_grids;
 
-	std::vector<bool> m_visibleImGuiWindows;
+	std::map<std::string, bool> m_visibleImGuiWindows;
 
 	EGameState m_gameState;
 
