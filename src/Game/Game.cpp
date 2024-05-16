@@ -20,7 +20,9 @@
 Game::Game(const sf::VideoMode& videoMode)
 	: m_window(videoMode, "Rogue Tic-Tac-Toe")
 {
-	m_grids.emplace_back(Grid::Map::getMapPointer());
+	auto map = Grid::Map::getMapPointer();
+	map->resize(sf::Vector2i(m_window.getSize()));
+	m_grids.emplace_back(map);
 
 	{
 		sf::Vector2i combatLeftTop(m_window.getSize().x, m_window.getSize().y/2 + 60);
@@ -98,24 +100,39 @@ void Game::onMouseClick(sf::Event &event)
 void Game::onKeyPressed(sf::Event &event)
 {
 	std::cout << "EVENT" << std::endl;
+
+	// player moving
 	switch (event.key.code)
 	{
 	case sf::Keyboard::W:
 	case sf::Keyboard::A:
 	case sf::Keyboard::S:
 	case sf::Keyboard::D:
-		// player moving
-		if (!Grid::GridManager::moveEvent(m_window, event, m_grids[0]))
+	case sf::Keyboard::Up:
+	case sf::Keyboard::Left:
+	case sf::Keyboard::Down:
+	case sf::Keyboard::Right:
+		auto moveResult = Grid::GridManager::moveEvent(m_window, event, m_grids[0]);
+		if (moveResult)
 		{
-			m_gameState = EGameState::InCombat;
+			if (moveResult->hasTag("enemy"))
+			{
+				m_gameState = EGameState::InCombat;
+			}
+			else if (moveResult->hasTag("item"))
+			{
+				m_gameState = EGameState::Interacting;
+			}
 		}
 		else
 		{
 			m_gameState = EGameState::Exploring;
 		}
 		break;
+	}
 
-	case sf::Keyboard::Escape:
+	if (event.key.code == sf::Keyboard::Escape)
+	{
 		event.type = sf::Event::Closed;
 		return;
 	}

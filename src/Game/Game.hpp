@@ -14,6 +14,7 @@ public:
 	{
 		Exploring,
 		InCombat,
+		Interacting,
 
 		None
 	};

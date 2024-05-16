@@ -33,6 +33,7 @@ namespace Grid
 		m_size = sf::Vector2u(m_bottomRight - m_topLeft);
 		m_linesAmount = sf::Vector2u(m_size.y/m_offset,  // horizontal lines
 									 m_size.x/m_offset); // vertical lines
+		m_cellsAmount = sf::Vector2u(m_linesAmount.y-1, m_linesAmount.x-1);
 
 	}
 

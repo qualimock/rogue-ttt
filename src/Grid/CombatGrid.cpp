@@ -126,9 +126,9 @@ namespace Grid
 				if (dynamic_cast<Entity::TTTCell *>(cell.second)->faction() == winnerFaction)
 				{
 					cell.second->setColor(sf::Color::White);
-					return true;
 				}
 			}
+			return true;
 		}
 
 		return false;

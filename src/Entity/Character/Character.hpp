@@ -24,7 +24,7 @@ namespace Entity
 
 		void move(const sf::Vector2i &offset);
 
-		void interact(const Entity &target);
+		void interact(Entity *target);
 
 	private:
 		EType m_type;

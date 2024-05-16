@@ -45,8 +45,18 @@ namespace Entity
 		setPosition(position() + offset);
 	}
 
-	void Character::interact(const Entity &target)
+	void Character::interact(Entity *target)
 	{
 		std::cout << "INTERACTION" << std::endl;
+
+		switch (m_type)
+		{
+		case EType::Enemy:
+			std::cout << "ENEMY" << std::endl;
+			break;
+
+		case EType::NPC:
+			std::cout << "NPC" << std::endl;
+		}
 	}
 }

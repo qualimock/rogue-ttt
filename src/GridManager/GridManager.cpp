@@ -12,7 +12,7 @@ namespace Grid
 {
 	bool GridManager::mouseClicked(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid)
 	{
-		std::cout << "MOUSE" << std::endl << std::endl;
+		std::cout << "MOUSE" << std::endl;		
 
 		switch (grid->type())
 		{
@@ -27,31 +27,37 @@ namespace Grid
 		return false;
 	}
 
-	bool GridManager::moveEvent(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid)
+	Entity::Entity * GridManager::moveEvent(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid)
 	{
-		std::cout << "KEYBOARD" << std::endl << std::endl;
+		std::cout << "KEYBOARD" << std::endl;
 
 		sf::Vector2i movement;
 
 		switch(event.key.code)
 		{
 		case sf::Keyboard::W:
+		case sf::Keyboard::Up:
 			movement = sf::Vector2i(0, -1);
 			break;
 
 		case sf::Keyboard::A:
+		case sf::Keyboard::Left:
 			movement = sf::Vector2i(-1, 0);
 			break;
 
 		case sf::Keyboard::S:
+		case sf::Keyboard::Down:
 			movement = sf::Vector2i(0, 1);
 			break;
 
 		case sf::Keyboard::D:
+		case sf::Keyboard::Right:
 			movement = sf::Vector2i(1, 0);
 			break;
 		}
 
-		return dynamic_cast<Grid::Map *>(grid)->movePlayer(movement);
+		auto moveResult = dynamic_cast<Grid::Map *>(grid)->movePlayer(movement);
+
+		return moveResult;
 	}
 }
