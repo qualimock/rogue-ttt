@@ -6,8 +6,6 @@
 
 namespace Grid
 {
-	typedef std::vector<sf::VertexArray> Lines;
-
 	class IGrid
 	{
 	public:
@@ -19,16 +17,13 @@ namespace Grid
 			Storage
 		};
 
-		IGrid(sf::RenderWindow &window,
-			  EGridType gridType,
+		IGrid(EGridType gridType,
 			  const sf::Vector2i &topLeft,
 			  const sf::Vector2i &bottomRight,
 			  unsigned linesOffset);
-		~IGrid();
 
-		virtual void processEvent(sf::Event &event) = 0;
 		virtual void update();
-		virtual void draw();
+		virtual void render(sf::RenderTarget &target);
 
 		virtual void move(const sf::Vector2i &position) = 0;
 		virtual void resize(const sf::Vector2i &point) = 0;
@@ -38,18 +33,17 @@ namespace Grid
 		const sf::Vector2u size() const { return m_size; }
 
 	private:
-		Lines m_verticalLines;
-		Lines m_horizontalLines;
+		std::vector<sf::VertexArray> m_verticalLines;
+		std::vector<sf::VertexArray> m_horizontalLines;
 
 		EGridType m_type;
 
 	protected:
-		sf::RenderWindow &m_window;
-
 		sf::Vector2i m_topLeft;
 		sf::Vector2i m_bottomRight;
 
 		sf::Vector2u m_linesAmount;
+		sf::Vector2u m_cellsAmount;
 
 		unsigned m_offset;
 

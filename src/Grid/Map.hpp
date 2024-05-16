@@ -2,27 +2,34 @@
 
 #include "BaseGrid.hpp"
 
+#include "../Entity/Entity.hpp"
+#include "../Entity/Character/Character.hpp"
+
 #include <memory>
+
+namespace Entity
+{
+	class Character;
+}
 
 namespace Grid
 {
 	class Map : public BaseGrid
 	{
-		Map(sf::RenderWindow &window);
-
-		static std::unique_ptr<Map> map;
-
-	public:
-		~Map();
-
-		static std::unique_ptr<Map>& getMap(sf::RenderWindow &window);
+		Map();
 
 		Map(const Map&) = delete;
 		Map& operator=(const Map&) = delete;
-		Map(Map&&) = delete;
-		Map& operator=(Map&&) = delete;
 
-		void processEvent(sf::Event &event) override;
+	public:
+		static Map& getMap();
+		static Map* getMapPointer();
+
 		void move() = delete;
+
+		void placeCharacter(const sf::Vector2i &position, Entity::Character::EType type);
+		void placeActor(const sf::Vector2i &position, Entity::Actor *actor);
+
+		Entity::Entity * movePlayer(const sf::Vector2i &indexOffset);
 	};
 }

@@ -2,13 +2,17 @@
 
 #include <memory>
 
+#include "../Game/Game.hpp"
+
 namespace sf {
 	class Event;
+	class RenderWindow;
 }
 
 namespace Grid
 {
 	class IGrid;
+	class BaseGrid;
 
 	class GridManager
 	{
@@ -22,7 +26,7 @@ namespace Grid
 
 		~GridManager() = default;
 
-		static void processEvent(sf::Event &event, std::unique_ptr<IGrid>::pointer grid);
-		static void processEvent(sf::Event &event, IGrid &grid);
+		static bool mouseClicked(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid);
+		static Entity::Entity * moveEvent(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid);
 	};
 }

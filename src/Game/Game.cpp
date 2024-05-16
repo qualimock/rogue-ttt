@@ -10,6 +10,7 @@
 #include "../GridManager/GridManager.hpp"
 
 #include "../Grid/DraggableGrid.hpp"
+#include "../Grid/CombatGrid.hpp"
 #include "../Grid/Map.hpp"
 
 #define DEBUG
@@ -19,13 +20,21 @@
 Game::Game(const sf::VideoMode& videoMode)
 	: m_window(videoMode, "Rogue Tic-Tac-Toe")
 {
-	m_grids.emplace_back(std::move(Grid::Map::getMap(m_window)).get());
+	auto map = Grid::Map::getMapPointer();
+	map->resize(sf::Vector2i(m_window.getSize()));
+	m_grids.emplace_back(map);
 
-	// combat grid
 	{
-		sf::Vector2i combatP1(m_window.getSize().x, m_window.getSize().y/2 + 60);
-		sf::Vector2i combatP2(combatP1 + sf::Vector2i(120, 120));
-		m_grids.emplace_back(new Grid::BaseGrid(m_window, Grid::BaseGrid::EGridType::Combat, "combat", combatP1, combatP2));
+		sf::Vector2i combatLeftTop(m_window.getSize().x, m_window.getSize().y/2 + 60);
+		sf::Vector2i combatRightBottom(combatLeftTop + sf::Vector2i(120, 120));
+		m_grids.emplace_back(new Grid::CombatGrid("combat", combatLeftTop, combatRightBottom, 0, 40));
+	}
+
+	m_gameState = EGameState::Exploring;
+
+	for (auto &grid : m_grids)
+	{
+		m_visibleImGuiWindows.push_back(false);
 	}
 }
 
@@ -46,6 +55,117 @@ bool Game::init()
 	return true;
 }
 
+void Game::onMouseClick(sf::Event &event)
+{
+	sf::Vector2i mousePos = sf::Mouse::getPosition(m_window);
+
+    // search grid on mouse position
+	{
+		std::vector<Grid::BaseGrid *> mouseGrids;
+
+		for (auto &grid : m_grids)
+		{
+			sf::Vector2i gridLU = grid->position();
+			sf::Vector2i gridRB = grid->position() + sf::Vector2i(grid->size());
+
+			if (mousePos.x >= gridLU.x && mousePos.x <= gridRB.x &&
+				mousePos.y >= gridLU.y && mousePos.y <= gridRB.y)
+			{
+			    mouseGrids.emplace_back(grid);
+			}
+		}
+
+		if (mouseGrids.empty())
+			return;
+
+		Grid::BaseGrid *currentGrid = mouseGrids.at(0);
+		for (auto &grid : mouseGrids)
+		{
+			if (grid->layer() > currentGrid->layer())
+			{
+				currentGrid = grid;
+			}
+		}
+
+		switch(event.type)
+		{
+		case sf::Event::MouseButtonPressed:
+			if (currentGrid->name() == "combat" && m_gameState == EGameState::InCombat)
+			{
+				if (Grid::GridManager::mouseClicked(m_window, event, currentGrid))
+				{
+					m_grids[0]->destroyEntity(m_currentlyInteractedEntity);
+					m_currentlyInteractedEntity = nullptr;
+
+					m_gameState = EGameState::Exploring;
+				}
+			}
+			break;
+		}
+	}
+}
+
+void Game::onKeyPressed(sf::Event &event)
+{
+	// player moving
+	if (m_gameState == EGameState::Exploring)
+	switch (event.key.code)
+	{
+	case sf::Keyboard::W:
+	case sf::Keyboard::A:
+	case sf::Keyboard::S:
+	case sf::Keyboard::D:
+	case sf::Keyboard::Up:
+	case sf::Keyboard::Left:
+	case sf::Keyboard::Down:
+	case sf::Keyboard::Right:
+		auto moveResult = Grid::GridManager::moveEvent(m_window, event, m_grids[0]);
+		if (moveResult)
+		{
+			if (moveResult->hasTag("enemy"))
+			{
+				m_currentlyInteractedEntity = dynamic_cast<Entity::Character *>(moveResult);
+				m_gameState = EGameState::InCombat;
+			}
+			else if (moveResult->hasTag("item"))
+			{
+				m_currentlyInteractedEntity = dynamic_cast<Entity::Actor *>(moveResult);
+				m_gameState = EGameState::Interacting;
+			}
+		}
+		else
+		{
+			m_currentlyInteractedEntity = nullptr;
+			m_gameState = EGameState::Exploring;
+		}
+		break;
+	}
+
+	std::cout << "STATE" << std::endl;
+
+	switch (m_gameState)
+	{
+	case EGameState::Exploring:
+		std::cout << "EXPLORING" << std::endl;
+		break;
+
+	case EGameState::InCombat:
+		std::cout << "COMBAT" << std::endl;
+		break;
+
+	case EGameState::Interacting:
+		std::cout << "INTERACTION" << std::endl;
+		break;
+	}
+
+
+	if (event.key.code == sf::Keyboard::Escape)
+	{
+		event.type = sf::Event::Closed;
+		return;
+	}
+}
+
 void Game::update()
 {
 	ImGui::SFML::Update(m_window, m_deltaClock.restart());
@@ -55,35 +175,23 @@ void Game::update()
 	{
 		ImGui::SFML::ProcessEvent(m_window, event);
 
-		for (auto &grid : m_grids)
+		switch(event.type)
 		{
-			if (event.type != sf::Event::MouseButtonPressed)
+		case sf::Event::MouseButtonPressed:
+			std::cout << std::endl << "EVENT" << std::endl;
+			if (!ImGuiFlags.mouseHover)
 			{
-				if (!ImGuiFlags.mouseHover)
-					Grid::GridManager::processEvent(event, grid);				
+				onMouseClick(event);
 			}
-			else
-			{
-				if (!ImGuiFlags.mouseHover)
-				{
-					Grid::GridManager::processEvent(event, grid);
-				}
-			}
-		}
+			break;
 
-		if (event.type == sf::Event::KeyPressed)
-		{
-			if (event.key.code == sf::Keyboard::Escape)
-			{
-				event.type = sf::Event::Closed;
-			}
+		case sf::Event::KeyPressed:
+			std::cout << std::endl << "EVENT" << std::endl;
+			onKeyPressed(event);
+			break;
 
-			if (event.key.code == sf::Keyboard::S) {
-				auto mousePos = sf::Mouse::getPosition(m_window);
-				m_grids.emplace_back(new Grid::DraggableGrid(m_window, Grid::IGrid::EGridType::Interaction,
-															 ("G(" + std::to_string(mousePos.x) + ":" + std::to_string(mousePos.y) + ")").c_str(),
-															 mousePos, mousePos+sf::Vector2i(100, 100), 7, true));
-			}
+		default:
+			break;
 		}
 
 		if (event.type == sf::Event::Closed)
@@ -95,11 +203,17 @@ void Game::update()
 		{
 			sf::FloatRect view(0, 0, event.size.width, event.size.height);
 			m_window.setView(sf::View(view));
+
 			m_grids[0]->resize(sf::Vector2i(event.size.width-200, event.size.height));
-			// combat grid
+
+            // move combat grid relative to window size
+			for (auto &grid : m_grids)
 			{
-				sf::Vector2i combatPosition(m_window.getSize().x-160, m_window.getSize().y/2 - 60);
-				m_grids[1]->move(combatPosition);
+				if (grid->type() == Grid::IGrid::EGridType::Combat)
+				{
+					sf::Vector2i combatPosition(m_window.getSize().x-160, m_window.getSize().y/2 - 60);
+					grid->move(combatPosition);
+				}
 			}
 		}
 	}
@@ -120,7 +234,14 @@ void Game::processImgui()
 		{
 			if (ImGui::MenuItem("New"))
 			{
-				// placeholder
+				for (auto &grid : m_grids)
+				{
+					if (grid->name() == "combat")
+					{
+						grid->clear();
+						break;
+					}
+				}
 			}
 
 			if (ImGui::MenuItem("Exit", "Esc"))
@@ -136,15 +257,11 @@ void Game::processImgui()
 
 		if (ImGui::BeginMenu("Grids"))
 		{
-			int i = 0;
-			for (auto grid = m_grids.begin(); grid < m_grids.end(); ++i, ++grid)
+			for (int i = 0; i < m_grids.size(); i++)
 			{
-				if (m_grids.at(i)->name() == "map")
-					continue;
-				
-				if (ImGui::MenuItem(m_grids.at(i)->name().c_str()))
+				if (ImGui::MenuItem(m_grids[i]->name().c_str()))
 				{
-					m_grids.erase(grid);
+					m_visibleImGuiWindows[i] = !m_visibleImGuiWindows[i];
 				}
 			}
 
@@ -157,20 +274,29 @@ void Game::processImgui()
 		ImGui::EndMainMenuBar();
 	}
 
-#ifdef DEBUG
-	ImGui::Begin("Debug");
-		for (auto &grid : m_grids)
+	for (int i = 0; i < m_grids.size(); i++)
+	{
+		if (m_visibleImGuiWindows[i])
+		if (ImGui::Begin(m_grids[i]->name().c_str()))
 		{
-			ImGui::LabelText(grid->name().c_str(), "Name");
-			ImGui::LabelText((std::to_string(grid->position().x) + ":" + std::to_string(grid->position().y)).c_str(), "Position");
-			ImGui::LabelText((std::to_string(grid->size().x) + ":" + std::to_string(grid->size().y)).c_str(), "Size");
+			ImGui::LabelText((std::to_string(m_grids[i]->position().x) + ":" + std::to_string(m_grids[i]->position().y)).c_str(), "Position");
+			ImGui::LabelText((std::to_string(m_grids[i]->size().x) + ":" + std::to_string(m_grids[i]->size().y)).c_str(), "Size");
+			ImGui::LabelText((std::to_string(m_grids[i]->layer()).c_str()), "Layer");
+			ImGui::LabelText("", "Cells");
+			for (auto &cell : m_grids[i]->m_entities)
+			{
+				ImGui::LabelText("", "");
+				ImGui::LabelText((std::to_string(cell.first.x) + ":" + std::to_string(cell.first.y)).c_str(), "Index");
+				ImGui::LabelText((std::to_string(cell.second->position().x) + ":" + std::to_string(cell.second->position().y)).c_str(), "Position");
+				ImGui::LabelText((std::to_string(cell.second->size().x) + ":" + std::to_string(cell.second->size().y)).c_str(), "Size");
+			}
+
+			if (ImGui::IsWindowHovered())
+				ImGuiFlags.mouseHover = true;
+
+			ImGui::End();
 		}
-
-		if (ImGui::IsWindowHovered())
-			ImGuiFlags.mouseHover = true;
-
-		ImGui::End();
-#endif
+	}
 
 	ImGui::SFML::Render(m_window);
 }
@@ -180,7 +306,8 @@ void Game::render()
 	m_window.clear();
 	for (auto &grid : m_grids)
 	{
-		grid->draw();
+		grid->render(m_window);
+		grid->renderCells(m_window);
 	}
 	processImgui();
 	m_window.display();

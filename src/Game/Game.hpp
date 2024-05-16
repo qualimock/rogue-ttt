@@ -9,17 +9,16 @@
 
 class Game
 {
-	sf::RenderWindow m_window;
-	sf::Clock m_deltaClock;
-
-	std::vector<Grid::BaseGrid *> m_grids;
-
-	struct
-	{
-		bool mouseHover = false;
-	} ImGuiFlags;
-
 public:
+	enum class EGameState
+	{
+		Exploring,
+		InCombat,
+		Interacting,
+
+		None
+	};
+
 	Game(const sf::VideoMode& videoMode);
 	~Game();
 
@@ -30,4 +29,24 @@ public:
 	bool init();
 
 	const sf::RenderWindow *window() const { return &m_window; }
+
+private:	
+	sf::RenderWindow m_window;
+	sf::Clock m_deltaClock;
+
+	std::vector<Grid::BaseGrid *> m_grids;
+
+	std::vector<bool> m_visibleImGuiWindows;
+
+	EGameState m_gameState;
+
+	Entity::Entity *m_currentlyInteractedEntity = nullptr;
+
+	struct
+	{
+		bool mouseHover = false;
+	} ImGuiFlags;
+
+	void onMouseClick(sf::Event &event);
+	void onKeyPressed(sf::Event &event);
 };
