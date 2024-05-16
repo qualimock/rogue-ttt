@@ -25,7 +25,8 @@ namespace Entity
 
 	void Entity::setPosition(const sf::Vector2i &position)
 	{
-		m_shape.setPosition(sf::Vector2f(position));
+		m_position = position;
+		m_shape.setPosition(sf::Vector2f(m_position));
 	}
 
 	void Entity::setColor(sf::Color color)

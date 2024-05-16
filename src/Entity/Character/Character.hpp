@@ -22,7 +22,7 @@ namespace Entity
 		Character(const Entity &entity, EType type);
 		Character(Entity &&entity, EType type);
 
-		void move(const sf::Vector2i &position);
+		void move(const sf::Vector2i &offset);
 
 		void interact(const Entity &target);
 

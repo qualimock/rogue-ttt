@@ -98,9 +98,14 @@ void Game::onMouseClick(sf::Event &event)
 
 void Game::onKeyPressed(sf::Event &event)
 {
-	if (event.key.code == sf::Keyboard::Escape)
+	// player moving
+	Grid::GridManager::keyPressed(m_window, event, m_grids[0]);
+
+	switch (event.key.code)
 	{
+	case sf::Keyboard::Escape:
 		event.type = sf::Event::Closed;
+		return;
 	}
 }
 
@@ -139,9 +144,10 @@ void Game::update()
 		{
 			sf::FloatRect view(0, 0, event.size.width, event.size.height);
 			m_window.setView(sf::View(view));
+
 			m_grids[0]->resize(sf::Vector2i(event.size.width-200, event.size.height));
 
-// combat grid
+            // move combat grid relative to window size
 			for (auto &grid : m_grids)
 			{
 				if (grid->type() == Grid::IGrid::EGridType::Combat)
@@ -220,6 +226,8 @@ void Game::processImgui()
 			ImGui::LabelText("", "Cells");
 			for (auto &cell : m_grids[i]->m_entities)
 			{
+				ImGui::LabelText("", "");
+				ImGui::LabelText((std::to_string(cell.first.x) + ":" + std::to_string(cell.first.y)).c_str(), "Index");
 				ImGui::LabelText((std::to_string(cell.second->position().x) + ":" + std::to_string(cell.second->position().y)).c_str(), "Position");
 				ImGui::LabelText((std::to_string(cell.second->size().x) + ":" + std::to_string(cell.second->size().y)).c_str(), "Size");
 			}

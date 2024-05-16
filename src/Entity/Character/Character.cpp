@@ -9,7 +9,26 @@ namespace Entity
 						 EType type)
 		: Entity(position, size)
 		, m_type(type)
-	{}
+	{
+		switch(type)
+		{
+		case EType::Player:
+			setColor(sf::Color::White);
+			break;
+
+		case EType::Enemy:
+			setColor(sf::Color::Red);
+			break;
+
+		case EType::NPC:
+			setColor(sf::Color::Yellow);
+			break;
+
+		case EType::None:
+			setColor(sf::Color::Magenta);
+			break;
+		}
+	}
 
 	Character::Character(const Entity &entity, EType type)
 		: Entity(entity)
@@ -21,9 +40,9 @@ namespace Entity
 		, m_type(type)
 	{}
 
-	void Character::move(const sf::Vector2i &position)
+	void Character::move(const sf::Vector2i &offset)
 	{
-		setPosition(position);
+		setPosition(position() + offset);
 	}
 
 	void Character::interact(const Entity &target)

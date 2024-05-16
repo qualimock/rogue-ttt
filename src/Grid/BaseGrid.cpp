@@ -105,11 +105,13 @@ namespace Grid
 	{
 		if (m_entities.find(IndexPosition.first) == m_entities.end())
 		{
+			entity->setPosition(IndexPosition.second);
 			m_entities.emplace
 			(
 				IndexPosition.first,
 				entity
 			);
+
 			std::cout << "SPAWNED" << std::endl;
 			std::cout << IndexPosition.first.x << ":" << IndexPosition.first.y << std::endl;
 		}

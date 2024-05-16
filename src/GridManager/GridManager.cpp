@@ -4,13 +4,12 @@
 
 #include "../Grid/BaseGrid.hpp"
 #include "../Grid/CombatGrid.hpp"
+#include "../Grid/Map.hpp"
 
 #include <iostream>
 
 namespace Grid
 {
-	void GridManager::processEvent(sf::Event &event, BaseGrid *grid) {}
-
 	void GridManager::mouseClicked(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid)
 	{
 		std::cout << "EVENT" << std::endl;
@@ -35,5 +34,31 @@ namespace Grid
 		}
 
 		std::cout << std::endl;
+	}
+
+	void GridManager::keyPressed(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid)
+	{
+		sf::Vector2i movement;
+
+		switch(event.key.code)
+		{
+		case sf::Keyboard::W:
+			movement = sf::Vector2i(0, -1);
+			break;
+
+		case sf::Keyboard::A:
+			movement = sf::Vector2i(-1, 0);
+			break;
+
+		case sf::Keyboard::S:
+			movement = sf::Vector2i(0, 1);
+			break;
+
+		case sf::Keyboard::D:
+			movement = sf::Vector2i(1, 0);
+			break;
+		}
+
+		dynamic_cast<Grid::Map *>(grid)->movePlayer(movement);
 	}
 }
