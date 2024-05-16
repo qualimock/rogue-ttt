@@ -58,7 +58,7 @@ bool Game::init()
 void Game::onMouseClick(sf::Event &event)
 {
 	sf::Vector2i mousePos = sf::Mouse::getPosition(m_window);
-	
+
     // search grid on mouse position
 	{
 		std::vector<Grid::BaseGrid *> mouseGrids;
@@ -87,11 +87,19 @@ void Game::onMouseClick(sf::Event &event)
 			}
 		}
 
-		std::cout << "EVENT" << std::endl;
 		switch(event.type)
 		{
 		case sf::Event::MouseButtonPressed:
-			Grid::GridManager::mouseClicked(m_window, event, currentGrid);
+			if (currentGrid->name() == "combat" && m_gameState == EGameState::InCombat)
+			{
+				if (Grid::GridManager::mouseClicked(m_window, event, currentGrid))
+				{
+					m_grids[0]->destroyEntity(m_currentlyInteractedEntity);
+					m_currentlyInteractedEntity = nullptr;
+
+					m_gameState = EGameState::Exploring;
+				}
+			}
 			break;
 		}
 	}
@@ -99,9 +107,8 @@ void Game::onMouseClick(sf::Event &event)
 
 void Game::onKeyPressed(sf::Event &event)
 {
-	std::cout << "EVENT" << std::endl;
-
 	// player moving
+	if (m_gameState == EGameState::Exploring)
 	switch (event.key.code)
 	{
 	case sf::Keyboard::W:
@@ -117,19 +124,40 @@ void Game::onKeyPressed(sf::Event &event)
 		{
 			if (moveResult->hasTag("enemy"))
 			{
+				m_currentlyInteractedEntity = dynamic_cast<Entity::Character *>(moveResult);
 				m_gameState = EGameState::InCombat;
 			}
 			else if (moveResult->hasTag("item"))
 			{
+				m_currentlyInteractedEntity = dynamic_cast<Entity::Actor *>(moveResult);
 				m_gameState = EGameState::Interacting;
 			}
 		}
 		else
 		{
+			m_currentlyInteractedEntity = nullptr;
 			m_gameState = EGameState::Exploring;
 		}
 		break;
 	}
+
+	std::cout << "STATE" << std::endl;
+
+	switch (m_gameState)
+	{
+	case EGameState::Exploring:
+		std::cout << "EXPLORING" << std::endl;
+		break;
+
+	case EGameState::InCombat:
+		std::cout << "COMBAT" << std::endl;
+		break;
+
+	case EGameState::Interacting:
+		std::cout << "INTERACTION" << std::endl;
+		break;
+	}
+
 
 	if (event.key.code == sf::Keyboard::Escape)
 	{
@@ -150,6 +178,7 @@ void Game::update()
 		switch(event.type)
 		{
 		case sf::Event::MouseButtonPressed:
+			std::cout << std::endl << "EVENT" << std::endl;
 			if (!ImGuiFlags.mouseHover)
 			{
 				onMouseClick(event);
@@ -157,6 +186,7 @@ void Game::update()
 			break;
 
 		case sf::Event::KeyPressed:
+			std::cout << std::endl << "EVENT" << std::endl;
 			onKeyPressed(event);
 			break;
 

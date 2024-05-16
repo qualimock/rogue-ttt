@@ -116,6 +116,7 @@ namespace Grid
 					}
 
 					m_entities.insert(std::move(player));
+					return foundEntity->second;
 				}
 			}
 		}

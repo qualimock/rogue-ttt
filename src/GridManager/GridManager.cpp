@@ -56,8 +56,6 @@ namespace Grid
 			break;
 		}
 
-		auto moveResult = dynamic_cast<Grid::Map *>(grid)->movePlayer(movement);
-
-		return moveResult;
+		return dynamic_cast<Grid::Map *>(grid)->movePlayer(movement);
 	}
 }

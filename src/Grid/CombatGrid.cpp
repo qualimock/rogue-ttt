@@ -43,33 +43,21 @@ namespace Grid
 		{
 			if (checkNeighbors(entity, sf::Vector2i(1, 1), sf::Vector2i(-1, -1)) != Entity::TTTCell::Faction::None)
 			{
-				std::cout << "ORIGIN" << std::endl;
-				std::cout << entity.first.x << ":" << entity.first.y << std::endl;
-				std::cout << "URDL" << std::endl;
 				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
 			}
 
 			if	(checkNeighbors(entity, sf::Vector2i(-1, 1), sf::Vector2i(1, -1)) != Entity::TTTCell::Faction::None)
 			{
-				std::cout << "ORIGIN" << std::endl;
-				std::cout << entity.first.x << ":" << entity.first.y << std::endl;
-				std::cout << "ULDR" << std::endl;
 				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
 			}
 
 			if (checkNeighbors(entity, sf::Vector2i(0, 1), sf::Vector2i(0, -1)) != Entity::TTTCell::Faction::None)
 			{
-				std::cout << "ORIGIN" << std::endl;
-				std::cout << entity.first.x << ":" << entity.first.y << std::endl;
-				std::cout << "UCDC" << std::endl;
 				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
 			}
 
 			if(checkNeighbors(entity, sf::Vector2i(1, 0), sf::Vector2i(-1, 0)) != Entity::TTTCell::Faction::None)
 			{
-				std::cout << "ORIGIN" << std::endl;
-				std::cout << entity.first.x << ":" << entity.first.y << std::endl;
-				std::cout << "CRCL" << std::endl;
 				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
 			}
 		}
@@ -128,6 +116,7 @@ namespace Grid
 					cell.second->setColor(sf::Color::White);
 				}
 			}
+			m_entities.clear();
 			return true;
 		}
 
