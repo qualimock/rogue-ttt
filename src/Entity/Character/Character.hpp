@@ -28,5 +28,7 @@ namespace Entity
 
 	private:
 		EType m_type;
+
+		void init();
 	};
 }
