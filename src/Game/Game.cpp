@@ -283,7 +283,7 @@ void Game::processImgui()
 			for (auto &cell : grid.second->m_entities)
 			{
 				ImGui::LabelText("", "");
-				ImGui::LabelText((std::to_string(cell.first.x) + ":" + std::to_string(cell.first.y)).c_str(), "Index");
+				ImGui::LabelText((std::to_string(cell.second->index().x) + ":" + std::to_string(cell.second->index().y)).c_str(), "Index");
 				ImGui::LabelText((std::to_string(cell.second->position().x) + ":" + std::to_string(cell.second->position().y)).c_str(), "Position");
 				ImGui::LabelText((std::to_string(cell.second->size().x) + ":" + std::to_string(cell.second->size().y)).c_str(), "Size");
 			}

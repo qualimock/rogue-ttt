@@ -10,7 +10,26 @@ namespace Entity
 		: Entity(position, size)
 		, m_type(type)
 	{
-		switch(type)
+		init();
+	}
+
+	Character::Character(const Entity &entity, EType type)
+		: Entity(entity)
+		, m_type(type)
+	{
+		init();
+	}
+
+	Character::Character(Entity &&entity, EType type)
+		: Entity(entity)
+		, m_type(type)
+	{
+		init();
+	}
+
+	void Character::init()
+	{
+		switch(m_type)
 		{
 		case EType::Player:
 			setColor(sf::Color::White);
@@ -28,17 +47,8 @@ namespace Entity
 			setColor(sf::Color::Magenta);
 			break;
 		}
+		addTag("solid");
 	}
-
-	Character::Character(const Entity &entity, EType type)
-		: Entity(entity)
-		, m_type(type)
-	{}
-
-	Character::Character(Entity &&entity, EType type)
-		: Entity(entity)
-		, m_type(type)
-	{}
 
 	void Character::move(const sf::Vector2i &offset)
 	{
@@ -49,14 +59,17 @@ namespace Entity
 	{
 		std::cout << "INTERACTION" << std::endl;
 
-		switch (m_type)
-		{
-		case EType::Enemy:
-			std::cout << "ENEMY" << std::endl;
-			break;
+		target->onInteract();
+	}
 
-		case EType::NPC:
-			std::cout << "NPC" << std::endl;
-		}
+	void Character::onInteract()
+	{
+		std::cout
+			<< "CHARACTER" << std::endl
+			<< "POSITION" << std::endl
+			<< position().x << ":" << position().y << std::endl
+			<< "SIZE" << std::endl
+			<< size().x << ":" << size().y <<
+		std::endl;
 	}
 }

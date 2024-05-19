@@ -31,6 +31,7 @@ namespace Grid
 		const EGridType type() const { return m_type; }
 		const sf::Vector2i position() const { return m_topLeft; }
 		const sf::Vector2u size() const { return m_size; }
+		const sf::Vector2u cellSize() const { return m_cellSize; }
 
 	private:
 		std::vector<sf::VertexArray> m_verticalLines;
@@ -44,6 +45,8 @@ namespace Grid
 
 		sf::Vector2u m_linesAmount;
 		sf::Vector2u m_cellsAmount;
+
+		sf::Vector2u m_cellSize;
 
 		unsigned m_offset;
 

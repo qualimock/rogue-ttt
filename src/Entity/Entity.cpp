@@ -8,6 +8,7 @@ namespace Entity
 		, m_position(position)
 		, m_size(size)
 		, m_color(sf::Color::White)
+		, m_index(0, 0)
 	{
 		setPosition(position);
 		resetColor();
@@ -19,6 +20,11 @@ namespace Entity
 			return true;
 
 		return false;
+	}
+
+	void Entity::removeTag(const std::string &tag)
+	{
+		m_tags.erase(tag);
 	}
 
 	void Entity::render(sf::RenderTarget &target)
@@ -40,5 +46,10 @@ namespace Entity
 	void Entity::setColor(sf::Color color)
 	{
 		m_shape.setFillColor(color);
+	}
+
+	void Entity::setIndex(const sf::Vector2i &index)
+	{
+		m_index = index;
 	}
 }

@@ -38,7 +38,8 @@ namespace Grid
 
 		for (auto &entity : m_entities)
 		{
-			entity.second->setPosition(m_topLeft + sf::Vector2i(m_offset * entity.first.x, m_offset * entity.first.y));
+			entity.second->setPosition(m_topLeft + sf::Vector2i(m_offset * entity.second->index().x,
+																m_offset * entity.second->index().y));
 		}
 	}
 
@@ -70,35 +71,42 @@ namespace Grid
 			// crossing lines click
 			if ( (m_size.y - 1) % position.y == 0 )
 			{
-				if ( m_entities.contains(entityIndex) || entityIndex.x < 0 || entityIndex.x > (m_size.x - 1) % m_offset )
+				for (auto &entity : m_entities)
 				{
-					entityIndex.x++;
-				}
+					if ( entity.second->index() == entityIndex || entityIndex.x < 0 || entityIndex.x > (m_size.x - 1) % m_offset )
+					{
+						entityIndex.x++;
+					}
 
-				if ( m_entities.contains(entityIndex) || entityIndex.y < 0 || entityIndex.y > (m_size.y - 1) % m_offset )
-				{
-					entityIndex.y++;
+					if ( entity.second->index() == entityIndex || entityIndex.y < 0 || entityIndex.y > (m_size.y - 1) % m_offset )
+					{
+						entityIndex.y++;
+					}
 				}
 			}
 
 			entityIndex.y++;
 
-			if ( m_entities.contains(entityIndex) || entityIndex.x < 0 || entityIndex.x > (m_size.x - 1) % m_offset )
+			for (auto &entity : m_entities)
 			{
-				entityIndex.x++;
+				if ( entity.second->index() == entityIndex || entityIndex.x < 0 || entityIndex.x > (m_size.x - 1) % m_offset )
+				{
+					entityIndex.x++;
+				}
 			}
-
 		}
 		// horizontal line click
 		else if ( (m_size.y - 1) % position.y == 0 )
 		{
 			entityIndex.x++;
 
-			if ( m_entities.contains(entityIndex) || entityIndex.y < 0 || entityIndex.y > (m_size.y - 1) % m_offset )
+			for (auto &entity : m_entities)
 			{
-				entityIndex.y++;
+				if ( entity.second->index() == entityIndex || entityIndex.y < 0 || entityIndex.y > (m_size.y - 1) % m_offset )
+				{
+					entityIndex.y++;
+				}
 			}
-
 		}
 		// entity click
 		else
@@ -121,22 +129,22 @@ namespace Grid
 	void BaseGrid::spawnEntity(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
 							   Entity::Entity *entity)
 	{
-		if (m_entities.find(IndexPosition.first) == m_entities.end())
+		std::string entityIndex = std::to_string(m_entities.size());
+
+		if (m_entities.find(entityIndex) == m_entities.end())
 		{
 			entity->setPosition(IndexPosition.second);
-			entity->addTag(std::to_string(m_entities.size()));
-			m_entities.emplace
-			(
-				IndexPosition.first,
-				entity
-			);
+			entity->setIndex(IndexPosition.first);
+			entity->addTag(entityIndex);
+
+			m_entities.emplace(entityIndex, entity);
 
 			std::cout << "SPAWNED" << std::endl;
 			std::cout << IndexPosition.first.x << ":" << IndexPosition.first.y << std::endl;
 		}
 	}
 
-	void BaseGrid::destroyEntity(const sf::Vector2i &index)
+	void BaseGrid::destroyEntity(const std::string &index)
 	{
 		if (m_entities.find(index) != m_entities.end())
 		{
