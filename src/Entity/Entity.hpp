@@ -18,6 +18,7 @@ namespace Entity
 		void render(sf::RenderTarget &target);
 
 		virtual void resetColor();
+		virtual void onInteract() = 0;
 
 		bool operator==(const Entity *entity) const;
 

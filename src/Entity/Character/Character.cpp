@@ -58,6 +58,17 @@ namespace Entity
 	{
 		std::cout << "INTERACTION" << std::endl;
 
+		target->onInteract();
+	}
 
+	void Character::onInteract()
+	{
+		std::cout
+			<< "CHARACTER" << std::endl
+			<< "POSITION" << std::endl
+			<< position().x << ":" << position().y << std::endl
+			<< "SIZE" << std::endl
+			<< size().x << ":" << size().y <<
+		std::endl;
 	}
 }

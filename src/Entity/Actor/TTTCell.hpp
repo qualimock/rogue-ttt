@@ -22,6 +22,7 @@ namespace Entity
 		bool isAlly(const TTTCell &tttCell);
 
 		void resetColor() override;
+		void onInteract() override {}
 
 		const Faction faction() const { return m_faction; }
 

@@ -29,4 +29,15 @@ namespace Entity
 	{
 		setColor(sf::Color::Magenta);
 	}
+
+	void Actor::onInteract()
+	{
+		std::cout
+			<< "ACTOR" << std::endl
+			<< "POSITION" << std::endl
+			<< position().x << ":" << position().y << std::endl
+			<< "SIZE" << std::endl
+			<< size().x << ":" << size().y <<
+		std::endl;
+	}
 }

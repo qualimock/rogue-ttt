@@ -26,6 +26,10 @@ namespace Entity
 
 		void interact(Entity *target);
 
+		void onInteract() override;
+
+		const EType type() const { return m_type; }
+
 	private:
 		EType m_type;
 
