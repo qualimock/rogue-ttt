@@ -274,12 +274,14 @@ void Game::processImgui()
 	for (auto &grid : m_grids)
 	{
 		if (m_visibleImGuiWindows.at(grid.first))
-		if (ImGui::Begin(grid.first.c_str()))
 		{
+			ImGui::Begin(grid.first.c_str());
+
 			ImGui::LabelText((std::to_string(grid.second->position().x) + ":" + std::to_string(grid.second->position().y)).c_str(), "Position");
 			ImGui::LabelText((std::to_string(grid.second->size().x) + ":" + std::to_string(grid.second->size().y)).c_str(), "Size");
 			ImGui::LabelText((std::to_string(grid.second->layer()).c_str()), "Layer");
 			ImGui::LabelText("", "Cells");
+
 			for (auto &cell : grid.second->m_entities)
 			{
 				ImGui::LabelText("", "");
