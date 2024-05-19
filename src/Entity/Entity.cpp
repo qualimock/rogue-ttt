@@ -8,6 +8,7 @@ namespace Entity
 		, m_position(position)
 		, m_size(size)
 		, m_color(sf::Color::White)
+		, m_index(0, 0)
 	{
 		setPosition(position);
 		resetColor();
@@ -45,5 +46,10 @@ namespace Entity
 	void Entity::setColor(sf::Color color)
 	{
 		m_shape.setFillColor(color);
+	}
+
+	void Entity::setIndex(const sf::Vector2i &index)
+	{
+		m_index = index;
 	}
 }
