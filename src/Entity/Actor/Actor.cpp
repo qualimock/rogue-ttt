@@ -1,5 +1,7 @@
 #include "Actor.hpp"
 
+#include <iostream>
+
 namespace Entity
 {
 	Actor::Actor(const sf::Vector2i &position,
