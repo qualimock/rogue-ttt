@@ -12,16 +12,29 @@ namespace Grid
 														const sf::Vector2i &n1Offset,
 														const sf::Vector2i &n2Offset)
 	{
-		auto n1 = m_entities.find(origin.first + n1Offset);
-		auto n2 = m_entities.find(origin.first + n2Offset);
+		Entity::Entity *n1 = nullptr;
+		Entity::Entity *n2 = nullptr;
+
+		for (auto &entity : m_entities)
+		{
+			if (entity.second->index() == origin.first + n1Offset)
+			{
+				n1 = entity.second;
+			}
+			if (entity.second->index() == origin.first + n2Offset)
+			{
+				n2 = entity.second;
+			}
+		}
+
 		Entity::TTTCell::Faction neighboursFaction = Entity::TTTCell::Faction::None;
 
-		if (n1 != m_entities.end() && n2 != m_entities.end())
+		if (n1 && n2)
 		{
-			if (dynamic_cast<Entity::TTTCell *>(n1->second)->faction() ==
-				dynamic_cast<Entity::TTTCell *>(n2->second)->faction())
+			if (dynamic_cast<Entity::TTTCell *>(n1)->faction() ==
+				dynamic_cast<Entity::TTTCell *>(n2)->faction())
 			{
-				neighboursFaction = dynamic_cast<Entity::TTTCell *>(n1->second)->faction();
+				neighboursFaction = dynamic_cast<Entity::TTTCell *>(n1)->faction();
 			}
 
 			if (neighboursFaction == dynamic_cast<Entity::TTTCell *>(origin.second)->faction())
@@ -37,22 +50,26 @@ namespace Grid
 	{
 		for (auto &entity : m_entities)
 		{
-			if (checkNeighbors(entity, sf::Vector2i(1, 1), sf::Vector2i(-1, -1)) != Entity::TTTCell::Faction::None)
+			if (checkNeighbors(std::make_pair(entity.second->index(), entity.second),
+							   sf::Vector2i(1, 1), sf::Vector2i(-1, -1)) != Entity::TTTCell::Faction::None)
 			{
 				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
 			}
 
-			if	(checkNeighbors(entity, sf::Vector2i(-1, 1), sf::Vector2i(1, -1)) != Entity::TTTCell::Faction::None)
+			if	(checkNeighbors(std::make_pair(entity.second->index(), entity.second),
+								sf::Vector2i(-1, 1), sf::Vector2i(1, -1)) != Entity::TTTCell::Faction::None)
 			{
 				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
 			}
 
-			if (checkNeighbors(entity, sf::Vector2i(0, 1), sf::Vector2i(0, -1)) != Entity::TTTCell::Faction::None)
+			if (checkNeighbors(std::make_pair(entity.second->index(), entity.second),
+							   sf::Vector2i(0, 1), sf::Vector2i(0, -1)) != Entity::TTTCell::Faction::None)
 			{
 				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
 			}
 
-			if(checkNeighbors(entity, sf::Vector2i(1, 0), sf::Vector2i(-1, 0)) != Entity::TTTCell::Faction::None)
+			if(checkNeighbors(std::make_pair(entity.second->index(), entity.second),
+							  sf::Vector2i(1, 0), sf::Vector2i(-1, 0)) != Entity::TTTCell::Faction::None)
 			{
 				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
 			}
@@ -82,7 +99,15 @@ namespace Grid
 			break;
 
 		case sf::Mouse::Middle:
-			destroyEntity(cellIndexPosition.first);
+			for (auto &entity : m_entities)
+			{
+				if (entity.second->index() == cellIndexPosition.first)
+				{
+					destroyEntity(entity.first);
+					break;
+				}
+			}
+
 			if (getWinner() == Entity::TTTCell::Faction::None)
 			{
 				for (auto &cell : m_entities)

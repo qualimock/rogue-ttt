@@ -6,26 +6,6 @@
 
 #include "../Entity/Actor/Actor.hpp"
 
-
-namespace std
-{
-	template <class T>
-    struct hash<sf::Vector2<T>>
-    {
-        std::size_t operator()(const sf::Vector2<T>& v) const
-        {
-            using std::hash;
-
-            std::size_t tmp0 = hash<T>()(v.x);
-            std::size_t tmp1 = hash<T>()(v.y);
-
-            tmp0 ^= tmp1 + 0x9e3779b9 + (tmp0 << 6) + (tmp0 >> 2);
-			return tmp0;
-         }
-    };
-}
-
-
 namespace Grid
 {
 	class BaseGrid : public IGrid
@@ -50,7 +30,7 @@ namespace Grid
 				 unsigned layer = 0,
 				 unsigned linesOffset = 40);
 
-		std::unordered_map<sf::Vector2i, Entity::Entity *> m_entities;
+		std::map<std::string, Entity::Entity *> m_entities;
 		void move(const sf::Vector2i &position) override;
 		void resize(const sf::Vector2i &point) override;
 
@@ -71,6 +51,6 @@ namespace Grid
 
 		void spawnEntity(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
 						 Entity::Entity *entity);
-		void destroyEntity(const sf::Vector2i &index);
+		void destroyEntity(const std::string &index);
 	};
 }

@@ -47,6 +47,7 @@ namespace Entity
 			setColor(sf::Color::Magenta);
 			break;
 		}
+		addTag("solid");
 	}
 
 	void Character::move(const sf::Vector2i &offset)

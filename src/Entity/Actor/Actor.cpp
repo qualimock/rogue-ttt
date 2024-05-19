@@ -30,6 +30,7 @@ namespace Entity
 	void Actor::init()
 	{
 		setColor(sf::Color::Magenta);
+		addTag("solid");
 	}
 
 	void Actor::onInteract()

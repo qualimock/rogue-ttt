@@ -2,8 +2,8 @@
 
 #include "BaseGrid.hpp"
 
-#include "../Entity/Entity.hpp"
 #include "../Entity/Character/Character.hpp"
+#include "../Entity/Actor/Actor.hpp"
 
 namespace Entity
 {
@@ -27,7 +27,7 @@ namespace Grid
 		void move() = delete;
 
 		void placeCharacter(const sf::Vector2i &position, Entity::Character::EType type);
-		void placeActor(const sf::Vector2i &position, Entity::Actor *actor);
+		void placeActor(const sf::Vector2i &position, Entity::Actor::EType type);
 
 		Entity::Entity * movePlayer(const sf::Vector2i &indexOffset);
 	};
