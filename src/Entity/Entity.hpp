@@ -22,11 +22,12 @@ namespace Entity
 		bool operator==(const Entity *entity) const;
 
 		void addTag(const std::string &tag) { m_tags.emplace(tag); }
+		void removeTag(const std::string &tag);
 		bool hasTag(const std::string &tag) { return m_tags.contains(tag); }
 
 		const sf::Vector2i position() const { return m_position; }
 		const sf::Vector2u size() const { return m_size; }
-		const std::set<std::string> &tags() const { return m_tags; }
+		const std::set<std::string> tags() const { return m_tags; }
 
 	private:
 		sf::RectangleShape m_shape;

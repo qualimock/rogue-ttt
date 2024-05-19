@@ -21,6 +21,11 @@ namespace Entity
 		return false;
 	}
 
+	void Entity::removeTag(const std::string &tag)
+	{
+		m_tags.erase(tag);
+	}
+
 	void Entity::render(sf::RenderTarget &target)
 	{
 		target.draw(m_shape);
