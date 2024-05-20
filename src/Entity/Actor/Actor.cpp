@@ -6,8 +6,9 @@ namespace Entity
 {
 	Actor::Actor(const sf::Vector2i &position,
 				 const sf::Vector2u &size,
+				 unsigned layer,
 				 EType type)
-		: Entity(position, size)
+		: Entity(position, size, layer)
 		, m_type(type)
 	{
 		init();

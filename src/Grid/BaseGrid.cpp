@@ -12,6 +12,7 @@ namespace Grid
 					   unsigned linesOffset)
 		: IGrid(eGridType, topLeft, bottomRight, linesOffset)
 		, m_layer(layer)
+		, m_cellLayers(0)
 	{}
 
 	BaseGrid::BaseGrid(EGridType eGridType,
@@ -20,6 +21,7 @@ namespace Grid
 					   unsigned linesOffset)
 		: IGrid(eGridType, sf::Vector2i(0, 0), sf::Vector2i(size), linesOffset)
 		, m_layer(layer)
+		, m_cellLayers(0)
 	{}
 
 	BaseGrid::BaseGrid(EGridType eGridType,
@@ -29,6 +31,7 @@ namespace Grid
 					   unsigned linesOffset)
 		: IGrid(eGridType, position, position+sf::Vector2i(size), linesOffset)
 		, m_layer(layer)
+		, m_cellLayers(0)
 	{}
 
 	void BaseGrid::move(const sf::Vector2i &position)
@@ -164,10 +167,30 @@ namespace Grid
 		}
 	}
 
+	void BaseGrid::update()
+	{
+		IGrid::update();
+
+		for (auto &entity : m_entities)
+		{
+			if (entity.second->layer() > m_cellLayers)
+			{
+				m_cellLayers = entity.second->layer();
+			}
+		}
+	}
+
 	void BaseGrid::renderCells(sf::RenderTarget &target)
 	{
-		for(auto &cell : m_entities){
-			cell.second->render(target);
+		for (unsigned i = 0; i < m_cellLayers+1; ++i)
+		{
+			for(auto &entity : m_entities)
+			{
+				if (entity.second->layer() == i)
+				{
+					entity.second->render(target);
+				}
+			}
 		}
 	}
 

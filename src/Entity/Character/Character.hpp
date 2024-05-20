@@ -18,6 +18,7 @@ namespace Entity
 
 		Character(const sf::Vector2i &position,
 				  const sf::Vector2u &size,
+				  unsigned layer,
 				  EType type);
 		Character(const Entity &entity, EType type);
 		Character(Entity &&entity, EType type);

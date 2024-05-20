@@ -12,6 +12,8 @@ namespace Grid
 	{
 		unsigned m_layer;
 
+		unsigned m_cellLayers;
+
 	public:
 		BaseGrid(EGridType eGridType,
 				 const sf::Vector2i &topLeft,
@@ -37,6 +39,7 @@ namespace Grid
 		virtual bool clicked(sf::Mouse::Button button,
 							 const sf::Vector2i &mousePosition);
 
+		void update() override;
 		void renderCells(sf::RenderTarget &target);
 
 		void clear();

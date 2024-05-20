@@ -56,7 +56,7 @@ namespace Grid
 
 			std::cout << "PLAYER" << std::endl;
 
-			entity = new Entity::Player(Entity::Character(position, cellSize(), type));
+			entity = new Entity::Player(Entity::Character(position, cellSize(), 1, type));
 			entity->addTag("player");
 			break;
 		}
@@ -65,7 +65,7 @@ namespace Grid
 		{
 			std::cout << "ENEMY" << std::endl;
 
-			entity = new Entity::Character(position, cellSize(), type);
+			entity = new Entity::Character(position, cellSize(), 1, type);
 			entity->addTag("enemy");
 			break;
 		}
@@ -98,7 +98,7 @@ namespace Grid
 		{
 			std::cout << "WALL" << std::endl;
 
-			entity = new Entity::Wall(Entity::Actor(position, cellSize(), type));
+			entity = new Entity::Wall(Entity::Actor(position, cellSize(), 1, type));
 			entity->addTag("wall");
 			break;
 		}
@@ -106,7 +106,7 @@ namespace Grid
 		{
 			std::cout << "DOOR" << std::endl;
 
-			entity = new Entity::Door(Entity::Actor(position, cellSize(), type));
+			entity = new Entity::Door(Entity::Actor(position, cellSize(), 0, type));
 			entity->addTag("door");
 			break;
 		}

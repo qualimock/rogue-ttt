@@ -22,6 +22,7 @@ namespace Entity
 
 		Actor(const sf::Vector2i &position,
 			  const sf::Vector2u &size,
+			  unsigned layer,
 			  EType type);
 		Actor(const Entity &entity, EType type);
 		Actor(Entity &&entity, EType type);

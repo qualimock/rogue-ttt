@@ -3,12 +3,14 @@
 namespace Entity
 {
 	Entity::Entity(const sf::Vector2i& position,
-				   const sf::Vector2u& size)
+				   const sf::Vector2u& size,
+				   unsigned layer)
 		: m_shape(sf::Vector2f(size))
 		, m_position(position)
 		, m_size(size)
 		, m_color(sf::Color::White)
 		, m_index(0, 0)
+		, m_layer(layer)
 	{
 		setPosition(position);
 		resetColor();
