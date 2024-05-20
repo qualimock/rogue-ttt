@@ -52,9 +52,10 @@ namespace Entity
 		m_shape.setFillColor(color);
 	}
 
-	void Entity::setSprite(const sf::Sprite &sprite)
+	void Entity::setTexture(const sf::Texture texture)
 	{
-		m_sprite = sprite;
+		m_texture = texture;
+		m_sprite.setTexture(m_texture);
 	}
 
 	void Entity::setIndex(const sf::Vector2i &index)

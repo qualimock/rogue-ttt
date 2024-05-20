@@ -15,6 +15,7 @@ namespace Entity
 
 		void setPosition(const sf::Vector2i &position);
 		void setColor(sf::Color color);
+		void setTexture(const sf::Texture texture);
 		void setSprite(const sf::Sprite &sprite);
 
 		void render(sf::RenderTarget &target);

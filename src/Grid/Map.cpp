@@ -73,7 +73,6 @@ namespace Grid
 		Entity::Entity *entity = nullptr;
 
 		sf::Texture texture;
-		sf::Sprite sprite;
 
 		switch (type)
 		{
@@ -90,14 +89,13 @@ namespace Grid
 
 			std::cout << "PLAYER" << std::endl;
 
-			if (!texture.loadFromFile("res/PixelTexturePack/Rocks/ICEYROCKS.png"))
+			if (!texture.loadFromFile("res/PixelTexturePack/Rocks/ICEYROCKS.png", sf::IntRect(0, 0, 32, 32)))
 			{
 				std::cerr << "FAILED TO LOAD PLAYER TEXTURE" << std::endl;
 			}
-			sprite.setTexture(texture);
 
 			entity = new Entity::Player(Entity::Character(position, cellSize(), 2, type));
-			entity->setSprite(sprite);
+			entity->setTexture(texture);
 			entity->addTag("player");
 			break;
 		}
@@ -110,10 +108,9 @@ namespace Grid
 			{
 				std::cerr << "FAILED TO LOAD WALL" << std::endl;
 			}
-			sprite.setTexture(texture);
 
 			entity = new Entity::Character(position, cellSize(), 2, type);
-			entity->setSprite(sprite);
+			entity->setTexture(texture);
 			entity->addTag("enemy");
 			break;
 		}
@@ -126,7 +123,7 @@ namespace Grid
 			{
 				std::cerr << "FAILED TO LOAD WALL" << std::endl;
 			}
-			sprite.setTexture(texture);
+			entity->setTexture(texture);
 
 			break;
 		}
@@ -148,7 +145,6 @@ namespace Grid
 		Entity::Entity *entity = nullptr;
 
 		sf::Texture texture;
-		sf::Sprite sprite;
 
 		switch (type)
 		{
@@ -160,10 +156,9 @@ namespace Grid
 			{
 				std::cerr << "FAILED TO LOAD WALL" << std::endl;
 			}
-			sprite.setTexture(texture);
 
 			entity = new Entity::Wall(Entity::Actor(position, cellSize(), 2, type));
-			entity->setSprite(sprite);
+			entity->setTexture(texture);
 			entity->addTag("wall");
 			break;
 		}
@@ -174,10 +169,9 @@ namespace Grid
 			{
 				std::cerr << "FAILED TO LOAD DOOR" << std::endl;
 			}
-			sprite.setTexture(texture);
 
 			entity = new Entity::Door(Entity::Actor(position, cellSize(), 1, type));
-			entity->setSprite(sprite);
+			entity->setTexture(texture);
 			entity->addTag("door");
 			break;
 		}
@@ -185,14 +179,13 @@ namespace Grid
 		{
 			std::cout << "FLOOR" << std::endl;
 
-			// if (!texture.loadFromFile("res/PixelTexturePack/Elements/TALLGRASS.png"))
-			// {
-			// 	std::cerr << "FAILED TO LOAD GRASS" << std::endl;
-			// }
-			// sprite.setTexture(texture);
+			if (!texture.loadFromFile("res/PixelTexturePack/Elements/TALLGRASS.png"))
+			{
+				std::cerr << "FAILED TO LOAD GRASS" << std::endl;
+			}
 
 			entity = new Entity::Floor(Entity::Actor(position, cellSize(), 0, type));
-			entity->setSprite(sprite);
+			entity->setTexture(texture);
 			entity->addTag("floor");
 			break;
 		}
