@@ -3,9 +3,10 @@
 #include <iostream>
 
 #include "../Entity/Character/Player.hpp"
+
 #include "../Entity/Actor/Wall.hpp"
 #include "../Entity/Actor/Door.hpp"
-
+#include "../Entity/Actor/Floor.hpp"
 
 namespace Grid
 {
@@ -16,11 +17,41 @@ namespace Grid
 	{
 		placeCharacter(sf::Vector2i(m_size.x / 2, m_size.y / 2), Entity::Character::EType::Player);
 		placeCharacter(sf::Vector2i(100, 100), Entity::Character::EType::Enemy);
+
 		placeActor(sf::Vector2i(200, 200), Entity::Actor::EType::Wall);
 		placeActor(sf::Vector2i(240, 200), Entity::Actor::EType::Wall);
 		placeActor(sf::Vector2i(280, 200), Entity::Actor::EType::Door);
 		placeActor(sf::Vector2i(320, 200), Entity::Actor::EType::Wall);
 		placeActor(sf::Vector2i(360, 200), Entity::Actor::EType::Wall);
+		
+		for (unsigned y = 1; y < m_cellsAmount.y+2; y++)
+		{
+			for (unsigned x = 1; x < m_cellsAmount.x-3; x++)
+			{
+				placeActor(sf::Vector2i(x*m_offset, y*m_offset), Entity::Actor::EType::Floor);
+			}
+		}
+	}
+
+	void Map::resize(const sf::Vector2i &point)
+	{
+		BaseGrid::resize(point);
+
+		// for (auto &entity : m_entities)
+		// {
+		// 	if (entity.second->hasTag("floor"))
+		// 	{
+		// 		m_entities.erase(entity.first);
+		// 	}
+		// }
+		// for (unsigned y = 40; y < m_cellsAmount.y * 40; y += 40)
+		// {
+		// 	for (unsigned x = 40; x < m_cellsAmount.x * 40; x += 40)
+		// 	{
+		// 		// std::cout << x << ":" << y << std::endl;
+		// 		placeActor(sf::Vector2i(x, y), Entity::Actor::EType::Floor);
+		// 	}
+		// }
 	}
 
 	Map * Map::getMap()
@@ -41,6 +72,9 @@ namespace Grid
 
 		Entity::Entity *entity = nullptr;
 
+		sf::Texture texture;
+		sf::Sprite sprite;
+
 		switch (type)
 		{
 		case Entity::Character::EType::Player:
@@ -56,7 +90,14 @@ namespace Grid
 
 			std::cout << "PLAYER" << std::endl;
 
-			entity = new Entity::Player(Entity::Character(position, cellSize(), 1, type));
+			if (!texture.loadFromFile("res/PixelTexturePack/Rocks/ICEYROCKS.png"))
+			{
+				std::cerr << "FAILED TO LOAD PLAYER TEXTURE" << std::endl;
+			}
+			sprite.setTexture(texture);
+
+			entity = new Entity::Player(Entity::Character(position, cellSize(), 2, type));
+			entity->setSprite(sprite);
 			entity->addTag("player");
 			break;
 		}
@@ -65,7 +106,14 @@ namespace Grid
 		{
 			std::cout << "ENEMY" << std::endl;
 
-			entity = new Entity::Character(position, cellSize(), 1, type);
+			if (!texture.loadFromFile("res/PixelTexturePack/Rocks/GOLDROCKS.png"))
+			{
+				std::cerr << "FAILED TO LOAD WALL" << std::endl;
+			}
+			sprite.setTexture(texture);
+
+			entity = new Entity::Character(position, cellSize(), 2, type);
+			entity->setSprite(sprite);
 			entity->addTag("enemy");
 			break;
 		}
@@ -73,6 +121,13 @@ namespace Grid
 		case Entity::Character::EType::NPC:
 		{
 			std::cout << "NPC" << std::endl;
+
+			if (!texture.loadFromFile("res/PixelTexturePack/Bricks/REDBRICKS.png"))
+			{
+				std::cerr << "FAILED TO LOAD WALL" << std::endl;
+			}
+			sprite.setTexture(texture);
+
 			break;
 		}
 
@@ -92,22 +147,53 @@ namespace Grid
 
 		Entity::Entity *entity = nullptr;
 
+		sf::Texture texture;
+		sf::Sprite sprite;
+
 		switch (type)
 		{
 		case Entity::Actor::EType::Wall:
 		{
 			std::cout << "WALL" << std::endl;
 
-			entity = new Entity::Wall(Entity::Actor(position, cellSize(), 1, type));
+			if (!texture.loadFromFile("res/PixelTexturePack/Bricks/REDBRICKS.png"))
+			{
+				std::cerr << "FAILED TO LOAD WALL" << std::endl;
+			}
+			sprite.setTexture(texture);
+
+			entity = new Entity::Wall(Entity::Actor(position, cellSize(), 2, type));
+			entity->setSprite(sprite);
 			entity->addTag("wall");
 			break;
 		}
 		case Entity::Actor::EType::Door:
 		{
 			std::cout << "DOOR" << std::endl;
+			if (!texture.loadFromFile("res/PixelTexturePack/Doors/SPOOKYDOOR.png"))
+			{
+				std::cerr << "FAILED TO LOAD DOOR" << std::endl;
+			}
+			sprite.setTexture(texture);
 
-			entity = new Entity::Door(Entity::Actor(position, cellSize(), 0, type));
+			entity = new Entity::Door(Entity::Actor(position, cellSize(), 1, type));
+			entity->setSprite(sprite);
 			entity->addTag("door");
+			break;
+		}
+		case Entity::Actor::EType::Floor:
+		{
+			std::cout << "FLOOR" << std::endl;
+
+			// if (!texture.loadFromFile("res/PixelTexturePack/Elements/TALLGRASS.png"))
+			// {
+			// 	std::cerr << "FAILED TO LOAD GRASS" << std::endl;
+			// }
+			// sprite.setTexture(texture);
+
+			entity = new Entity::Floor(Entity::Actor(position, cellSize(), 0, type));
+			entity->setSprite(sprite);
+			entity->addTag("floor");
 			break;
 		}
 		}
@@ -118,6 +204,12 @@ namespace Grid
 	Entity::Entity * Map::movePlayer(const sf::Vector2i &indexOffset)
 	{
 		auto player = dynamic_cast<Entity::Player *>(m_entities.at("0"));
+		if (!player->hasTag("player"))
+		{
+			std::cerr << "PLAYER HAS NON-ZERO INDEX" << std::endl;
+			return nullptr;
+		}
+
 		Entity::Entity* foundEntity = nullptr;
 
 		for (auto &entity : m_entities)

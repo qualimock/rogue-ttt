@@ -50,10 +50,8 @@ namespace Grid
 	{
 		m_bottomRight = point;
 		m_size = sf::Vector2u(m_bottomRight - m_topLeft);
-		m_linesAmount = sf::Vector2u(m_size.y/m_offset,  // horizontal lines
-									 m_size.x/m_offset); // vertical lines
-		m_cellsAmount = sf::Vector2u(m_linesAmount.y-1, m_linesAmount.x-1);
 
+		update();
 	}
 
 	std::pair<sf::Vector2i, sf::Vector2i> BaseGrid::adjustEntityPosition(const sf::Vector2i &position) const
@@ -132,6 +130,12 @@ namespace Grid
 	void BaseGrid::spawnEntity(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
 							   Entity::Entity *entity)
 	{
+		if (!entity)
+		{
+			std::cerr << "CANNOT SPAWN NULLPTR" << std::endl;
+			return;
+		}
+
 		std::string entityIndex = std::to_string(m_entities.size());
 
 		if (m_entities.find(entityIndex) == m_entities.end())

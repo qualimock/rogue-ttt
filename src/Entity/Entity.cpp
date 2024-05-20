@@ -31,7 +31,8 @@ namespace Entity
 
 	void Entity::render(sf::RenderTarget &target)
 	{
-		target.draw(m_shape);
+		target.draw(m_sprite);
+		// target.draw(m_shape);
 	}
 
 	void Entity::resetColor()
@@ -43,11 +44,17 @@ namespace Entity
 	{
 		m_position = position;
 		m_shape.setPosition(sf::Vector2f(m_position));
+		m_sprite.setPosition(sf::Vector2f(m_position));
 	}
 
 	void Entity::setColor(sf::Color color)
 	{
 		m_shape.setFillColor(color);
+	}
+
+	void Entity::setSprite(const sf::Sprite &sprite)
+	{
+		m_sprite = sprite;
 	}
 
 	void Entity::setIndex(const sf::Vector2i &index)

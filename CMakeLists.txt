@@ -6,3 +6,5 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS True)
 
 add_subdirectory(dependencies)
 add_subdirectory(src)
+
+file(COPY res DESTINATION ${CMAKE_BINARY_DIR})

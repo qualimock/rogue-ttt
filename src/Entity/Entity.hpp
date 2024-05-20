@@ -15,6 +15,7 @@ namespace Entity
 
 		void setPosition(const sf::Vector2i &position);
 		void setColor(sf::Color color);
+		void setSprite(const sf::Sprite &sprite);
 
 		void render(sf::RenderTarget &target);
 
@@ -38,6 +39,9 @@ namespace Entity
 	private:
 		sf::RectangleShape m_shape;
 		std::set<std::string> m_tags;
+
+		sf::Texture m_texture;
+		sf::Sprite m_sprite;
 
 		sf::Vector2i m_position;
 		sf::Vector2u m_size;
