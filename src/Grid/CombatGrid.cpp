@@ -125,6 +125,7 @@ namespace Grid
 											   sf::Vector2u(m_offset, m_offset),
 											   clickFaction);
 			spawnEntity(cellIndexPosition, newCell);
+			AI_Move();
 		}
 		winnerFaction = getWinner();
 
@@ -143,4 +144,31 @@ namespace Grid
 
 		return false;
 	}
+
+	void CombatGrid::AI_Move() {
+
+		auto cellIndexPosition = adjustEntityPosition(position()+sf::Vector2i((rand()%3+1)*40, (rand() % 3 + 1) * 40));
+		while (IsOccupied(cellIndexPosition)) {
+			cellIndexPosition = adjustEntityPosition(position() + sf::Vector2i((rand() % 3 + 1) * 40, (rand() % 3 + 1) * 40));
+		}
+		Entity::TTTCell::Faction clickFaction;
+		clickFaction = Entity::TTTCell::Faction::Nought;
+		auto newCell = new Entity::TTTCell(cellIndexPosition.second,
+			sf::Vector2u(m_offset, m_offset),
+			clickFaction);
+		spawnEntity(cellIndexPosition, newCell);
+	}
+
+	bool CombatGrid::IsOccupied( std::pair<sf::Vector2i,sf::Vector2i> pos) {
+		for (auto& entity : m_entities)
+		{
+			if (entity.second->index() == pos.first)
+			{
+				return true;
+				break;
+			}
+		}
+		return false;
+	}
+
 }

@@ -14,13 +14,24 @@ namespace Grid
 	Map::Map()
 		: BaseGrid(EGridType::Map, sf::Vector2u(640, 480))
 	{
-		placeCharacter(sf::Vector2i(m_size.x / 2, m_size.y / 2), Entity::Character::EType::Player);
-		placeCharacter(sf::Vector2i(100, 100), Entity::Character::EType::Enemy);
+		placeCharacter(sf::Vector2i(280, 320), Entity::Character::EType::Player);
+		placeCharacter(sf::Vector2i(280, 160), Entity::Character::EType::Enemy);
+		placeActor(sf::Vector2i(200, 240), Entity::Actor::EType::Wall);
+		placeActor(sf::Vector2i(240, 240), Entity::Actor::EType::Wall);
+		placeActor(sf::Vector2i(280, 240), Entity::Actor::EType::Door);
+		placeActor(sf::Vector2i(320, 240), Entity::Actor::EType::Wall);
+		placeActor(sf::Vector2i(360, 240), Entity::Actor::EType::Wall);
 		placeActor(sf::Vector2i(200, 200), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(240, 200), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(280, 200), Entity::Actor::EType::Door);
-		placeActor(sf::Vector2i(320, 200), Entity::Actor::EType::Wall);
 		placeActor(sf::Vector2i(360, 200), Entity::Actor::EType::Wall);
+		placeActor(sf::Vector2i(200, 160), Entity::Actor::EType::Wall);
+		placeActor(sf::Vector2i(360, 160), Entity::Actor::EType::Wall);
+		placeActor(sf::Vector2i(200, 120), Entity::Actor::EType::Wall);
+		placeActor(sf::Vector2i(360, 120), Entity::Actor::EType::Wall);
+		placeActor(sf::Vector2i(200, 80), Entity::Actor::EType::Wall);
+		placeActor(sf::Vector2i(240, 80), Entity::Actor::EType::Wall);
+		placeActor(sf::Vector2i(280, 80), Entity::Actor::EType::Wall);
+		placeActor(sf::Vector2i(320, 80), Entity::Actor::EType::Wall);
+		placeActor(sf::Vector2i(360, 80), Entity::Actor::EType::Wall);
 	}
 
 	Map * Map::getMap()
