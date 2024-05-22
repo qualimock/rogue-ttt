@@ -19,5 +19,11 @@ namespace Grid
 		bool clicked(sf::Mouse::Button button, const sf::Vector2i &mousePosition) override;
 
 		Entity::TTTCell::Faction getWinner();
+
+		void AI_Move();
+
+		bool IsOccupied(std::pair<sf::Vector2i, sf::Vector2i> pos);
+
+		int UsedCells;
 	};
 }

@@ -26,8 +26,6 @@ namespace Grid
 
 		void move() = delete;
 
-		void resize(const sf::Vector2i &point) override;
-
 		void placeCharacter(const sf::Vector2i &position, Entity::Character::EType type);
 		void placeActor(const sf::Vector2i &position, Entity::Actor::EType type);
 

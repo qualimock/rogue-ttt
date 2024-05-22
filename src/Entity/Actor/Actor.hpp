@@ -14,7 +14,7 @@ namespace Entity
 			Floor,
 			Item,
 			Wall,
-
+			WoodenFloor,
 			None
 		};
 

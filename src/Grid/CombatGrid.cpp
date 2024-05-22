@@ -6,7 +6,9 @@ namespace Grid
 {
 	CombatGrid::CombatGrid(BaseGrid &&grid)
 		: BaseGrid(grid)
-	{}
+	{
+		UsedCells = 0;
+	}
 
 	Entity::TTTCell::Faction CombatGrid::checkNeighbors(const std::pair<sf::Vector2i, Entity::Entity *> &origin,
 														const sf::Vector2i &n1Offset,
@@ -94,25 +96,12 @@ namespace Grid
 			clickFaction = Entity::TTTCell::Faction::Cross;
 			break;
 
-		case sf::Mouse::Right:
-			clickFaction = Entity::TTTCell::Faction::Nought;
-			break;
-
-		case sf::Mouse::Middle:
-			for (auto &entity : m_entities)
-			{
-				if (entity.second->index() == cellIndexPosition.first)
-				{
-					destroyEntity(entity.first);
-					break;
-				}
-			}
-
 			if (getWinner() == Entity::TTTCell::Faction::None)
 			{
 				for (auto &cell : m_entities)
 				{
 					dynamic_cast<Entity::TTTCell *>(cell.second)->resetColor();
+					
 				}
 			}
 			return false;
@@ -124,7 +113,16 @@ namespace Grid
 			auto newCell = new Entity::TTTCell(cellIndexPosition.second,
 											   sf::Vector2u(m_offset, m_offset),
 											   clickFaction);
-			spawnEntity(cellIndexPosition, newCell);
+			if (!IsOccupied(cellIndexPosition)) {
+				spawnEntity(cellIndexPosition, newCell);
+				UsedCells++;
+				if (UsedCells != 9) {
+					AI_Move();
+				}else if(getWinner() == Entity::TTTCell::Faction::None){
+						m_entities.clear();
+						UsedCells = 0;
+				}
+			}
 		}
 		winnerFaction = getWinner();
 
@@ -141,6 +139,33 @@ namespace Grid
 			return true;
 		}
 
+		return false;
+	}
+
+	void CombatGrid::AI_Move() {
+
+		auto cellIndexPosition = adjustEntityPosition(position()+sf::Vector2i((rand()%3+1)*40, (rand() % 3 + 1) * 40));
+		while (IsOccupied(cellIndexPosition)) {
+			cellIndexPosition = adjustEntityPosition(position() + sf::Vector2i((rand() % 3 + 1) * 40, (rand() % 3 + 1) * 40));
+		}
+		Entity::TTTCell::Faction clickFaction;
+		clickFaction = Entity::TTTCell::Faction::Nought;
+		auto newCell = new Entity::TTTCell(cellIndexPosition.second,
+			sf::Vector2u(m_offset, m_offset),
+			clickFaction);
+		spawnEntity(cellIndexPosition, newCell);
+		UsedCells++;
+	}
+
+	bool CombatGrid::IsOccupied( std::pair<sf::Vector2i,sf::Vector2i> pos) {
+		for (auto& entity : m_entities)
+		{
+			if (entity.second->index() == pos.first)
+			{
+				return true;
+				break;
+			}
+		}
 		return false;
 	}
 }

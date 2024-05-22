@@ -48,12 +48,11 @@ namespace Grid
 
 		const unsigned layer() const { return m_layer; }
 
+		void spawnEntity(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
+			Entity::Entity* entity);
 	protected:
 		std::pair<sf::Vector2i, sf::Vector2i>
 		adjustEntityPosition(const sf::Vector2i &position) const;
-
-		void spawnEntity(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
-						 Entity::Entity *entity);
 		void destroyEntity(const std::string &index);
 	};
 }

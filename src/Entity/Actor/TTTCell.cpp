@@ -18,14 +18,37 @@ namespace Entity
 
 	void TTTCell::resetColor()
 	{
+		sf::Texture texture;
 		switch(m_faction)
 		{
 		case Faction::Cross:
-			m_color = sf::Color::Red;
+			switch (rand() % 3) {
+			case 0:
+				texture.loadFromFile("res/Sprites/Actors/X1.png");
+				break;
+			case 1:
+				texture.loadFromFile("res/Sprites/Actors/X2.png");
+				break;
+			case 2:
+				texture.loadFromFile("res/Sprites/Actors/X3.png");
+				break;
+			}
+			setTexture(texture);
 			break;
 
 		case Faction::Nought:
-			m_color = sf::Color::Cyan;
+			switch (rand() % 3) {
+			case 0:
+				texture.loadFromFile("res/Sprites/Actors/O1.png");
+				break;
+			case 1:
+				texture.loadFromFile("res/Sprites/Actors/O2.png");
+				break;
+			case 2:
+				texture.loadFromFile("res/Sprites/Actors/O3.png");
+				break;
+			}
+			setTexture(texture);
 			break;
 
 		case Faction::None:

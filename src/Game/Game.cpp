@@ -11,6 +11,7 @@
 
 #include "../Grid/DraggableGrid.hpp"
 #include "../Grid/CombatGrid.hpp"
+#include "../Grid/InventoryGrid.h"
 #include "../Grid/Map.hpp"
 
 #define DEBUG
@@ -27,7 +28,6 @@ Game::~Game()
 bool Game::init()
 {
 	auto map = Grid::Map::getMap();
-	map->resize(sf::Vector2i(m_window.getSize()));
 	m_grids.emplace("map", map);
 
 	std::cout << m_grids.size() << std::endl;
@@ -160,7 +160,7 @@ void Game::onKeyPressed(sf::Event &event)
 				new Grid::CombatGrid(
 					Grid::BaseGrid(
 						Grid::BaseGrid::EGridType::Combat,
-						sf::Vector2i(m_window.getSize().x-160, m_window.getSize().y/2 - 60),
+						sf::Vector2i(m_window.getSize().x-160, m_window.getSize().y/2 + 60),
 						sf::Vector2u(120, 120))
 					)
 				);
@@ -169,6 +169,22 @@ void Game::onKeyPressed(sf::Event &event)
 
 	case EGameState::Interacting:
 		std::cout << "INTERACTION" << std::endl;
+		if (!m_grids.contains("inventory")) {
+			m_visibleImGuiWindows.emplace("inventory", false);
+			m_grids.emplace(
+				"inventory",
+				new Grid::InventoryGrid(
+					Grid::BaseGrid(
+						Grid::BaseGrid::EGridType::Interaction,
+						sf::Vector2i(m_window.getSize().x - 160, m_window.getSize().y / 6),
+						sf::Vector2u(120, 120))
+				)
+			);
+		}
+		Grid::InventoryGrid * Inventory = dynamic_cast<Grid::InventoryGrid *>(m_grids.at("inventory"));
+		Inventory->AddItem(m_currentlyInteractedEntity);
+		m_grids.at("map")->destroyEntity(m_currentlyInteractedEntity);
+		m_gameState = EGameState::Exploring;
 		break;
 	}
 }
@@ -177,6 +193,7 @@ void Game::update()
 {
 	ImGui::SFML::Update(m_window, m_deltaClock.restart());
 
+	//m_window.setSize(sf::Vector2u(720, 480));
 	sf::Event event;
 	while (m_window.pollEvent(event))
 	{
@@ -211,7 +228,7 @@ void Game::update()
 			sf::FloatRect view(0, 0, event.size.width, event.size.height);
 			m_window.setView(sf::View(view));
 
-			m_grids.at("map")->resize(sf::Vector2i(event.size.width-200, event.size.height));
+			//m_grids.at("map")->resize(sf::Vector2i(event.size.width-200, event.size.height));
 
             // move combat grid relative to window size
 			auto combatGrid = m_grids.find("combat");

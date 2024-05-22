@@ -12,6 +12,8 @@ add_executable(${PROJECT_NAME}
   Grid/Map.hpp
   Grid/CombatGrid.cpp
   Grid/CombatGrid.hpp
+  Grid/InventoryGrid.cpp
+  Grid/InventoryGrid.h
   GridManager/GridManager.cpp
   GridManager/GridManager.hpp
   Entity/Entity.cpp
@@ -24,6 +26,10 @@ add_executable(${PROJECT_NAME}
   Entity/Actor/Wall.hpp
   Entity/Actor/Floor.cpp
   Entity/Actor/Floor.hpp
+  Entity/Actor/WoodenFloor.cpp
+  Entity/Actor/WoodenFloor.hpp
+  Entity/Actor/Item.cpp
+  Entity/Actor/Item.h
   Entity/Actor/Door.cpp
   Entity/Actor/Door.hpp
   Entity/Character/Character.cpp
@@ -31,7 +37,7 @@ add_executable(${PROJECT_NAME}
   Entity/Character/Player.cpp
   Entity/Character/Player.hpp
   Resources/ResourceManager.cpp
-  Resources/ResourceManager.hpp)
+  Resources/ResourceManager.hpp "Grid/InventoryGrid.cpp")
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
