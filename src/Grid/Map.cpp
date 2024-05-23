@@ -17,6 +17,7 @@ namespace Grid
 	Map::Map()
 		: BaseGrid(EGridType::Map, sf::Vector2u(520, 520))
 	{
+		/*
 		placeCharacter(sf::Vector2i(280, 480), Entity::Character::EType::Player);
 		placeActor(sf::Vector2i(280, 480), Entity::Actor::EType::Floor);
 		placeCharacter(sf::Vector2i(280, 80), Entity::Character::EType::Enemy);
@@ -74,7 +75,8 @@ namespace Grid
 
 		placeActor(sf::Vector2i(440, 240), Entity::Actor::EType::Item);
 		placeActor(sf::Vector2i(480, 240), Entity::Actor::EType::Item);
-
+		*/
+		loadLevel(currentLevel->second);
 	}
 
 	Map * Map::getMap()
@@ -245,7 +247,7 @@ namespace Grid
 				break;
 			}
 		}
-
+		
 		bool canMove =
 			((player->index().x + indexOffset.x) >= 0) &&
 			((player->index().x + indexOffset.x) <= m_cellsAmount.x) &&
@@ -264,9 +266,55 @@ namespace Grid
 			}
 			else
 			{
-				player->interact(foundEntity);
+				if (foundEntity == nullptr)
+				{
+					sf::Vector2i levelIndex = currentLevel->first + indexOffset;
+
+					//тут надо выгрузить старый уровень
+					
+					currentLevel = m_levels.find(levelIndex);
+					loadLevel(currentLevel->second);
+					
+					sf::Vector2i movementIndex = player->index(); //куда игрок пойдет
+
+					if (player->index().x + indexOffset.x < 0)
+					{
+						movementIndex.x = m_cellsAmount.x - 1;
+					}
+					else 
+					{
+						movementIndex.x = 0;
+					}
+
+					if (player->index().y + indexOffset.y < 0)
+					{
+						movementIndex.y = m_cellsAmount.y - 1;
+					}
+					else 
+					{
+						movementIndex.y = 0;	
+					}
+
+					player->setIndex(movementIndex);
+					player->setPosition(sf::Vector2i(movementIndex.x * m_offset, movementIndex.y * m_offset));
+				}
+				else
+				{
+					player->interact(foundEntity);
+				}
 			}
 		}
+	
 		return foundEntity;
+	}
+
+	void Map::loadLevel(Level &level){
+		for(auto &pair : level.getActors()){
+			placeActor(pair.second.position(), pair.second.type());
+		}
+
+		for(auto &pair : level.getCharacters()){
+			placeCharacter(pair.second.position(), pair.second.type());
+		}
 	}
 }

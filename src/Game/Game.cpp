@@ -28,6 +28,7 @@ Game::~Game()
 bool Game::init()
 {
 	auto map = Grid::Map::getMap();
+
 	m_grids.emplace("map", map);
 
 	std::cout << m_grids.size() << std::endl;
