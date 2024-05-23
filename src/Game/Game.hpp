@@ -46,7 +46,7 @@ private:
 	EGameState m_gameState;
 
 	Entity::Entity *m_currentlyInteractedEntity = nullptr;
-
+	
 	struct
 	{
 		bool mouseHover = false;
