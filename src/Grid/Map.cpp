@@ -272,31 +272,35 @@ namespace Grid
 
 					//тут надо выгрузить старый уровень
 					
-					currentLevel = m_levels.find(levelIndex);
-					loadLevel(currentLevel->second);
+					auto nextLevel = m_levels.find(levelIndex);
 					
-					sf::Vector2i movementIndex = player->index(); //куда игрок пойдет
+					if (nextLevel != m_levels.end()){
+						currentLevel = nextLevel;
+						loadLevel(currentLevel->second);
+					
+						sf::Vector2i movementIndex = player->index(); //куда игрок пойдет
 
-					if (player->index().x + indexOffset.x < 0)
-					{
-						movementIndex.x = m_cellsAmount.x - 1;
-					}
-					else 
-					{
-						movementIndex.x = 0;
-					}
+						if (player->index().x + indexOffset.x < 0)
+						{
+							movementIndex.x = m_cellsAmount.x - 1;
+						}
+						else 
+						{
+							movementIndex.x = 0;
+						}
 
-					if (player->index().y + indexOffset.y < 0)
-					{
-						movementIndex.y = m_cellsAmount.y - 1;
-					}
-					else 
-					{
-						movementIndex.y = 0;	
-					}
+						if (player->index().y + indexOffset.y < 0)
+						{
+							movementIndex.y = m_cellsAmount.y - 1;
+						}
+						else 
+						{
+							movementIndex.y = 0;	
+						}
 
-					player->setIndex(movementIndex);
-					player->setPosition(sf::Vector2i(movementIndex.x * m_offset, movementIndex.y * m_offset));
+						player->setIndex(movementIndex);
+						player->setPosition(sf::Vector2i(movementIndex.x * m_offset, movementIndex.y * m_offset));
+					}
 				}
 				else
 				{
