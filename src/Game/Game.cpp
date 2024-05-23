@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "../GridManager/GridManager.hpp"
+#include "../Resources/ResourceManager.hpp"
 
 #include "../Grid/DraggableGrid.hpp"
 #include "../Grid/CombatGrid.hpp"
@@ -45,6 +46,8 @@ bool Game::init()
 		std::cerr << "ERR:\n\tFailed to initialize the window!" << std::endl;
 		return false;
 	}
+
+	ResourceManager::load_json_resources("res/resources.json");
 
 	return true;
 }

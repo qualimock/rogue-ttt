@@ -2,8 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
-// #include <rapidjson/document.h>
-// #include <rapidjson/error/en.h>
+#include <rapidjson/document.h>
+#include <rapidjson/error/en.h>
 
 #include <sstream>
 #include <fstream>
@@ -99,4 +99,75 @@ std::shared_ptr<sf::Sprite> ResourceManager::get_sprite(const std::string &sprit
 
 	std::cerr << "ERROR::RESOURCES::get_sprite:\n\tCannot find sprite: " << spriteName << std::endl;
 	return nullptr;
+}
+
+bool ResourceManager::load_json_resources(const std::string &jsonPath)
+{
+	const std::string jsonString = get_file_string(jsonPath);
+	if (jsonString.empty())
+	{
+		std::cerr << "ERROR::RESOURCES::load_json_resources:\n\tNo JSON resources file!" << std::endl;
+		return false;
+	}
+
+	rapidjson::Document document;
+	rapidjson::ParseResult parseResult = document.Parse(jsonString.c_str());
+	if (!parseResult)
+	{
+		std::cerr << "ERROR::RESOURCES::LOAD_JSON_RESOURCES: Parse error:\n\t"
+				  << rapidjson::GetParseError_En(parseResult.Code())
+				  << "(" << parseResult.Offset() << ")\n\t"
+				  << "In JSON file: " << jsonPath << std::endl;
+		return false;
+	}
+
+	auto spritesIterator = document.FindMember("sprites");
+	if (spritesIterator != document.MemberEnd())
+	{
+		for (const auto &currentSprite : spritesIterator->value.GetArray())
+		{
+			const std::string name = currentSprite["name"].GetString();
+			const std::string texture = currentSprite["initialSubTexture"].GetString();
+
+			auto sprite = load_sprite(name, texture, sf::IntRect(0, 0, 40, 40));
+			if (!sprite) {
+				continue;
+			}
+		}
+	}
+
+	auto levelsIterator = document.FindMember("levels");
+	if (levelsIterator != document.MemberEnd())
+	{
+		for (const auto &currentLevel : levelsIterator->value.GetArray())
+		{
+			const auto name = currentLevel["name"].GetArray();
+			const auto description = currentLevel["description"].GetArray();
+			size_t maxLength = 0;
+
+			std::vector<std::string> levelRows;
+			levelRows.reserve(description.Size());
+
+			for (const auto &currentRow : description)
+			{
+				levelRows.emplace_back(currentRow.GetString());
+				if (maxLength < levelRows.back().length())
+				{
+					maxLength = levelRows.back().length();
+				}
+			}
+
+			for (auto &currentRow : levelRows)
+			{
+				while (currentRow.length() < maxLength)
+				{
+					currentRow.append("D");
+				}
+			}
+
+			m_levels.emplace_back(std::move(levelRows));
+		}
+	}
+
+	return true;
 }

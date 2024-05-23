@@ -40,5 +40,7 @@ public:
 												   const sf::IntRect &subTexture);
 	static std::shared_ptr<sf::Sprite> get_sprite(const std::string &spriteName);
 
+	static bool load_json_resources(const std::string &jsonPath);
+
 	static const std::vector<std::vector<std::string>> &get_levels() { return m_levels; }
 };
