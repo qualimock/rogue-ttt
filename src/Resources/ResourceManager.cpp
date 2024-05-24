@@ -12,7 +12,9 @@
 ResourceManager::TexturesMap ResourceManager::m_textures;
 ResourceManager::SpritesMap ResourceManager::m_sprites;
 std::string ResourceManager::m_path;
-std::vector<std::vector<std::string>> ResourceManager::m_levels;
+ObjectArray ResourceManager::m_levels;
+ObjectArray ResourceManager::m_floors;
+std::vector<sf::Vector2i> ResourceManager::m_levelIndices;
 
 void ResourceManager::set_executable_path(const std::string &executablePath)
 {
@@ -142,12 +144,16 @@ bool ResourceManager::load_json_resources(const std::string &jsonPath)
 	{
 		for (const auto &currentLevel : levelsIterator->value.GetArray())
 		{
-			// const auto name = currentLevel["name"].GetArray();
 			const auto description = currentLevel["description"].GetArray();
+			const auto floor = currentLevel["floor"].GetArray();
+			const auto index = currentLevel["index"].GetArray();
 			size_t maxLength = 0;
 
 			std::vector<std::string> levelRows;
 			levelRows.reserve(description.Size());
+
+			std::vector<std::string> floorRows;
+			floorRows.reserve(floor.Size());
 
 			for (const auto &currentRow : description)
 			{
@@ -158,7 +164,18 @@ bool ResourceManager::load_json_resources(const std::string &jsonPath)
 				}
 			}
 
-			for (auto &currentRow : levelRows)
+			maxLength = 0;
+
+			for (const auto &currentRow : floor)
+			{
+				floorRows.emplace_back(currentRow.GetString());
+				if (maxLength < levelRows.back().length())
+				{
+					maxLength = levelRows.back().length();
+				}
+			}
+
+			for (auto &currentRow : floorRows)
 			{
 				while (currentRow.length() < maxLength)
 				{
@@ -166,7 +183,11 @@ bool ResourceManager::load_json_resources(const std::string &jsonPath)
 				}
 			}
 
+			sf::Vector2i levelIndex(index[0].GetInt(), index[1].GetInt());
+
 			m_levels.emplace_back(std::move(levelRows));
+			m_floors.emplace_back(std::move(floorRows));
+			m_levelIndices.emplace_back(std::move(levelIndex));
 		}
 	}
 

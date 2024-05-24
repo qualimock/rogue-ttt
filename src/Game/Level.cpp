@@ -18,6 +18,8 @@ std::shared_ptr<Entity::Entity> create_entity_from_description(const char descri
 	{
 	case 'P':
 		return std::make_shared<Entity::Player>(Entity::Character("player", position, size, 2, Entity::Character::EType::Player));
+	case 'E':
+		return std::make_shared<Entity::Character>("enemy", position, size, 2, Entity::Character::EType::Enemy);
 	case 'W':
 		return std::make_shared<Entity::Wall>(Entity::Actor("wall", position, size, 1, Entity::Actor::EType::Wall));
 	case 'D':

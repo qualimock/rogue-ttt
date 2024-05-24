@@ -16,68 +16,27 @@ namespace Grid
 	Map * Map::map = nullptr;
 
 	Map::Map()
-		: BaseGrid(EGridType::Map, sf::Vector2u(520, 520))
+		: BaseGrid(EGridType::Map, sf::Vector2u(520, 480))
 	{
-		/*
-		placeCharacter(sf::Vector2i(280, 480), Entity::Character::EType::Player);
-		placeActor(sf::Vector2i(280, 480), Entity::Actor::EType::Floor);
-		placeCharacter(sf::Vector2i(280, 80), Entity::Character::EType::Enemy);
-		placeActor(sf::Vector2i(280, 80), Entity::Actor::EType::WoodenFloor);
+		auto levels = ResourceManager::get_levels();
 
-		placeActor(sf::Vector2i(360, 80), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(200, 80), Entity::Actor::EType::Wall);
-
-		placeActor(sf::Vector2i(360, 160), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(200, 160), Entity::Actor::EType::Wall);
-
-		placeActor(sf::Vector2i(360, 120), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(200, 120), Entity::Actor::EType::Wall);
-
-
-		placeActor(sf::Vector2i(200, 40), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(240, 40), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(280, 40), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(320, 40), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(360, 40), Entity::Actor::EType::Wall);
-
-		
-		placeActor(sf::Vector2i(200, 200), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(240, 200), Entity::Actor::EType::Wall);
-		
-		placeActor(sf::Vector2i(280, 200), Entity::Actor::EType::Door);
-		placeActor(sf::Vector2i(280, 200), Entity::Actor::EType::WoodenFloor);
-		placeActor(sf::Vector2i(320, 200), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(360, 200), Entity::Actor::EType::Wall);
-
-
-		for (unsigned y = 1; y < 14; y++)
+		for (unsigned levelCounter = 0; levelCounter < levels.first; ++levelCounter)
 		{
-			for (unsigned x = 1; x < 14; x++)
-			{
-				bool occupied = false;
-				for (auto& entity : m_entities)
-				{
-					if (entity.second->index() == sf::Vector2i(x-1, y-1))
-					{
-						occupied = true;
-						break;
-					}
-				}
-				if (!occupied) {
-					if ((x > 4) && (x < 10) && (y < 5)) {
-						placeActor(sf::Vector2i(x * m_offset, y * m_offset), Entity::Actor::EType::WoodenFloor);
-					}
-					else {
-						placeActor(sf::Vector2i(x * m_offset, y * m_offset), Entity::Actor::EType::Floor);
-					}
-				}
-			}
+			auto level = Level(levels.second.second.first[levelCounter]);
+			auto floor = Level(levels.second.second.second[levelCounter]);
+			auto index = levels.second.first[levelCounter];
+
+			m_levelIndices.emplace(std::to_string(levelCounter), index);
+			m_levels.emplace(std::to_string(levelCounter), std::make_pair(level, floor));
 		}
 
-		placeActor(sf::Vector2i(440, 240), Entity::Actor::EType::Item);
-		placeActor(sf::Vector2i(480, 240), Entity::Actor::EType::Item);
-		*/
-		// loadLevel(currentLevel->second);
+		m_player = std::make_shared<Entity::Player>(Entity::Character("player0",
+																	  sf::Vector2i(m_size.x / 2, m_size.y / 2 + 100),
+																	  cellSize(), 2,
+																	  Entity::Character::EType::Player));
+
+		m_currentLevel = m_levels.find("0");
+		loadLevel(0);
 	}
 
 	Map * Map::getMap()
@@ -91,149 +50,6 @@ namespace Grid
 			return std::move(map);
 		}
 	}
-
-	// void Map::placeCharacter(const sf::Vector2i &position, Entity::Character::EType type)
-	// {
-	// 	std::cout << "PLACE" << std::endl;
-	// 	sf::Texture texture;
-	// 	Entity::Entity *entity = nullptr;
-
-	// 	switch (type)
-	// 	{
-	// 	case Entity::Character::EType::Player:
-	// 	{
-	// 		for (auto &entity : m_entities)
-	// 		{
-	// 			if (entity.second->hasTag("player"))
-	// 			{
-	// 				std::cout << "PLAYER ALREADY EXISTS" << std::endl;
-	// 			}
-	// 			return;
-	// 		}
-
-	// 		std::cout << "PLAYER" << std::endl;
-
-	// 		entity = new Entity::Player(Entity::Character(position, cellSize(), 1, type));
-	// 		if (!texture.loadFromFile("res/Sprites/Characters/Player.png", sf::IntRect(0, 0, 40, 40)))
-	// 		{
-	// 			std::cerr << "FAILED TO LOAD PLAYER TEXTURE" << std::endl;
-	// 		}
-
-	// 		entity = new Entity::Player(Entity::Character(position, cellSize(), 2, type));
-	// 		entity->setTexture(texture);
-	// 		entity->addTag("player");
-	// 		break;
-	// 	}
-
-	// 	case Entity::Character::EType::Enemy:
-	// 	{
-	// 		std::cout << "ENEMY" << std::endl;
-	// 		entity = new Entity::Character(position, cellSize(), 1, type);
-	// 		if (!texture.loadFromFile("res/Sprites/Characters/Enemy.png"))
-	// 		{
-	// 			std::cerr << "FAILED TO LOAD WALL" << std::endl;
-	// 		}
-
-	// 		entity = new Entity::Character(position, cellSize(), 2, type);
-	// 		entity->setTexture(texture);
-	// 		entity->addTag("enemy");
-	// 		break;
-	// 	}
-
-	// 	case Entity::Character::EType::NPC:
-	// 	{
-	// 		std::cout << "NPC" << std::endl;
-	// 		break;
-	// 	}
-
-	// 	case Entity::Character::EType::None:
-	// 	{
-	// 		std::cerr << "ATTEMPT TO SPAWN A 'NONE' CHARACTER" << std::endl;
-	// 		throw std::exception();
-	// 	}
-	// 	}
-
-	// 	spawnEntity(adjustEntityPosition(position), entity);
-	// }
-
-	// void Map::placeActor(const sf::Vector2i &position, Entity::Actor::EType type)
-	// {
-	// 	std::cout << "PLACE" << std::endl;
-	// 	sf::Texture texture;
-	// 	Entity::Entity *entity = nullptr;
-
-	// 	switch (type)
-	// 	{
-	// 	case Entity::Actor::EType::Wall:
-	// 	{
-	// 		std::cout << "WALL" << std::endl;
-	// 		if (!texture.loadFromFile("res/Sprites/Actors/Wall.png"))
-	// 		{
-	// 			std::cerr << "FAILED TO LOAD WALL" << std::endl;
-	// 		}
-
-	// 		entity = new Entity::Wall(Entity::Actor(position, cellSize(), 2, type));
-	// 		entity->setTexture(texture);
-	// 		entity->addTag("wall");
-	// 		break;
-	// 	}
-	// 	case Entity::Actor::EType::Door:
-	// 	{
-	// 		std::cout << "DOOR" << std::endl;
-	// 		if (!texture.loadFromFile("res/Sprites/Actors/Door.png"))
-	// 		{
-	// 			std::cerr << "FAILED TO LOAD DOOR" << std::endl;
-	// 		}
-	// 		entity = new Entity::Door(Entity::Actor(position, cellSize(), 1, type));
-	// 		entity->setTexture(texture);
-	// 		entity->addTag("door");
-	// 		break;
-	// 	}
-	// 	case Entity::Actor::EType::Item:
-	// 	{
-	// 		std::cout << "ITEM" << std::endl;
-	// 		if (!texture.loadFromFile("res/Sprites/Actors/Item.png"))
-	// 		{
-	// 			std::cerr << "FAILED TO LOAD ITEM" << std::endl;
-	// 		}
-	// 		entity = new Entity::Item(Entity::Actor(position, cellSize(), 1, type));
-	// 		entity->setTexture(texture);
-	// 		entity->addTag("item");
-	// 		break;
-	// 	}
-	// 	case Entity::Actor::EType::Floor:
-	// 	{
-	// 		std::cout << "FLOOR" << std::endl;
-
-	// 		if (!texture.loadFromFile("res/Sprites/Background/Grass.png"))
-	// 		{
-	// 			std::cerr << "FAILED TO LOAD GRASS" << std::endl;
-	// 		}
-	// 		if (rand() % 5 == 0) {
-	// 			texture.loadFromFile("res/Sprites/Background/Grass2.png");
-	// 		}
-	// 		entity = new Entity::Floor(Entity::Actor(position, cellSize(), 0, type));
-	// 		entity->setTexture(texture);
-	// 		entity->addTag("floor");
-	// 		break;
-	// 	}
-	// 	case Entity::Actor::EType::WoodenFloor:
-	// 	{
-	// 		std::cout << "FLOOR" << std::endl;
-
-	// 		if (!texture.loadFromFile("res/Sprites/Background/WoodFloor.png"))
-	// 		{
-	// 			std::cerr << "FAILED TO LOAD GRASS" << std::endl;
-	// 		}
-
-	// 		entity = new Entity::WoodenFloor(Entity::Actor(position, cellSize(), 0, type));
-	// 		entity->setTexture(texture);
-	// 		entity->addTag("floor");
-	// 		break;
-	// 	}
-	// 	}
-	// 	spawnEntity(adjustEntityPosition(position), entity);
-	// }
 
 	std::shared_ptr<Entity::Entity> Map::movePlayer(const sf::Vector2i &indexOffset)
 	{
@@ -272,47 +88,72 @@ namespace Grid
 			}
 			else
 			{
-				// if (foundEntity == nullptr)
-				// {
-				// 	sf::Vector2i levelIndex = currentLevel->first + indexOffset;
-
-				// 	//тут надо выгрузить старый уровень
-					
-				// 	auto nextLevel = m_levels.find(levelIndex);
-					
-				// 	if (nextLevel != m_levels.end()){
-				// 		currentLevel = nextLevel;
-				// 		loadLevel(currentLevel->second);
-					
-				// 		sf::Vector2i movementIndex = player->index(); //куда игрок пойдет
-
-				// 		if (player->index().x + indexOffset.x < 0)
-				// 		{
-				// 			movementIndex.x = m_cellsAmount.x - 1;
-				// 		}
-				// 		else 
-				// 		{
-				// 			movementIndex.x = 0;
-				// 		}
-
-				// 		if (player->index().y + indexOffset.y < 0)
-				// 		{
-				// 			movementIndex.y = m_cellsAmount.y - 1;
-				// 		}
-				// 		else 
-				// 		{
-				// 			movementIndex.y = 0;	
-				// 		}
-
-				// 		player->setIndex(movementIndex);
-				// 		player->setPosition(sf::Vector2i(movementIndex.x * m_offset, movementIndex.y * m_offset));
-				// 	}
-				// }
-				// else
-				// {
 					player->interact(foundEntity);
-				// }
 			}
+		}
+		else
+		{
+			if (foundEntity == nullptr)
+			{
+				sf::Vector2i levelIndex = m_levelIndices.at(m_currentLevel->first) + indexOffset;
+
+				std::string nextLevelName;
+				for (auto &index : m_levelIndices)
+				{
+					if (levelIndex == index.second)
+					{
+						nextLevelName = index.first;
+						break;
+					}
+				}
+
+				auto nextLevel = m_levels.find(nextLevelName);
+				if (nextLevel == m_levels.end())
+				{
+					return nullptr;
+				}
+
+				std::cout << nextLevel->first << std::endl;
+					
+				if (nextLevel != m_levels.end()){
+					m_currentLevel = nextLevel;
+					for (unsigned i = 0; i < m_levels.size(); ++i)
+					{
+						if (m_levelIndices.find(m_currentLevel->first) != m_levelIndices.end())
+						{
+							loadLevel(i);
+							break;
+						}
+					}
+					
+					sf::Vector2i movementIndex = player->index(); //куда игрок пойдет
+
+					if (player->index().x + indexOffset.x < 0)
+					{
+						movementIndex.x = m_cellsAmount.x;
+					}
+					else if (player->index().x + indexOffset.x > m_cellsAmount.x)
+					{
+						movementIndex.x = 0;
+					}
+
+					if (player->index().y + indexOffset.y < 0)
+					{
+						movementIndex.y = m_cellsAmount.y;
+					}
+					else if (player->index().y + indexOffset.y > m_cellsAmount.y)
+					{
+						movementIndex.y = 0;	
+					}
+
+					player->setIndex(movementIndex);
+					std::cout << movementIndex.x << ":" << movementIndex.y << std::endl;
+					player->setPosition(sf::Vector2i(movementIndex.x * m_offset, movementIndex.y * m_offset));
+
+				}
+			}
+
+			return nullptr;
 		}
 	
 		return foundEntity;
@@ -320,16 +161,21 @@ namespace Grid
 
 	void Map::loadLevel(unsigned levelIndex)
 	{
-		auto level = Level(ResourceManager::get_levels()[levelIndex]);
-		auto floor = Level(ResourceManager::get_levels()[levelIndex+1]);
-		for (auto &entity : level.entities())
+		clear();
+
+		for (auto &entity : m_currentLevel->second.first.entities())
 		{
 			spawnEntity(entity->position(), entity);
+			m_entities.emplace(entity->name(), entity);
 		}
-		for (auto &entity : floor.entities())
+
+		for (auto &entity : m_currentLevel->second.second.entities())
 		{
 			spawnEntity(entity->position(), entity);
+			m_entities.emplace(entity->name(), entity);
 		}
-	    m_levels.emplace("0", level);
+
+		spawnEntity(m_player->position(), m_player);
+		m_entities.emplace(m_player->name(), m_player);
 	}
 }

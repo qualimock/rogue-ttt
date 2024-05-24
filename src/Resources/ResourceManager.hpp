@@ -7,6 +7,8 @@
 #include <map>
 #include <vector>
 
+typedef std::vector<std::vector<std::string>> ObjectArray;
+
 class ResourceManager {
 	typedef std::map<const std::string, std::shared_ptr<sf::Texture>> TexturesMap;
 	static TexturesMap m_textures;
@@ -14,7 +16,9 @@ class ResourceManager {
 	typedef std::map<const std::string, std::shared_ptr<sf::Sprite>> SpritesMap;
 	static SpritesMap m_sprites;
 
-	static std::vector<std::vector<std::string>> m_levels;
+	static ObjectArray m_levels;
+	static ObjectArray m_floors;
+	static std::vector<sf::Vector2i> m_levelIndices;
 
 	static std::string m_path;
 
@@ -42,5 +46,9 @@ public:
 
 	static bool load_json_resources(const std::string &jsonPath);
 
-	static const std::vector<std::vector<std::string>> &get_levels() { return m_levels; }
+	static const std::pair<unsigned, std::pair<std::vector<sf::Vector2i>, std::pair<ObjectArray, ObjectArray>>>
+	get_levels()
+	{
+		return std::make_pair(m_levels.size(), std::make_pair(m_levelIndices, std::make_pair(m_levels, m_floors)));
+	}
 };

@@ -122,6 +122,7 @@ void Game::onKeyPressed(sf::Event &event)
 	case sf::Keyboard::Left:
 	case sf::Keyboard::Down:
 	case sf::Keyboard::Right:
+	{
 		auto moveResult = Grid::GridManager::moveEvent(m_window, event, m_grids.at("map"));
 		if (moveResult)
 		{
@@ -143,6 +144,29 @@ void Game::onKeyPressed(sf::Event &event)
 			m_gameState = EGameState::Exploring;
 		}
 		break;
+	}
+#ifdef DEBUG
+	case sf::Keyboard::Num1:
+	{
+		dynamic_cast<Grid::Map *>(m_grids.at("map"))->loadLevel(0);
+		break;
+	}
+	case sf::Keyboard::Num2:
+	{
+		dynamic_cast<Grid::Map *>(m_grids.at("map"))->loadLevel(1);
+		break;
+	}
+	case sf::Keyboard::Num3:
+	{
+		dynamic_cast<Grid::Map *>(m_grids.at("map"))->loadLevel(2);
+		break;
+	}
+	case sf::Keyboard::Num4:
+	{
+		dynamic_cast<Grid::Map *>(m_grids.at("map"))->loadLevel(3);
+		break;
+	}
+#endif
 	}
 
 	if (event.key.code == sf::Keyboard::Escape)
