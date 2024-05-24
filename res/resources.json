@@ -2,53 +2,135 @@
 	"levels": [
 		{
 			"description": [
-				"DDDDDDDDDD",
-				"DDDDDDDDDD",
-				"DDDDDDDDDD",
-				"DDDDDDDDDD",
-				"DDDDDDDDDD",
-				"DDDDDDDDDD",
-				"DDDDDDDDDD",
-				"DDDDDDDDDD",
-				"DDDDPDDDDD",
-				"DDDDDDDDDD"
-			]
+				"             ",
+				"  WWWWWWWWW  ",
+				"  W       W  ",
+				"  W   E   W  ",
+				"  W       W  ",
+				"  WWWWDWWWW  ",
+				"             ",
+				"             ",
+				"             ",
+				"             ",
+				"             ",
+				"             "
+			],
+
+			"floor": [
+			 	"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF"
+			],
+
+			"index": [0, 0]
+		},	 
+		{
+			"description": [
+				"             ",
+				"  WWWWWWWWW  ",
+				"  W       W  ",
+				"  W   E   W  ",
+				"  W       W  ",
+				"  WWWWDWWWW  ",
+				"  W       W  ",
+				"  W       W  ",
+				"  W       W  ",
+				"  WWWWDWWWW  ",
+				"             ",
+				"             "
+			],
+
+			"floor": [
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF"
+			],
+
+			"index": [0, 1]
 		},
 		{
 			"description": [
-				"DDDDDDDDDDDDD",
-				"D00D11D22D33D",
-				"D0DD1DD2DD3DD",
-				"DDDDDDDDDDDDD",
-				"D44D55D66D77D",
-				"D4DD5DD6DD7DD",
-				"DDDDDDDDDDDDD",
-				"D88D99DAADBBD",
-				"D8DD9DDADDBDD",
-				"DDDDDDDDDDDDD",
-				"DCCDGGDHHDIID",
-				"DCDDGDDHDDDDD",
-				"DDDDDH1GDDJJD",
-				"DDDDK0E2DDDDD"
-			]
+				"             ",
+				"  WWWWWWWWW  ",
+				"  WWWWWWWWW  ",
+				"  WWWWWWWWW  ",
+				"  WWWWWWWWW  ",
+				"  WWWWWWWWW  ",
+				"             ",
+				"             ",
+				"             ",
+				"             ",
+				"             ",
+				"             "
+			],
+
+			"floor": [
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF"
+			],
+
+			"index": [1, 0]
 		},
 		{
 			"description": [
-				"6666666666666",
-				"7DDDDDDDDDDD5",
-				"7DDDDDDDDDDD5",
-				"7DDDDDDDDDDD5",
-				"7DDDBBBBBDDD5",
-				"7DDDBH1GBDDD5",
-				"7DDDB0E2BDDD5",
-				"7DDDBJ3IBDDD5",
-				"7DDDBBBBBDDD5",
-				"7DDDDDADAAAA5",
-				"7DDDDDAAADDD5",
-				"7DDDDDADDDDD5",
-				"7DDDDKALDDDD5",
-				"8888888888888"
-			]
+				"             ",
+				"          W  ",
+				"          W  ",
+				"          W  ",
+				"          W  ",
+				"          W  ",
+				"          W  ",
+				"          W  ",
+				"          W  ",
+				"          W  ",
+				"             ",
+				"             "
+			],
+
+			"floor": [
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF",
+				"FFFFFFFFFFFFF"
+			],
+
+			"index": [2, 0]
 		}
 	]
 }
