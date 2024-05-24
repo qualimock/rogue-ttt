@@ -157,8 +157,8 @@ namespace Grid
 
 		m_entities.emplace(entity->name() + std::to_string(repeats), entity);
 
-		std::cout << "SPAWNED" << std::endl;
-		std::cout << IndexPosition.first.x << ":" << IndexPosition.first.y << std::endl;
+		// std::cout << "SPAWNED" << std::endl;
+		// std::cout << IndexPosition.first.x << ":" << IndexPosition.first.y << std::endl;
 	}
 
 	void BaseGrid::destroyEntity(const std::string &index)

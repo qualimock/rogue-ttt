@@ -11,23 +11,72 @@
 #include "../Entity/Actor/Item.h"
 
 std::shared_ptr<Entity::Entity> create_entity_from_description(const char description,
-												const sf::Vector2i &position,
-												const sf::Vector2u &size)
+															   const sf::Vector2i &position,
+															   const sf::Vector2u &size)
 {
+	sf::Texture texture;
 	switch (description)
 	{
 	case 'P':
-		return std::make_shared<Entity::Player>(Entity::Character("player", position, size, 2, Entity::Character::EType::Player));
+	{
+		auto player = std::make_shared<Entity::Player>(Entity::Character("player", position, size, 2, Entity::Character::EType::Player));
+		if (!texture.loadFromFile("res/Sprites/Characters/Player.png"))
+		{
+			std::cerr << "FAILED TO LOAD PLAYER TEXTURE" << std::endl;
+		}
+		player->setTexture(texture);
+		return player;
+	}
 	case 'E':
-		return std::make_shared<Entity::Character>("enemy", position, size, 2, Entity::Character::EType::Enemy);
+	{
+		auto enemy = std::make_shared<Entity::Character>("enemy", position, size, 2, Entity::Character::EType::Enemy);
+		if (!texture.loadFromFile("res/Sprites/Characters/Enemy.png"))
+		{
+			std::cerr << "FAILED TO LOAD ENEMY TEXTURE" << std::endl;
+		}
+		enemy->setTexture(texture);
+		return enemy;
+	}
 	case 'W':
-		return std::make_shared<Entity::Wall>(Entity::Actor("wall", position, size, 1, Entity::Actor::EType::Wall));
+	{
+		auto wall = std::make_shared<Entity::Wall>(Entity::Actor("wall", position, size, 1, Entity::Actor::EType::Wall));
+		if (!texture.loadFromFile("res/Sprites/Actors/Wall.png"))
+		{
+			std::cerr << "FAILED TO LOAD WALL TEXTURE" << std::endl;
+		}
+		wall->setTexture(texture);
+		return wall;
+	}
 	case 'D':
-		return std::make_shared<Entity::Door>(Entity::Actor("door", position, size, 1, Entity::Actor::EType::Door));
-	case 'I':
-		return std::make_shared<Entity::Item>(Entity::Actor("item", position, size, 1, Entity::Actor::EType::Item));
+	{
+		auto door = std::make_shared<Entity::Door>(Entity::Actor("door", position, size, 2, Entity::Actor::EType::Door));
+		if (!texture.loadFromFile("res/Sprites/Actors/Door.png"))
+		{
+			std::cerr << "FAILED TO LOAD DOOR TEXTURE" << std::endl;
+		}
+		door->setTexture(texture);
+		return door;
+	}
 	case 'F':
-		return std::make_shared<Entity::Floor>(Entity::Actor("floor", position, size, 0, Entity::Actor::EType::Floor));
+	{
+		auto floor = std::make_shared<Entity::Floor>(Entity::Actor("floor", position, size, 1, Entity::Actor::EType::Floor));
+		if (!texture.loadFromFile("res/Sprites/Background/Grass2.png"))
+		{
+			std::cerr << "FAILED TO LOAD FLOOR TEXTURE" << std::endl;
+		}
+		floor->setTexture(texture);
+		return floor;
+	}
+	case 'I':
+	{
+		auto item = std::make_shared<Entity::Item>(Entity::Actor("item", position, size, 1, Entity::Actor::EType::Item));
+		if (!texture.loadFromFile("res/Sprites/Actors/Item.png"))
+		{
+			std::cerr << "FAILED TO LOAD ITEM TEXTURE" << std::endl;
+		}
+		item->setTexture(texture);
+		return item;
+	}
 	case ' ':
 		return nullptr;
 	default:

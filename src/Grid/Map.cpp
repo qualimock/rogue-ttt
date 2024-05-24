@@ -35,6 +35,13 @@ namespace Grid
 																	  cellSize(), 2,
 																	  Entity::Character::EType::Player));
 
+		sf::Texture texture;
+		if (!texture.loadFromFile("res/Sprites/Characters/Player.png"))
+		{
+			std::cerr << "FAILED TO LOAD PLAYER TEXTURE" << std::endl;
+		}
+		m_player->setTexture(texture);
+
 		m_currentLevel = m_levels.find("0");
 		loadLevel(0);
 	}

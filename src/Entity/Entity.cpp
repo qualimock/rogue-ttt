@@ -33,8 +33,8 @@ namespace Entity
 
 	void Entity::render(sf::RenderTarget &target)
 	{
-		// target.draw(m_sprite);
-		target.draw(m_shape);
+		target.draw(m_sprite);
+		// target.draw(m_shape);
 	}
 
 	void Entity::resetColor()
