@@ -9,4 +9,4 @@ include_directories(dependencies/rapidjson/include)
 add_subdirectory(dependencies)
 add_subdirectory(src)
 
-file(COPY res DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/res DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
