@@ -9,7 +9,7 @@ namespace Grid
 	class CombatGrid : public BaseGrid
 	{
 		Entity::TTTCell::Faction checkNeighbors(
-			const std::pair<sf::Vector2i, Entity::Entity *> &origin,
+			const std::pair<sf::Vector2i, std::shared_ptr<Entity::Entity>> &origin,
 			const sf::Vector2i &n1Offset,
 			const sf::Vector2i &n2Offset);
 
@@ -23,5 +23,7 @@ namespace Grid
 		void AI_Move();
 
 		bool IsOccupied(std::pair<sf::Vector2i, sf::Vector2i> pos);
+
+		int UsedCells;
 	};
 }

@@ -5,33 +5,38 @@
 #include "../Entity/Character/Player.hpp"
 #include "../Entity/Actor/Wall.hpp"
 #include "../Entity/Actor/Door.hpp"
+#include "../Entity/Actor/Item.h"
+#include "../Entity/Actor/Floor.hpp"
+#include "../Entity/Actor/WoodenFloor.hpp"
 
+#include "../Resources/ResourceManager.hpp"
 
 namespace Grid
 {
 	Map * Map::map = nullptr;
 
 	Map::Map()
-		: BaseGrid(EGridType::Map, sf::Vector2u(640, 480))
+		: BaseGrid(EGridType::Map, sf::Vector2u(520, 480))
 	{
-		placeCharacter(sf::Vector2i(280, 320), Entity::Character::EType::Player);
-		placeCharacter(sf::Vector2i(280, 160), Entity::Character::EType::Enemy);
-		placeActor(sf::Vector2i(200, 240), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(240, 240), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(280, 240), Entity::Actor::EType::Door);
-		placeActor(sf::Vector2i(320, 240), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(360, 240), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(200, 200), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(360, 200), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(200, 160), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(360, 160), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(200, 120), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(360, 120), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(200, 80), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(240, 80), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(280, 80), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(320, 80), Entity::Actor::EType::Wall);
-		placeActor(sf::Vector2i(360, 80), Entity::Actor::EType::Wall);
+		auto levels = ResourceManager::get_levels();
+
+		for (unsigned levelCounter = 0; levelCounter < levels.first; ++levelCounter)
+		{
+			auto level = Level(levels.second.second.first[levelCounter]);
+			auto floor = Level(levels.second.second.second[levelCounter]);
+			auto index = levels.second.first[levelCounter];
+
+			m_levelIndices.emplace(std::to_string(levelCounter), index);
+			m_levels.emplace(std::to_string(levelCounter), std::make_pair(level, floor));
+		}
+
+		m_player = std::make_shared<Entity::Player>(Entity::Character("player0",
+																	  sf::Vector2i(m_size.x / 2, m_size.y / 2 + 100),
+																	  cellSize(), 2,
+																	  Entity::Character::EType::Player));
+
+		m_currentLevel = m_levels.find("0");
+		loadLevel(0);
 	}
 
 	Map * Map::getMap()
@@ -46,100 +51,25 @@ namespace Grid
 		}
 	}
 
-	void Map::placeCharacter(const sf::Vector2i &position, Entity::Character::EType type)
+	std::shared_ptr<Entity::Entity> Map::movePlayer(const sf::Vector2i &indexOffset)
 	{
-		std::cout << "PLACE" << std::endl;
-
-		Entity::Entity *entity = nullptr;
-
-		switch (type)
-		{
-		case Entity::Character::EType::Player:
-		{
-			for (auto &entity : m_entities)
-			{
-				if (entity.second->hasTag("player"))
-				{
-					std::cout << "PLAYER ALREADY EXISTS" << std::endl;
-				}
-				return;
-			}
-
-			std::cout << "PLAYER" << std::endl;
-
-			entity = new Entity::Player(Entity::Character(position, cellSize(), 1, type));
-			entity->addTag("player");
-			break;
-		}
-
-		case Entity::Character::EType::Enemy:
-		{
-			std::cout << "ENEMY" << std::endl;
-
-			entity = new Entity::Character(position, cellSize(), 1, type);
-			entity->addTag("enemy");
-			break;
-		}
-
-		case Entity::Character::EType::NPC:
-		{
-			std::cout << "NPC" << std::endl;
-			break;
-		}
-
-		case Entity::Character::EType::None:
-		{
-			std::cerr << "ATTEMPT TO SPAWN A 'NONE' CHARACTER" << std::endl;
-			throw std::exception();
-		}
-		}
-
-		spawnEntity(adjustEntityPosition(position), entity);
-	}
-
-	void Map::placeActor(const sf::Vector2i &position, Entity::Actor::EType type)
-	{
-		std::cout << "PLACE" << std::endl;
-
-		Entity::Entity *entity = nullptr;
-
-		switch (type)
-		{
-		case Entity::Actor::EType::Wall:
-		{
-			std::cout << "WALL" << std::endl;
-
-			entity = new Entity::Wall(Entity::Actor(position, cellSize(), 1, type));
-			entity->addTag("wall");
-			break;
-		}
-		case Entity::Actor::EType::Door:
-		{
-			std::cout << "DOOR" << std::endl;
-
-			entity = new Entity::Door(Entity::Actor(position, cellSize(), 0, type));
-			entity->addTag("door");
-			break;
-		}
-		}
-
-		spawnEntity(adjustEntityPosition(position), entity);
-	}
-
-	Entity::Entity * Map::movePlayer(const sf::Vector2i &indexOffset)
-	{
-		auto player = dynamic_cast<Entity::Player *>(m_entities.at("0"));
-		Entity::Entity* foundEntity = nullptr;
+		auto player = std::dynamic_pointer_cast<Entity::Player>(m_entities.at("player0"));
+		std::shared_ptr<Entity::Entity> foundEntity = nullptr;
 
 		for (auto &entity : m_entities)
 		{
+			if (entity.second->hasTag("floor"))
+			{
+				continue;
+			}
+
 			if (entity.second->index() == player->index() + indexOffset)
 			{
 				foundEntity = entity.second;
 				break;
 			}
 		}
-
+		
 		bool canMove =
 			((player->index().x + indexOffset.x) >= 0) &&
 			((player->index().x + indexOffset.x) <= m_cellsAmount.x) &&
@@ -158,9 +88,94 @@ namespace Grid
 			}
 			else
 			{
-				player->interact(foundEntity);
+					player->interact(foundEntity);
 			}
 		}
+		else
+		{
+			if (foundEntity == nullptr)
+			{
+				sf::Vector2i levelIndex = m_levelIndices.at(m_currentLevel->first) + indexOffset;
+
+				std::string nextLevelName;
+				for (auto &index : m_levelIndices)
+				{
+					if (levelIndex == index.second)
+					{
+						nextLevelName = index.first;
+						break;
+					}
+				}
+
+				auto nextLevel = m_levels.find(nextLevelName);
+				if (nextLevel == m_levels.end())
+				{
+					return nullptr;
+				}
+
+				std::cout << nextLevel->first << std::endl;
+					
+				if (nextLevel != m_levels.end()){
+					m_currentLevel = nextLevel;
+					for (unsigned i = 0; i < m_levels.size(); ++i)
+					{
+						if (m_levelIndices.find(m_currentLevel->first) != m_levelIndices.end())
+						{
+							loadLevel(i);
+							break;
+						}
+					}
+					
+					sf::Vector2i movementIndex = player->index(); //куда игрок пойдет
+
+					if (player->index().x + indexOffset.x < 0)
+					{
+						movementIndex.x = m_cellsAmount.x;
+					}
+					else if (player->index().x + indexOffset.x > m_cellsAmount.x)
+					{
+						movementIndex.x = 0;
+					}
+
+					if (player->index().y + indexOffset.y < 0)
+					{
+						movementIndex.y = m_cellsAmount.y;
+					}
+					else if (player->index().y + indexOffset.y > m_cellsAmount.y)
+					{
+						movementIndex.y = 0;	
+					}
+
+					player->setIndex(movementIndex);
+					std::cout << movementIndex.x << ":" << movementIndex.y << std::endl;
+					player->setPosition(sf::Vector2i(movementIndex.x * m_offset, movementIndex.y * m_offset));
+
+				}
+			}
+
+			return nullptr;
+		}
+	
 		return foundEntity;
+	}
+
+	void Map::loadLevel(unsigned levelIndex)
+	{
+		clear();
+
+		for (auto &entity : m_currentLevel->second.first.entities())
+		{
+			spawnEntity(entity->position(), entity);
+			m_entities.emplace(entity->name(), entity);
+		}
+
+		for (auto &entity : m_currentLevel->second.second.entities())
+		{
+			spawnEntity(entity->position(), entity);
+			m_entities.emplace(entity->name(), entity);
+		}
+
+		spawnEntity(m_player->position(), m_player);
+		m_entities.emplace(m_player->name(), m_player);
 	}
 }

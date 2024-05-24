@@ -16,7 +16,8 @@ namespace Entity
 			None
 		};
 
-		Character(const sf::Vector2i &position,
+		Character(const std::string &name,
+				  const sf::Vector2i &position,
 				  const sf::Vector2u &size,
 				  unsigned layer,
 				  EType type);
@@ -25,7 +26,7 @@ namespace Entity
 
 		void move(const sf::Vector2i &offset);
 
-		void interact(Entity *target);
+		void interact(std::shared_ptr<Entity> target);
 
 		void onInteract() override;
 

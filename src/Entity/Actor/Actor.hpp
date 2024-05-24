@@ -14,13 +14,14 @@ namespace Entity
 			Floor,
 			Item,
 			Wall,
-
+			WoodenFloor,
 			None
 		};
 
 		void onInteract() override;
 
-		Actor(const sf::Vector2i &position,
+		Actor(const std::string &name,
+			  const sf::Vector2i &position,
 			  const sf::Vector2u &size,
 			  unsigned layer,
 			  EType type);

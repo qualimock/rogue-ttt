@@ -16,6 +16,9 @@ namespace Entity
 		if (m_opened)
 		{
 			setColor(sf::Color::Green);
+			sf::Texture texture;
+			texture.loadFromFile("res/Sprites/Actors/DoorOpen.png");
+			setTexture(texture);
 			removeTag("solid");
 			return;
 		}

@@ -2,6 +2,8 @@ add_executable(${PROJECT_NAME}
   main.cpp
   Game/Game.cpp
   Game/Game.hpp
+  Game/Level.cpp
+  Game/Level.hpp
   Grid/IGrid.cpp
   Grid/IGrid.hpp
   Grid/BaseGrid.cpp
@@ -12,6 +14,8 @@ add_executable(${PROJECT_NAME}
   Grid/Map.hpp
   Grid/CombatGrid.cpp
   Grid/CombatGrid.hpp
+  Grid/InventoryGrid.cpp
+  Grid/InventoryGrid.h
   GridManager/GridManager.cpp
   GridManager/GridManager.hpp
   Entity/Entity.cpp
@@ -22,12 +26,20 @@ add_executable(${PROJECT_NAME}
   Entity/Actor/TTTCell.hpp
   Entity/Actor/Wall.cpp
   Entity/Actor/Wall.hpp
+  Entity/Actor/Floor.cpp
+  Entity/Actor/Floor.hpp
+  Entity/Actor/WoodenFloor.cpp
+  Entity/Actor/WoodenFloor.hpp
+  Entity/Actor/Item.cpp
+  Entity/Actor/Item.h
   Entity/Actor/Door.cpp
   Entity/Actor/Door.hpp
   Entity/Character/Character.cpp
   Entity/Character/Character.hpp
   Entity/Character/Player.cpp
-  Entity/Character/Player.hpp)
+  Entity/Character/Player.hpp
+  Resources/ResourceManager.cpp
+  Resources/ResourceManager.hpp)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 

@@ -6,14 +6,17 @@ namespace Grid
 {
 	CombatGrid::CombatGrid(BaseGrid &&grid)
 		: BaseGrid(grid)
-	{}
+	{
+		UsedCells = 0;
+	}
 
-	Entity::TTTCell::Faction CombatGrid::checkNeighbors(const std::pair<sf::Vector2i, Entity::Entity *> &origin,
+	Entity::TTTCell::Faction CombatGrid::checkNeighbors(const std::pair<sf::Vector2i,
+														std::shared_ptr<Entity::Entity>> &origin,
 														const sf::Vector2i &n1Offset,
 														const sf::Vector2i &n2Offset)
 	{
-		Entity::Entity *n1 = nullptr;
-		Entity::Entity *n2 = nullptr;
+		std::shared_ptr<Entity::Entity> n1 = nullptr;
+		std::shared_ptr<Entity::Entity> n2 = nullptr;
 
 		for (auto &entity : m_entities)
 		{
@@ -31,15 +34,15 @@ namespace Grid
 
 		if (n1 && n2)
 		{
-			if (dynamic_cast<Entity::TTTCell *>(n1)->faction() ==
-				dynamic_cast<Entity::TTTCell *>(n2)->faction())
+			if (std::dynamic_pointer_cast<Entity::TTTCell>(n1)->faction() ==
+				std::dynamic_pointer_cast<Entity::TTTCell>(n2)->faction())
 			{
-				neighboursFaction = dynamic_cast<Entity::TTTCell *>(n1)->faction();
+				neighboursFaction = std::dynamic_pointer_cast<Entity::TTTCell>(n1)->faction();
 			}
 
-			if (neighboursFaction == dynamic_cast<Entity::TTTCell *>(origin.second)->faction())
+			if (neighboursFaction == std::dynamic_pointer_cast<Entity::TTTCell>(origin.second)->faction())
 			{
-				return dynamic_cast<Entity::TTTCell *>(origin.second)->faction();
+				return std::dynamic_pointer_cast<Entity::TTTCell>(origin.second)->faction();
 			}
 		}
 
@@ -53,25 +56,25 @@ namespace Grid
 			if (checkNeighbors(std::make_pair(entity.second->index(), entity.second),
 							   sf::Vector2i(1, 1), sf::Vector2i(-1, -1)) != Entity::TTTCell::Faction::None)
 			{
-				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
+				return std::dynamic_pointer_cast<Entity::TTTCell>(entity.second)->faction();
 			}
 
 			if	(checkNeighbors(std::make_pair(entity.second->index(), entity.second),
 								sf::Vector2i(-1, 1), sf::Vector2i(1, -1)) != Entity::TTTCell::Faction::None)
 			{
-				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
+				return std::dynamic_pointer_cast<Entity::TTTCell>(entity.second)->faction();
 			}
 
 			if (checkNeighbors(std::make_pair(entity.second->index(), entity.second),
 							   sf::Vector2i(0, 1), sf::Vector2i(0, -1)) != Entity::TTTCell::Faction::None)
 			{
-				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
+				return std::dynamic_pointer_cast<Entity::TTTCell>(entity.second)->faction();
 			}
 
 			if(checkNeighbors(std::make_pair(entity.second->index(), entity.second),
 							  sf::Vector2i(1, 0), sf::Vector2i(-1, 0)) != Entity::TTTCell::Faction::None)
 			{
-				return dynamic_cast<Entity::TTTCell *>(entity.second)->faction();
+				return std::dynamic_pointer_cast<Entity::TTTCell>(entity.second)->faction();
 			}
 		}
 
@@ -94,25 +97,12 @@ namespace Grid
 			clickFaction = Entity::TTTCell::Faction::Cross;
 			break;
 
-		case sf::Mouse::Right:
-			clickFaction = Entity::TTTCell::Faction::Nought;
-			break;
-
-		case sf::Mouse::Middle:
-			for (auto &entity : m_entities)
-			{
-				if (entity.second->index() == cellIndexPosition.first)
-				{
-					destroyEntity(entity.first);
-					break;
-				}
-			}
-
 			if (getWinner() == Entity::TTTCell::Faction::None)
 			{
 				for (auto &cell : m_entities)
 				{
-					dynamic_cast<Entity::TTTCell *>(cell.second)->resetColor();
+					std::dynamic_pointer_cast<Entity::TTTCell>(cell.second)->resetColor();
+					
 				}
 			}
 			return false;
@@ -121,10 +111,10 @@ namespace Grid
 		winnerFaction = getWinner();
 		if (winnerFaction == Entity::TTTCell::Faction::None)
 		{
-			auto newCell = new Entity::TTTCell(cellIndexPosition.second,
-											   sf::Vector2u(m_offset, m_offset),
-											   clickFaction);
-			spawnEntity(cellIndexPosition, newCell);
+			auto newCell = std::make_shared<Entity::TTTCell>(cellIndexPosition.second,
+															 sf::Vector2u(m_offset, m_offset),
+															 clickFaction);
+			spawnEntity(cellIndexPosition.second, newCell);
 			AI_Move();
 		}
 		winnerFaction = getWinner();
@@ -133,7 +123,7 @@ namespace Grid
 		{
 			for (auto &cell : m_entities)
 			{
-				if (dynamic_cast<Entity::TTTCell *>(cell.second)->faction() == winnerFaction)
+				if (std::dynamic_pointer_cast<Entity::TTTCell>(cell.second)->faction() == winnerFaction)
 				{
 					cell.second->setColor(sf::Color::White);
 				}
@@ -153,10 +143,11 @@ namespace Grid
 		}
 		Entity::TTTCell::Faction clickFaction;
 		clickFaction = Entity::TTTCell::Faction::Nought;
-		auto newCell = new Entity::TTTCell(cellIndexPosition.second,
-			sf::Vector2u(m_offset, m_offset),
-			clickFaction);
-		spawnEntity(cellIndexPosition, newCell);
+		auto newCell = std::make_shared<Entity::TTTCell>(cellIndexPosition.second,
+														 sf::Vector2u(m_offset, m_offset),
+														 clickFaction);
+		spawnEntity(cellIndexPosition.second, newCell);
+		UsedCells++;
 	}
 
 	bool CombatGrid::IsOccupied( std::pair<sf::Vector2i,sf::Vector2i> pos) {
@@ -170,5 +161,4 @@ namespace Grid
 		}
 		return false;
 	}
-
 }

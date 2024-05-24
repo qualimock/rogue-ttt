@@ -3,25 +3,29 @@
 #include <SFML/Graphics.hpp>
 
 #include <set>
+#include <memory>
 
 namespace Entity
 {
 	class Entity
 	{
 	public:
-		Entity(const sf::Vector2i &position,
+		Entity(const std::string &name,
+			   const sf::Vector2i &position,
 			   const sf::Vector2u &size,
 			   unsigned layer);
 
 		void setPosition(const sf::Vector2i &position);
 		void setColor(sf::Color color);
+		void setTexture(const sf::Texture texture);
+		void setSprite(const sf::Sprite &sprite);
 
 		void render(sf::RenderTarget &target);
 
 		virtual void resetColor();
 		virtual void onInteract() = 0;
 
-		bool operator==(const Entity *entity) const;
+		bool operator==(const std::shared_ptr<Entity> entity) const;
 
 		void addTag(const std::string &tag) { m_tags.emplace(tag); }
 		void removeTag(const std::string &tag);
@@ -29,6 +33,7 @@ namespace Entity
 
 		void setIndex(const sf::Vector2i &index);
 
+		const std::string name() const { return m_name; }
 		const sf::Vector2i position() const { return m_position; }
 		const sf::Vector2u size() const { return m_size; }
 		const std::set<std::string> tags() const { return m_tags; }
@@ -38,6 +43,10 @@ namespace Entity
 	private:
 		sf::RectangleShape m_shape;
 		std::set<std::string> m_tags;
+		std::string m_name;
+
+		sf::Texture m_texture;
+		sf::Sprite m_sprite;
 
 		sf::Vector2i m_position;
 		sf::Vector2u m_size;

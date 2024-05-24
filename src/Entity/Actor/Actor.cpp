@@ -4,11 +4,12 @@
 
 namespace Entity
 {
-	Actor::Actor(const sf::Vector2i &position,
+	Actor::Actor(const std::string &name,
+				 const sf::Vector2i &position,
 				 const sf::Vector2u &size,
 				 unsigned layer,
 				 EType type)
-		: Entity(position, size, layer)
+		: Entity(name, position, size, layer)
 		, m_type(type)
 	{
 		init();

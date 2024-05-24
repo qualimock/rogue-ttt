@@ -32,6 +32,7 @@ namespace Grid
 		const sf::Vector2i position() const { return m_topLeft; }
 		const sf::Vector2u size() const { return m_size; }
 		const sf::Vector2u cellSize() const { return m_cellSize; }
+		const sf::Vector2u cellsAmount() const { return m_cellsAmount; }
 
 	private:
 		std::vector<sf::VertexArray> m_verticalLines;

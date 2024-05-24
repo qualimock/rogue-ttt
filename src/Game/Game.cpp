@@ -8,9 +8,11 @@
 #include <iostream>
 
 #include "../GridManager/GridManager.hpp"
+#include "../Resources/ResourceManager.hpp"
 
 #include "../Grid/DraggableGrid.hpp"
 #include "../Grid/CombatGrid.hpp"
+#include "../Grid/InventoryGrid.h"
 #include "../Grid/Map.hpp"
 
 #define DEBUG
@@ -26,8 +28,14 @@ Game::~Game()
 
 bool Game::init()
 {
+	if(!ResourceManager::load_json_resources("res/resources.json"))
+	{
+		std::cerr << "ERROR" << std::endl;
+		return false;
+	}
+
 	auto map = Grid::Map::getMap();
-	map->resize(sf::Vector2i(m_window.getSize()));
+	map->loadLevel(0);
 	m_grids.emplace("map", map);
 
 	std::cout << m_grids.size() << std::endl;
@@ -114,17 +122,18 @@ void Game::onKeyPressed(sf::Event &event)
 	case sf::Keyboard::Left:
 	case sf::Keyboard::Down:
 	case sf::Keyboard::Right:
+	{
 		auto moveResult = Grid::GridManager::moveEvent(m_window, event, m_grids.at("map"));
 		if (moveResult)
 		{
 			if (moveResult->hasTag("enemy"))
 			{
-				m_currentlyInteractedEntity = dynamic_cast<Entity::Character *>(moveResult);
+				m_currentlyInteractedEntity = std::dynamic_pointer_cast<Entity::Character>(moveResult);
 				m_gameState = EGameState::InCombat;
 			}
 			else if (moveResult->hasTag("item"))
 			{
-				m_currentlyInteractedEntity = dynamic_cast<Entity::Actor *>(moveResult);
+				m_currentlyInteractedEntity = std::dynamic_pointer_cast<Entity::Actor>(moveResult);
 				m_gameState = EGameState::Interacting;
 			}
 		}
@@ -135,6 +144,29 @@ void Game::onKeyPressed(sf::Event &event)
 			m_gameState = EGameState::Exploring;
 		}
 		break;
+	}
+#ifdef DEBUG
+	case sf::Keyboard::Num1:
+	{
+		dynamic_cast<Grid::Map *>(m_grids.at("map"))->loadLevel(0);
+		break;
+	}
+	case sf::Keyboard::Num2:
+	{
+		dynamic_cast<Grid::Map *>(m_grids.at("map"))->loadLevel(1);
+		break;
+	}
+	case sf::Keyboard::Num3:
+	{
+		dynamic_cast<Grid::Map *>(m_grids.at("map"))->loadLevel(2);
+		break;
+	}
+	case sf::Keyboard::Num4:
+	{
+		dynamic_cast<Grid::Map *>(m_grids.at("map"))->loadLevel(3);
+		break;
+	}
+#endif
 	}
 
 	if (event.key.code == sf::Keyboard::Escape)
@@ -160,7 +192,7 @@ void Game::onKeyPressed(sf::Event &event)
 				new Grid::CombatGrid(
 					Grid::BaseGrid(
 						Grid::BaseGrid::EGridType::Combat,
-						sf::Vector2i(m_window.getSize().x-160, m_window.getSize().y/2 - 60),
+						sf::Vector2i(m_window.getSize().x-160, m_window.getSize().y/2 + 60),
 						sf::Vector2u(120, 120))
 					)
 				);
@@ -169,6 +201,22 @@ void Game::onKeyPressed(sf::Event &event)
 
 	case EGameState::Interacting:
 		std::cout << "INTERACTION" << std::endl;
+		if (!m_grids.contains("inventory")) {
+			m_visibleImGuiWindows.emplace("inventory", false);
+			m_grids.emplace(
+				"inventory",
+				new Grid::InventoryGrid(
+					Grid::BaseGrid(
+						Grid::BaseGrid::EGridType::Interaction,
+						sf::Vector2i(m_window.getSize().x - 160, m_window.getSize().y / 6),
+						sf::Vector2u(120, 120))
+				)
+			);
+		}
+		Grid::InventoryGrid * Inventory = dynamic_cast<Grid::InventoryGrid *>(m_grids.at("inventory"));
+		Inventory->AddItem(m_currentlyInteractedEntity);
+		m_grids.at("map")->destroyEntity(m_currentlyInteractedEntity);
+		m_gameState = EGameState::Exploring;
 		break;
 	}
 }
@@ -177,6 +225,7 @@ void Game::update()
 {
 	ImGui::SFML::Update(m_window, m_deltaClock.restart());
 
+	//m_window.setSize(sf::Vector2u(720, 480));
 	sf::Event event;
 	while (m_window.pollEvent(event))
 	{
@@ -211,7 +260,7 @@ void Game::update()
 			sf::FloatRect view(0, 0, event.size.width, event.size.height);
 			m_window.setView(sf::View(view));
 
-			m_grids.at("map")->resize(sf::Vector2i(event.size.width-200, event.size.height));
+			//m_grids.at("map")->resize(sf::Vector2i(event.size.width-200, event.size.height));
 
             // move combat grid relative to window size
 			auto combatGrid = m_grids.find("combat");
