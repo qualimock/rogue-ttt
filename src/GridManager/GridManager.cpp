@@ -27,12 +27,11 @@ namespace Grid
 		return false;
 	}
 
-	Entity::Entity * GridManager::moveEvent(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid)
+	std::shared_ptr<Entity::Entity> GridManager::moveEvent(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid)
 	{
 		std::cout << "KEYBOARD" << std::endl;
 
 		sf::Vector2i movement;
-
 		switch(event.key.code)
 		{
 		case sf::Keyboard::W:

@@ -11,7 +11,7 @@ namespace Grid
 	public:
 		InventoryGrid(BaseGrid&& grid);
 
-		void AddItem(Entity::Entity* entity);
+		void AddItem(std::shared_ptr<Entity::Entity> entity);
 
 		int Occupied;
 	};

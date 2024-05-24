@@ -32,7 +32,7 @@ namespace Grid
 				 unsigned layer = 0,
 				 unsigned linesOffset = 40);
 
-		std::map<std::string, Entity::Entity *> m_entities;
+		std::map<std::string, std::shared_ptr<Entity::Entity>> m_entities;
 		void move(const sf::Vector2i &position) override;
 		void resize(const sf::Vector2i &point) override;
 
@@ -44,12 +44,11 @@ namespace Grid
 
 		void clear();
 
-		void destroyEntity(Entity::Entity *entity);
+		void destroyEntity(std::shared_ptr<Entity::Entity> entity);
 
 		const unsigned layer() const { return m_layer; }
 
-		void spawnEntity(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
-			Entity::Entity* entity);
+		void spawnEntity(const sf::Vector2i &position, std::shared_ptr<Entity::Entity> entity);
 	protected:
 		std::pair<sf::Vector2i, sf::Vector2i>
 		adjustEntityPosition(const sf::Vector2i &position) const;

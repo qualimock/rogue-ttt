@@ -1,0 +1,54 @@
+{
+	"levels": [
+		{
+			"description": [
+				"DDDDDDDDDD",
+				"DDDDDDDDDD",
+				"DDDDDDDDDD",
+				"DDDDDDDDDD",
+				"DDDDDDDDDD",
+				"DDDDDDDDDD",
+				"DDDDDDDDDD",
+				"DDDDDDDDDD",
+				"DDDDPDDDDD",
+				"DDDDDDDDDD"
+			]
+		},
+		{
+			"description": [
+				"DDDDDDDDDDDDD",
+				"D00D11D22D33D",
+				"D0DD1DD2DD3DD",
+				"DDDDDDDDDDDDD",
+				"D44D55D66D77D",
+				"D4DD5DD6DD7DD",
+				"DDDDDDDDDDDDD",
+				"D88D99DAADBBD",
+				"D8DD9DDADDBDD",
+				"DDDDDDDDDDDDD",
+				"DCCDGGDHHDIID",
+				"DCDDGDDHDDDDD",
+				"DDDDDH1GDDJJD",
+				"DDDDK0E2DDDDD"
+			]
+		},
+		{
+			"description": [
+				"6666666666666",
+				"7DDDDDDDDDDD5",
+				"7DDDDDDDDDDD5",
+				"7DDDDDDDDDDD5",
+				"7DDDBBBBBDDD5",
+				"7DDDBH1GBDDD5",
+				"7DDDB0E2BDDD5",
+				"7DDDBJ3IBDDD5",
+				"7DDDBBBBBDDD5",
+				"7DDDDDADAAAA5",
+				"7DDDDDAAADDD5",
+				"7DDDDDADDDDD5",
+				"7DDDDKALDDDD5",
+				"8888888888888"
+			]
+		}
+	]
+}

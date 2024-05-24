@@ -1,15 +1,11 @@
 #pragma once
 
 #include "BaseGrid.hpp"
-#include "Level.hpp"
+#include "../Game/Level.hpp"
 
 #include "../Entity/Character/Character.hpp"
 #include "../Entity/Actor/Actor.hpp"
 
-namespace Entity
-{
-	class Character;
-}
 
 namespace Grid
 {
@@ -17,10 +13,8 @@ namespace Grid
 	{
 		static Map * map;
 		
-		std::map<sf::Vector2i, Level> m_levels;
-		std::map<sf::Vector2i, Level>::iterator currentLevel = m_levels.begin();
-
-		void loadLevel(Level &level);
+		std::map<std::string, Level> m_levels;
+		std::map<std::string, Level>::iterator currentLevel = m_levels.begin();
 
 		Map();
 
@@ -32,10 +26,8 @@ namespace Grid
 
 		void move() = delete;
 
-		void placeCharacter(const sf::Vector2i &position, Entity::Character::EType type);
-		void placeActor(const sf::Vector2i &position, Entity::Actor::EType type);
+		void loadLevel(unsigned levelIndex);
 
-		Entity::Entity * movePlayer(const sf::Vector2i &indexOffset);
-
+		std::shared_ptr<Entity::Entity> movePlayer(const sf::Vector2i &indexOffset);
 	};
 }

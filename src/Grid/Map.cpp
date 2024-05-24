@@ -9,6 +9,7 @@
 #include "../Entity/Actor/Floor.hpp"
 #include "../Entity/Actor/WoodenFloor.hpp"
 
+#include "../Resources/ResourceManager.hpp"
 
 namespace Grid
 {
@@ -76,7 +77,7 @@ namespace Grid
 		placeActor(sf::Vector2i(440, 240), Entity::Actor::EType::Item);
 		placeActor(sf::Vector2i(480, 240), Entity::Actor::EType::Item);
 		*/
-		loadLevel(currentLevel->second);
+		// loadLevel(currentLevel->second);
 	}
 
 	Map * Map::getMap()
@@ -91,156 +92,161 @@ namespace Grid
 		}
 	}
 
-	void Map::placeCharacter(const sf::Vector2i &position, Entity::Character::EType type)
+	// void Map::placeCharacter(const sf::Vector2i &position, Entity::Character::EType type)
+	// {
+	// 	std::cout << "PLACE" << std::endl;
+	// 	sf::Texture texture;
+	// 	Entity::Entity *entity = nullptr;
+
+	// 	switch (type)
+	// 	{
+	// 	case Entity::Character::EType::Player:
+	// 	{
+	// 		for (auto &entity : m_entities)
+	// 		{
+	// 			if (entity.second->hasTag("player"))
+	// 			{
+	// 				std::cout << "PLAYER ALREADY EXISTS" << std::endl;
+	// 			}
+	// 			return;
+	// 		}
+
+	// 		std::cout << "PLAYER" << std::endl;
+
+	// 		entity = new Entity::Player(Entity::Character(position, cellSize(), 1, type));
+	// 		if (!texture.loadFromFile("res/Sprites/Characters/Player.png", sf::IntRect(0, 0, 40, 40)))
+	// 		{
+	// 			std::cerr << "FAILED TO LOAD PLAYER TEXTURE" << std::endl;
+	// 		}
+
+	// 		entity = new Entity::Player(Entity::Character(position, cellSize(), 2, type));
+	// 		entity->setTexture(texture);
+	// 		entity->addTag("player");
+	// 		break;
+	// 	}
+
+	// 	case Entity::Character::EType::Enemy:
+	// 	{
+	// 		std::cout << "ENEMY" << std::endl;
+	// 		entity = new Entity::Character(position, cellSize(), 1, type);
+	// 		if (!texture.loadFromFile("res/Sprites/Characters/Enemy.png"))
+	// 		{
+	// 			std::cerr << "FAILED TO LOAD WALL" << std::endl;
+	// 		}
+
+	// 		entity = new Entity::Character(position, cellSize(), 2, type);
+	// 		entity->setTexture(texture);
+	// 		entity->addTag("enemy");
+	// 		break;
+	// 	}
+
+	// 	case Entity::Character::EType::NPC:
+	// 	{
+	// 		std::cout << "NPC" << std::endl;
+	// 		break;
+	// 	}
+
+	// 	case Entity::Character::EType::None:
+	// 	{
+	// 		std::cerr << "ATTEMPT TO SPAWN A 'NONE' CHARACTER" << std::endl;
+	// 		throw std::exception();
+	// 	}
+	// 	}
+
+	// 	spawnEntity(adjustEntityPosition(position), entity);
+	// }
+
+	// void Map::placeActor(const sf::Vector2i &position, Entity::Actor::EType type)
+	// {
+	// 	std::cout << "PLACE" << std::endl;
+	// 	sf::Texture texture;
+	// 	Entity::Entity *entity = nullptr;
+
+	// 	switch (type)
+	// 	{
+	// 	case Entity::Actor::EType::Wall:
+	// 	{
+	// 		std::cout << "WALL" << std::endl;
+	// 		if (!texture.loadFromFile("res/Sprites/Actors/Wall.png"))
+	// 		{
+	// 			std::cerr << "FAILED TO LOAD WALL" << std::endl;
+	// 		}
+
+	// 		entity = new Entity::Wall(Entity::Actor(position, cellSize(), 2, type));
+	// 		entity->setTexture(texture);
+	// 		entity->addTag("wall");
+	// 		break;
+	// 	}
+	// 	case Entity::Actor::EType::Door:
+	// 	{
+	// 		std::cout << "DOOR" << std::endl;
+	// 		if (!texture.loadFromFile("res/Sprites/Actors/Door.png"))
+	// 		{
+	// 			std::cerr << "FAILED TO LOAD DOOR" << std::endl;
+	// 		}
+	// 		entity = new Entity::Door(Entity::Actor(position, cellSize(), 1, type));
+	// 		entity->setTexture(texture);
+	// 		entity->addTag("door");
+	// 		break;
+	// 	}
+	// 	case Entity::Actor::EType::Item:
+	// 	{
+	// 		std::cout << "ITEM" << std::endl;
+	// 		if (!texture.loadFromFile("res/Sprites/Actors/Item.png"))
+	// 		{
+	// 			std::cerr << "FAILED TO LOAD ITEM" << std::endl;
+	// 		}
+	// 		entity = new Entity::Item(Entity::Actor(position, cellSize(), 1, type));
+	// 		entity->setTexture(texture);
+	// 		entity->addTag("item");
+	// 		break;
+	// 	}
+	// 	case Entity::Actor::EType::Floor:
+	// 	{
+	// 		std::cout << "FLOOR" << std::endl;
+
+	// 		if (!texture.loadFromFile("res/Sprites/Background/Grass.png"))
+	// 		{
+	// 			std::cerr << "FAILED TO LOAD GRASS" << std::endl;
+	// 		}
+	// 		if (rand() % 5 == 0) {
+	// 			texture.loadFromFile("res/Sprites/Background/Grass2.png");
+	// 		}
+	// 		entity = new Entity::Floor(Entity::Actor(position, cellSize(), 0, type));
+	// 		entity->setTexture(texture);
+	// 		entity->addTag("floor");
+	// 		break;
+	// 	}
+	// 	case Entity::Actor::EType::WoodenFloor:
+	// 	{
+	// 		std::cout << "FLOOR" << std::endl;
+
+	// 		if (!texture.loadFromFile("res/Sprites/Background/WoodFloor.png"))
+	// 		{
+	// 			std::cerr << "FAILED TO LOAD GRASS" << std::endl;
+	// 		}
+
+	// 		entity = new Entity::WoodenFloor(Entity::Actor(position, cellSize(), 0, type));
+	// 		entity->setTexture(texture);
+	// 		entity->addTag("floor");
+	// 		break;
+	// 	}
+	// 	}
+	// 	spawnEntity(adjustEntityPosition(position), entity);
+	// }
+
+	std::shared_ptr<Entity::Entity> Map::movePlayer(const sf::Vector2i &indexOffset)
 	{
-		std::cout << "PLACE" << std::endl;
-		sf::Texture texture;
-		Entity::Entity *entity = nullptr;
-
-		switch (type)
-		{
-		case Entity::Character::EType::Player:
-		{
-			for (auto &entity : m_entities)
-			{
-				if (entity.second->hasTag("player"))
-				{
-					std::cout << "PLAYER ALREADY EXISTS" << std::endl;
-				}
-				return;
-			}
-
-			std::cout << "PLAYER" << std::endl;
-
-			entity = new Entity::Player(Entity::Character(position, cellSize(), 1, type));
-			if (!texture.loadFromFile("res/Sprites/Characters/Player.png", sf::IntRect(0, 0, 40, 40)))
-			{
-				std::cerr << "FAILED TO LOAD PLAYER TEXTURE" << std::endl;
-			}
-
-			entity = new Entity::Player(Entity::Character(position, cellSize(), 2, type));
-			entity->setTexture(texture);
-			entity->addTag("player");
-			break;
-		}
-
-		case Entity::Character::EType::Enemy:
-		{
-			std::cout << "ENEMY" << std::endl;
-			entity = new Entity::Character(position, cellSize(), 1, type);
-			if (!texture.loadFromFile("res/Sprites/Characters/Enemy.png"))
-			{
-				std::cerr << "FAILED TO LOAD WALL" << std::endl;
-			}
-
-			entity = new Entity::Character(position, cellSize(), 2, type);
-			entity->setTexture(texture);
-			entity->addTag("enemy");
-			break;
-		}
-
-		case Entity::Character::EType::NPC:
-		{
-			std::cout << "NPC" << std::endl;
-			break;
-		}
-
-		case Entity::Character::EType::None:
-		{
-			std::cerr << "ATTEMPT TO SPAWN A 'NONE' CHARACTER" << std::endl;
-			throw std::exception();
-		}
-		}
-
-		spawnEntity(adjustEntityPosition(position), entity);
-	}
-
-	void Map::placeActor(const sf::Vector2i &position, Entity::Actor::EType type)
-	{
-		std::cout << "PLACE" << std::endl;
-		sf::Texture texture;
-		Entity::Entity *entity = nullptr;
-
-		switch (type)
-		{
-		case Entity::Actor::EType::Wall:
-		{
-			std::cout << "WALL" << std::endl;
-			if (!texture.loadFromFile("res/Sprites/Actors/Wall.png"))
-			{
-				std::cerr << "FAILED TO LOAD WALL" << std::endl;
-			}
-
-			entity = new Entity::Wall(Entity::Actor(position, cellSize(), 2, type));
-			entity->setTexture(texture);
-			entity->addTag("wall");
-			break;
-		}
-		case Entity::Actor::EType::Door:
-		{
-			std::cout << "DOOR" << std::endl;
-			if (!texture.loadFromFile("res/Sprites/Actors/Door.png"))
-			{
-				std::cerr << "FAILED TO LOAD DOOR" << std::endl;
-			}
-			entity = new Entity::Door(Entity::Actor(position, cellSize(), 1, type));
-			entity->setTexture(texture);
-			entity->addTag("door");
-			break;
-		}
-		case Entity::Actor::EType::Item:
-		{
-			std::cout << "ITEM" << std::endl;
-			if (!texture.loadFromFile("res/Sprites/Actors/Item.png"))
-			{
-				std::cerr << "FAILED TO LOAD ITEM" << std::endl;
-			}
-			entity = new Entity::Item(Entity::Actor(position, cellSize(), 1, type));
-			entity->setTexture(texture);
-			entity->addTag("item");
-			break;
-		}
-		case Entity::Actor::EType::Floor:
-		{
-			std::cout << "FLOOR" << std::endl;
-
-			if (!texture.loadFromFile("res/Sprites/Background/Grass.png"))
-			{
-				std::cerr << "FAILED TO LOAD GRASS" << std::endl;
-			}
-			if (rand() % 5 == 0) {
-				texture.loadFromFile("res/Sprites/Background/Grass2.png");
-			}
-			entity = new Entity::Floor(Entity::Actor(position, cellSize(), 0, type));
-			entity->setTexture(texture);
-			entity->addTag("floor");
-			break;
-		}
-		case Entity::Actor::EType::WoodenFloor:
-		{
-			std::cout << "FLOOR" << std::endl;
-
-			if (!texture.loadFromFile("res/Sprites/Background/WoodFloor.png"))
-			{
-				std::cerr << "FAILED TO LOAD GRASS" << std::endl;
-			}
-
-			entity = new Entity::WoodenFloor(Entity::Actor(position, cellSize(), 0, type));
-			entity->setTexture(texture);
-			entity->addTag("floor");
-			break;
-		}
-		}
-		spawnEntity(adjustEntityPosition(position), entity);
-	}
-
-	Entity::Entity * Map::movePlayer(const sf::Vector2i &indexOffset)
-	{
-		auto player = dynamic_cast<Entity::Player *>(m_entities.at("0"));
-		Entity::Entity* foundEntity = nullptr;
+		auto player = std::dynamic_pointer_cast<Entity::Player>(m_entities.at("player0"));
+		std::shared_ptr<Entity::Entity> foundEntity = nullptr;
 
 		for (auto &entity : m_entities)
 		{
+			if (entity.second->hasTag("floor"))
+			{
+				continue;
+			}
+
 			if (entity.second->index() == player->index() + indexOffset)
 			{
 				foundEntity = entity.second;
@@ -266,59 +272,64 @@ namespace Grid
 			}
 			else
 			{
-				if (foundEntity == nullptr)
-				{
-					sf::Vector2i levelIndex = currentLevel->first + indexOffset;
+				// if (foundEntity == nullptr)
+				// {
+				// 	sf::Vector2i levelIndex = currentLevel->first + indexOffset;
 
-					//тут надо выгрузить старый уровень
+				// 	//тут надо выгрузить старый уровень
 					
-					auto nextLevel = m_levels.find(levelIndex);
+				// 	auto nextLevel = m_levels.find(levelIndex);
 					
-					if (nextLevel != m_levels.end()){
-						currentLevel = nextLevel;
-						loadLevel(currentLevel->second);
+				// 	if (nextLevel != m_levels.end()){
+				// 		currentLevel = nextLevel;
+				// 		loadLevel(currentLevel->second);
 					
-						sf::Vector2i movementIndex = player->index(); //куда игрок пойдет
+				// 		sf::Vector2i movementIndex = player->index(); //куда игрок пойдет
 
-						if (player->index().x + indexOffset.x < 0)
-						{
-							movementIndex.x = m_cellsAmount.x - 1;
-						}
-						else 
-						{
-							movementIndex.x = 0;
-						}
+				// 		if (player->index().x + indexOffset.x < 0)
+				// 		{
+				// 			movementIndex.x = m_cellsAmount.x - 1;
+				// 		}
+				// 		else 
+				// 		{
+				// 			movementIndex.x = 0;
+				// 		}
 
-						if (player->index().y + indexOffset.y < 0)
-						{
-							movementIndex.y = m_cellsAmount.y - 1;
-						}
-						else 
-						{
-							movementIndex.y = 0;	
-						}
+				// 		if (player->index().y + indexOffset.y < 0)
+				// 		{
+				// 			movementIndex.y = m_cellsAmount.y - 1;
+				// 		}
+				// 		else 
+				// 		{
+				// 			movementIndex.y = 0;	
+				// 		}
 
-						player->setIndex(movementIndex);
-						player->setPosition(sf::Vector2i(movementIndex.x * m_offset, movementIndex.y * m_offset));
-					}
-				}
-				else
-				{
+				// 		player->setIndex(movementIndex);
+				// 		player->setPosition(sf::Vector2i(movementIndex.x * m_offset, movementIndex.y * m_offset));
+				// 	}
+				// }
+				// else
+				// {
 					player->interact(foundEntity);
-				}
+				// }
 			}
 		}
 	
 		return foundEntity;
 	}
 
-	void Map::loadLevel(Level &level){
-		for(auto &pair : level.getActors()){
-			placeActor(pair.second.position(), pair.second.type());
+	void Map::loadLevel(unsigned levelIndex)
+	{
+		auto level = Level(ResourceManager::get_levels()[levelIndex]);
+		auto floor = Level(ResourceManager::get_levels()[levelIndex+1]);
+		for (auto &entity : level.entities())
+		{
+			spawnEntity(entity->position(), entity);
 		}
-
-		for(auto &pair : level.getCharacters()){
-			placeCharacter(pair.second.position(), pair.second.type());
+		for (auto &entity : floor.entities())
+		{
+			spawnEntity(entity->position(), entity);
 		}
+	    m_levels.emplace("0", level);
 	}
 }

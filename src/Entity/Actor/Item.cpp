@@ -5,7 +5,6 @@ namespace Entity
 	Item::Item(Actor&& actor)
 		: Actor(actor)
 	{
-		addTag("item");
 		setColor(sf::Color::Red);
 	}
 

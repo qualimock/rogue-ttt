@@ -2,6 +2,8 @@ add_executable(${PROJECT_NAME}
   main.cpp
   Game/Game.cpp
   Game/Game.hpp
+  Game/Level.cpp
+  Game/Level.hpp
   Grid/IGrid.cpp
   Grid/IGrid.hpp
   Grid/BaseGrid.cpp
@@ -37,7 +39,7 @@ add_executable(${PROJECT_NAME}
   Entity/Character/Player.cpp
   Entity/Character/Player.hpp
   Resources/ResourceManager.cpp
-  Resources/ResourceManager.hpp "Grid/InventoryGrid.cpp")
+  Resources/ResourceManager.hpp)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 

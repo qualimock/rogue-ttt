@@ -5,7 +5,7 @@ namespace Entity
 	TTTCell::TTTCell(const sf::Vector2i &position,
 					 const sf::Vector2u &size,
 					 Faction faction)
-		: Actor(position, size, 0, EType::tttCell)
+		: Actor("tttcell", position, size, 0, EType::tttCell)
 		, m_faction(faction)
 	{
 		resetColor();

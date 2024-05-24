@@ -27,6 +27,6 @@ namespace Grid
 		~GridManager() = default;
 
 		static bool mouseClicked(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid);
-		static Entity::Entity * moveEvent(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid);
+		static std::shared_ptr<Entity::Entity> moveEvent(sf::RenderWindow &window, sf::Event &event, BaseGrid *grid);
 	};
 }

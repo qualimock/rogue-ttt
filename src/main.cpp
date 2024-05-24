@@ -1,8 +1,12 @@
 #include "Game/Game.hpp"
 
-int main()
+#include "Resources/ResourceManager.hpp"
+
+int main(int argc, char **argv)
 {
 	{
+		ResourceManager::set_executable_path(argv[0]);
+
 		Game g_game(sf::VideoMode(720, 480));
 		const sf::RenderWindow *window = g_game.window();
 

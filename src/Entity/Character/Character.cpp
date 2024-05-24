@@ -4,11 +4,12 @@
 
 namespace Entity
 {
-	Character::Character(const sf::Vector2i &position,
+	Character::Character(const std::string &name,
+						 const sf::Vector2i &position,
 						 const sf::Vector2u &size,
 						 unsigned layer,
 						 EType type)
-		: Entity(position, size, layer)
+		: Entity(name, position, size, layer)
 		, m_type(type)
 	{
 		init();
@@ -56,7 +57,7 @@ namespace Entity
 		setPosition(position() + offset);
 	}
 
-	void Character::interact(Entity *target)
+	void Character::interact(std::shared_ptr<Entity> target)
 	{
 		std::cout << "INTERACTION" << std::endl;
 

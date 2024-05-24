@@ -31,7 +31,8 @@ std::string ResourceManager::get_file_string(const std::string &relativeFilePath
 	std::ifstream file;
 	file.open(m_path + "/" + relativeFilePath.c_str(), std::ios::in | std::ios::binary);
 
-	if (!file.is_open()) {
+	if (!file.is_open())
+	{
 		std::cerr << "ERROR::FILE::get_file_string:\n\tCannot open " << relativeFilePath << std::endl;
 		return std::string();
 	}
@@ -121,27 +122,27 @@ bool ResourceManager::load_json_resources(const std::string &jsonPath)
 		return false;
 	}
 
-	auto spritesIterator = document.FindMember("sprites");
-	if (spritesIterator != document.MemberEnd())
-	{
-		for (const auto &currentSprite : spritesIterator->value.GetArray())
-		{
-			const std::string name = currentSprite["name"].GetString();
-			const std::string texture = currentSprite["initialSubTexture"].GetString();
+	// auto spritesIterator = document.FindMember("sprites");
+	// if (spritesIterator != document.MemberEnd())
+	// {
+	// 	for (const auto &currentSprite : spritesIterator->value.GetArray())
+	// 	{
+	// 		const std::string name = currentSprite["name"].GetString();
+	// 		const std::string texture = currentSprite["subTexture"].GetString();
 
-			auto sprite = load_sprite(name, texture, sf::IntRect(0, 0, 40, 40));
-			if (!sprite) {
-				continue;
-			}
-		}
-	}
+	// 		auto sprite = load_sprite(name, texture, sf::IntRect(0, 0, 40, 40));
+	// 		if (!sprite) {
+	// 			continue;
+	// 		}
+	// 	}
+	// }
 
 	auto levelsIterator = document.FindMember("levels");
 	if (levelsIterator != document.MemberEnd())
 	{
 		for (const auto &currentLevel : levelsIterator->value.GetArray())
 		{
-			const auto name = currentLevel["name"].GetArray();
+			// const auto name = currentLevel["name"].GetArray();
 			const auto description = currentLevel["description"].GetArray();
 			size_t maxLength = 0;
 
@@ -161,7 +162,7 @@ bool ResourceManager::load_json_resources(const std::string &jsonPath)
 			{
 				while (currentRow.length() < maxLength)
 				{
-					currentRow.append("D");
+					currentRow.append("F");
 				}
 			}
 

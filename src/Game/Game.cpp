@@ -28,8 +28,14 @@ Game::~Game()
 
 bool Game::init()
 {
-	auto map = Grid::Map::getMap();
+	if(!ResourceManager::load_json_resources("res/resources.json"))
+	{
+		std::cerr << "ERROR" << std::endl;
+		return false;
+	}
 
+	auto map = Grid::Map::getMap();
+	map->loadLevel(0);
 	m_grids.emplace("map", map);
 
 	std::cout << m_grids.size() << std::endl;
@@ -47,8 +53,6 @@ bool Game::init()
 		std::cerr << "ERR:\n\tFailed to initialize the window!" << std::endl;
 		return false;
 	}
-
-	ResourceManager::load_json_resources("res/resources.json");
 
 	return true;
 }
@@ -123,12 +127,12 @@ void Game::onKeyPressed(sf::Event &event)
 		{
 			if (moveResult->hasTag("enemy"))
 			{
-				m_currentlyInteractedEntity = dynamic_cast<Entity::Character *>(moveResult);
+				m_currentlyInteractedEntity = std::dynamic_pointer_cast<Entity::Character>(moveResult);
 				m_gameState = EGameState::InCombat;
 			}
 			else if (moveResult->hasTag("item"))
 			{
-				m_currentlyInteractedEntity = dynamic_cast<Entity::Actor *>(moveResult);
+				m_currentlyInteractedEntity = std::dynamic_pointer_cast<Entity::Actor>(moveResult);
 				m_gameState = EGameState::Interacting;
 			}
 		}

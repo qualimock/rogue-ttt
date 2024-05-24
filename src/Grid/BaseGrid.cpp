@@ -63,58 +63,61 @@ namespace Grid
 		relativePosition.x = position.x - m_topLeft.x;
 		relativePosition.y = position.y - m_topLeft.y;
 
-		entityIndex.x = relativePosition.x / ( m_offset + 1 ) - 1;
-		entityIndex.y = relativePosition.y / ( m_offset + 1 ) - 1;
+		entityIndex.x = relativePosition.x / m_offset + 1 - 1;
+		entityIndex.y = relativePosition.y / m_offset + 1 - 1;
 
 		// vertical line click
-		if ( (m_size.x - 1) % position.x == 0 )
-		{
-			// crossing lines click
-			if ( (m_size.y - 1) % position.y == 0 )
-			{
-				for (auto &entity : m_entities)
-				{
-					if ( entity.second->index() == entityIndex || entityIndex.x < 0 || entityIndex.x > (m_size.x - 1) % m_offset )
-					{
-						entityIndex.x++;
-					}
+		// if ( position.x != 0 && position.y != 0 )
+		// {
+			// if ( (m_size.x - 1) % position.x == 0 )
+			// {
+			// 	// crossing lines click
+			// 	if ( (m_size.y - 1) % position.y == 0 )
+			// 	{
+			// 		for (auto &entity : m_entities)
+			// 		{
+			// 			if ( entity.second->index() == entityIndex || entityIndex.x < 0 || entityIndex.x > (m_size.x - 1) % m_offset )
+			// 			{
+			// 				entityIndex.x++;
+			// 			}
 
-					if ( entity.second->index() == entityIndex || entityIndex.y < 0 || entityIndex.y > (m_size.y - 1) % m_offset )
-					{
-						entityIndex.y++;
-					}
-				}
-			}
+			// 			if ( entity.second->index() == entityIndex || entityIndex.y < 0 || entityIndex.y > (m_size.y - 1) % m_offset )
+			// 			{
+			// 				entityIndex.y++;
+			// 			}
+			// 		}
+			// 	}
 
-			entityIndex.y++;
+			// 	entityIndex.y++;
 
-			for (auto &entity : m_entities)
-			{
-				if ( entity.second->index() == entityIndex || entityIndex.x < 0 || entityIndex.x > (m_size.x - 1) % m_offset )
-				{
-					entityIndex.x++;
-				}
-			}
-		}
-		// horizontal line click
-		else if ( (m_size.y - 1) % position.y == 0 )
-		{
-			entityIndex.x++;
+			// 	for (auto &entity : m_entities)
+			// 	{
+			// 		if ( entity.second->index() == entityIndex || entityIndex.x < 0 || entityIndex.x > (m_size.x - 1) % m_offset )
+			// 		{
+			// 			entityIndex.x++;
+			// 		}
+			// 	}
+			// }
+			// // horizontal line click
+			// else if ( (m_size.y - 1) % position.y == 0 )
+			// {
+			// 	entityIndex.x++;
 
-			for (auto &entity : m_entities)
-			{
-				if ( entity.second->index() == entityIndex || entityIndex.y < 0 || entityIndex.y > (m_size.y - 1) % m_offset )
-				{
-					entityIndex.y++;
-				}
-			}
-		}
-		// entity click
-		else
-		{
-			entityIndex.x++;
-			entityIndex.y++;
-		}
+			// 	for (auto &entity : m_entities)
+			// 	{
+			// 		if ( entity.second->index() == entityIndex || entityIndex.y < 0 || entityIndex.y > (m_size.y - 1) % m_offset )
+			// 		{
+			// 			entityIndex.y++;
+			// 		}
+			// 	}
+			// }
+			// // entity click
+			// else
+			// {
+			// 	entityIndex.x++;
+			// 	entityIndex.y++;
+			// }
+		// }
 
 		entityPosition.x = entityIndex.x * ( m_offset ) - relativePosition.x + position.x;
 		entityPosition.y = entityIndex.y * ( m_offset ) - relativePosition.y + position.y;
@@ -127,8 +130,7 @@ namespace Grid
 		return false;
 	}
 
-	void BaseGrid::spawnEntity(std::pair<sf::Vector2i, sf::Vector2i> IndexPosition,
-							   Entity::Entity *entity)
+	void BaseGrid::spawnEntity(const sf::Vector2i &position, std::shared_ptr<Entity::Entity> entity)
 	{
 		if (!entity)
 		{
@@ -136,19 +138,27 @@ namespace Grid
 			return;
 		}
 
-		std::string entityIndex = std::to_string(m_entities.size());
+		unsigned repeats = 0;
 
-		if (m_entities.find(entityIndex) == m_entities.end())
+		for (auto &cell : m_entities)
 		{
-			entity->setPosition(IndexPosition.second);
-			entity->setIndex(IndexPosition.first);
-			entity->addTag(entityIndex);
-
-			m_entities.emplace(entityIndex, entity);
-
-			std::cout << "SPAWNED" << std::endl;
-			std::cout << IndexPosition.first.x << ":" << IndexPosition.first.y << std::endl;
+			if (m_entities.find(entity->name() + std::to_string(repeats)) != m_entities.end())
+			{
+				repeats++;
+			}
 		}
+
+		auto IndexPosition = adjustEntityPosition(position);
+
+		entity->setPosition(IndexPosition.second);
+		entity->setIndex(IndexPosition.first);
+			
+		entity->addTag(entity->name());
+
+		m_entities.emplace(entity->name() + std::to_string(repeats), entity);
+
+		std::cout << "SPAWNED" << std::endl;
+		std::cout << IndexPosition.first.x << ":" << IndexPosition.first.y << std::endl;
 	}
 
 	void BaseGrid::destroyEntity(const std::string &index)
@@ -159,7 +169,7 @@ namespace Grid
 		}
 	}
 
-	void BaseGrid::destroyEntity(Entity::Entity *entity)
+	void BaseGrid::destroyEntity(std::shared_ptr<Entity::Entity> entity)
 	{
 		for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
 		{

@@ -2,10 +2,12 @@
 
 namespace Entity
 {
-	Entity::Entity(const sf::Vector2i& position,
+	Entity::Entity(const std::string &name,
+				   const sf::Vector2i& position,
 				   const sf::Vector2u& size,
 				   unsigned layer)
-		: m_shape(sf::Vector2f(size))
+		: m_name(name)
+		, m_shape(sf::Vector2f(size))
 		, m_position(position)
 		, m_size(size)
 		, m_color(sf::Color::White)
@@ -16,7 +18,7 @@ namespace Entity
 		resetColor();
 	}
 
-	bool Entity::operator==(const Entity *entity) const
+	bool Entity::operator==(const std::shared_ptr<Entity> entity) const
 	{
 		if (m_tags == entity->tags())
 			return true;
@@ -31,8 +33,8 @@ namespace Entity
 
 	void Entity::render(sf::RenderTarget &target)
 	{
-		target.draw(m_sprite);
-		// target.draw(m_shape);
+		// target.draw(m_sprite);
+		target.draw(m_shape);
 	}
 
 	void Entity::resetColor()

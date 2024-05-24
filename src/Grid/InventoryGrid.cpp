@@ -9,8 +9,8 @@ namespace Grid
 		Occupied = 0;
 	}
 
-	void InventoryGrid::AddItem(Entity::Entity* entity) {
+	void InventoryGrid::AddItem(std::shared_ptr<Entity::Entity> entity) {
 		Occupied++;
-		spawnEntity(adjustEntityPosition(position() + sf::Vector2i(Occupied % 3 * 40, Occupied / 3 * 40)),entity);
+		spawnEntity(adjustEntityPosition(position() + sf::Vector2i(Occupied % 3 * 40, Occupied / 3 * 40)).second, entity);
 	}
 }
