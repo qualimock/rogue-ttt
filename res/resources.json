@@ -9,8 +9,8 @@
 				"  W       W  ",
 				"  WWWWDWWWW  ",
 				"             ",
-				"             ",
-				"             ",
+				"          I  ",
+				"          I  ",
 				"             ",
 				"             ",
 				"             "
@@ -36,16 +36,16 @@
 		{
 			"description": [
 				"             ",
-				"  WWWWWWWWW  ",
-				"  W       W  ",
-				"  W   E   W  ",
-				"  W       W  ",
-				"  WWWWDWWWW  ",
-				"  W       W  ",
-				"  W       W  ",
-				"  W       W  ",
-				"  WWWWDWWWW  ",
 				"             ",
+				"   WWWWWWWWW ",
+				"   W       W ",
+				"   W   EI  W ",
+				"   W       W ",
+				"   WWWWDWWWW ",
+				"   W     IIW ",
+				"   W       W ",
+				"   W       W ",
+				"   WWWWDWWWW ",
 				"             "
 			],
 
@@ -69,8 +69,8 @@
 		{
 			"description": [
 				"             ",
-				"  WWWWWWWWW  ",
-				"  WWWWWWWWW  ",
+				"             ",
+				"             ",
 				"  WWWWWWWWW  ",
 				"  WWWWWWWWW  ",
 				"  WWWWWWWWW  ",
