@@ -30,7 +30,7 @@ namespace Grid
 			m_levels.emplace(std::to_string(levelCounter), std::make_pair(level, floor));
 		}
 
-		m_player = std::make_shared<Entity::Player>(Entity::Character("player0",
+		m_player = std::make_shared<Entity::Player>(Entity::Character("player",
 																	  sf::Vector2i(m_size.x / 2, m_size.y / 2 + 100),
 																	  cellSize(), 2,
 																	  Entity::Character::EType::Player));
@@ -173,16 +173,13 @@ namespace Grid
 		for (auto &entity : m_currentLevel->second.first.entities())
 		{
 			spawnEntity(entity->position(), entity);
-			m_entities.emplace(entity->name(), entity);
 		}
 
 		for (auto &entity : m_currentLevel->second.second.entities())
 		{
 			spawnEntity(entity->position(), entity);
-			m_entities.emplace(entity->name(), entity);
 		}
 
 		spawnEntity(m_player->position(), m_player);
-		m_entities.emplace(m_player->name(), m_player);
 	}
 }
