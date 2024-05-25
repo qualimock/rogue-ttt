@@ -109,13 +109,21 @@ namespace Grid
 		}
 
 		winnerFaction = getWinner();
-		if (winnerFaction == Entity::TTTCell::Faction::None)
+		if (winnerFaction == Entity::TTTCell::Faction::None && !IsOccupied(cellIndexPosition))
 		{
 			auto newCell = std::make_shared<Entity::TTTCell>(cellIndexPosition.second,
 															 sf::Vector2u(m_offset, m_offset),
 															 clickFaction);
-			spawnEntity(cellIndexPosition.second, newCell);
-			AI_Move();
+			if (!IsOccupied(cellIndexPosition)) {
+				spawnEntity(cellIndexPosition.second, newCell);
+				UsedCells++;
+				if (UsedCells != 9) {
+					AI_Move();
+				}else if(getWinner() == Entity::TTTCell::Faction::None){
+						m_entities.clear();
+						UsedCells = 0;
+				}
+			}
 		}
 		winnerFaction = getWinner();
 
@@ -137,9 +145,9 @@ namespace Grid
 
 	void CombatGrid::AI_Move() {
 
-		auto cellIndexPosition = adjustEntityPosition(position()+sf::Vector2i((rand()%3+1)*40, (rand() % 3 + 1) * 40));
+		auto cellIndexPosition = adjustEntityPosition(position()+sf::Vector2i((rand()%3)*40, (rand() % 3) * 40));
 		while (IsOccupied(cellIndexPosition)) {
-			cellIndexPosition = adjustEntityPosition(position() + sf::Vector2i((rand() % 3 + 1) * 40, (rand() % 3 + 1) * 40));
+			cellIndexPosition = adjustEntityPosition(position() + sf::Vector2i((rand() % 3) * 40, (rand() % 3) * 40));
 		}
 		Entity::TTTCell::Faction clickFaction;
 		clickFaction = Entity::TTTCell::Faction::Nought;

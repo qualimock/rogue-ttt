@@ -37,6 +37,16 @@ std::shared_ptr<Entity::Entity> create_entity_from_description(const char descri
 		enemy->setTexture(texture);
 		return enemy;
 	}
+	case 'N':
+	{
+		auto enemy = std::make_shared<Entity::Character>("npc", position, size, 2, Entity::Character::EType::Enemy);
+		if (!texture.loadFromFile("res/Sprites/Characters/Enemy.png"))
+		{
+			std::cerr << "FAILED TO LOAD ENEMY TEXTURE" << std::endl;
+		}
+		enemy->setTexture(texture);
+		return enemy;
+	}
 	case 'W':
 	{
 		auto wall = std::make_shared<Entity::Wall>(Entity::Actor("wall", position, size, 1, Entity::Actor::EType::Wall));

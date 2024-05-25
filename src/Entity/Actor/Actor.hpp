@@ -10,6 +10,7 @@ namespace Entity
 		enum class EType
 		{
 			tttCell,
+			DialogueCell,
 			Door,
 			Floor,
 			Item,

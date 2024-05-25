@@ -20,7 +20,7 @@ public:
 		Exploring,
 		InCombat,
 		Interacting,
-
+		Dialogue,
 		None
 	};
 

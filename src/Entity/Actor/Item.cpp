@@ -6,6 +6,7 @@ namespace Entity
 		: Actor(actor)
 	{
 		setColor(sf::Color::Red);
+		ItemType = Type::Type1;
 	}
 
 	void Item::onInteract()

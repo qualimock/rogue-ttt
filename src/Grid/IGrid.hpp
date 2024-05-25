@@ -14,7 +14,8 @@ namespace Grid
 			Map,
 			Combat,
 			Interaction,
-			Storage
+			Storage,
+			Dialogue
 		};
 
 		IGrid(EGridType gridType,

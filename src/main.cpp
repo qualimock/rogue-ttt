@@ -15,7 +15,6 @@ int main(int argc, char **argv)
 		while (window->isOpen())
 		{
 			g_game.update();
-
 			g_game.render();
 		}
 	}

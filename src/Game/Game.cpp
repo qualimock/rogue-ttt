@@ -12,6 +12,7 @@
 
 #include "../Grid/DraggableGrid.hpp"
 #include "../Grid/CombatGrid.hpp"
+#include "../Grid/DialogueGrid.h"
 #include "../Grid/InventoryGrid.h"
 #include "../Grid/Map.hpp"
 
@@ -103,6 +104,14 @@ void Game::onMouseClick(sf::Event &event)
 					m_gameState = EGameState::Exploring;
 				}
 			}
+			if (currentGrid.first == "dialogue" && m_gameState == EGameState::Dialogue)
+			{
+				if (Grid::GridManager::mouseClicked(m_window, event, currentGrid.second))
+				{
+					m_grids.erase("dialogue");
+					m_gameState = EGameState::Exploring;
+				}
+			}
 			break;
 		}
 	}
@@ -135,6 +144,11 @@ void Game::onKeyPressed(sf::Event &event)
 			{
 				m_currentlyInteractedEntity = std::dynamic_pointer_cast<Entity::Actor>(moveResult);
 				m_gameState = EGameState::Interacting;
+			}
+			else if (moveResult->hasTag("npc"))
+			{
+				m_currentlyInteractedEntity = std::dynamic_pointer_cast<Entity::Actor>(moveResult);
+				m_gameState = EGameState::Dialogue;
 			}
 		}
 		else
@@ -176,7 +190,7 @@ void Game::onKeyPressed(sf::Event &event)
 	}
 
 	std::cout << "STATE" << std::endl;
-
+	Grid::InventoryGrid* Inventory;
 	switch (m_gameState)
 	{
 	case EGameState::Exploring:
@@ -213,16 +227,34 @@ void Game::onKeyPressed(sf::Event &event)
 				)
 			);
 		}
-		Grid::InventoryGrid * Inventory = dynamic_cast<Grid::InventoryGrid *>(m_grids.at("inventory"));
+		Inventory = dynamic_cast<Grid::InventoryGrid *>(m_grids.at("inventory"));
 		Inventory->AddItem(m_currentlyInteractedEntity);
 		m_grids.at("map")->destroyEntity(m_currentlyInteractedEntity);
 		m_gameState = EGameState::Exploring;
+		break;
+
+	case EGameState::Dialogue:
+		std::cout << "DIALOGUE" << std::endl;
+		if (!m_grids.contains("dialogue"))
+		{
+			m_visibleImGuiWindows.emplace("dialogue", false);
+			m_grids.emplace(
+				"dialogue",
+				new Grid::DialogueGrid(
+					Grid::BaseGrid(
+						Grid::BaseGrid::EGridType::Dialogue,
+						sf::Vector2i(m_window.getSize().x - 160, m_window.getSize().y / 2 + 60),
+						sf::Vector2u(120, 120))
+				)
+			);
+		}
 		break;
 	}
 }
 
 void Game::update()
 {
+	m_window.setSize(sf::Vector2u(720, 480));
 	ImGui::SFML::Update(m_window, m_deltaClock.restart());
 
 	//m_window.setSize(sf::Vector2u(720, 480));

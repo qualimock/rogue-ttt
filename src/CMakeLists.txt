@@ -16,6 +16,8 @@ add_executable(${PROJECT_NAME}
   Grid/CombatGrid.hpp
   Grid/InventoryGrid.cpp
   Grid/InventoryGrid.h
+  Grid/DialogueGrid.cpp
+  Grid/DialogueGrid.h
   GridManager/GridManager.cpp
   GridManager/GridManager.hpp
   Entity/Entity.cpp
@@ -24,6 +26,8 @@ add_executable(${PROJECT_NAME}
   Entity/Actor/Actor.hpp
   Entity/Actor/TTTCell.cpp
   Entity/Actor/TTTCell.hpp
+  Entity/Actor/DialogueCell.cpp
+  Entity/Actor/DialogueCell.hpp
   Entity/Actor/Wall.cpp
   Entity/Actor/Wall.hpp
   Entity/Actor/Floor.cpp
